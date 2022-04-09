@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import GUI from 'lil-gui';
 
 import { MouseMove } from 'utils/singletons/MouseMove';
 import { Bounds, UpdateInfo, Mouse } from 'utils/sharedTypes';
@@ -11,6 +12,7 @@ import { IntersectiveBackground3D } from '../Components/IntersectiveBackground3D
 interface Constructor {
   camera: THREE.PerspectiveCamera;
   mouseMove: MouseMove;
+  gui: GUI;
 }
 
 interface PerformRaycast {
@@ -26,6 +28,7 @@ export class InteractiveScene extends THREE.Scene {
   _rendererBounds: Bounds = { height: 100, width: 100 };
   _camera: THREE.PerspectiveCamera;
   _mouseMove: MouseMove;
+  _gui: GUI;
 
   _mouse2D: Mouse = {
     current: { x: 0, y: 0 },
@@ -46,10 +49,11 @@ export class InteractiveScene extends THREE.Scene {
   _canHoverObject = true;
   _intersectiveBackground3D = new IntersectiveBackground3D();
 
-  constructor({ mouseMove, camera }: Constructor) {
+  constructor({ mouseMove, camera, gui }: Constructor) {
     super();
     this._camera = camera;
     this._mouseMove = mouseMove;
+    this._gui = gui;
 
     this.add(this._intersectiveBackground3D);
   }
