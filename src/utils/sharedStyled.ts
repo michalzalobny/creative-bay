@@ -1,5 +1,7 @@
 import { css } from 'styled-components';
 
+import { sharedValues } from 'utils/sharedValues';
+
 export const s1 = css`
   font-size: 15px;
   line-height: 1.6;
@@ -12,4 +14,24 @@ export const m1 = css`
 
 export const m2 = css`
   font-size: 4.5rem;
+`;
+
+export const underline = css`
+  &:before {
+    content: '';
+    position: absolute;
+    top: 85%;
+    width: 100%;
+    height: 1px;
+    background-color: currentColor;
+    transform-origin: left;
+    transform: scaleX(0);
+    transition: transform 0.8s ${sharedValues.timings.t1};
+  }
+
+  &:hover {
+    &:before {
+      transform: scaleX(1);
+    }
+  }
 `;
