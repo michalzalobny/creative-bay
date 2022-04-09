@@ -13,19 +13,8 @@ export default function IndexPage() {
       <S.Wrapper>
         <Visualiser />
       </S.Wrapper>
-      <Link href="/test" passHref>
-        <a
-          style={{
-            zIndex: 100,
-            opacity: 0,
-            position: 'fixed',
-            bottom: 0,
-            left: 0,
-            fontSize: '14px',
-          }}
-        >
-          Go to test
-        </a>
+      <Link href="/projects/meta-office" passHref>
+        <a style={{ fontSize: '14px' }}>Go to test</a>
       </Link>
     </>
   );

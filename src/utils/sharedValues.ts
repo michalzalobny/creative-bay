@@ -25,4 +25,5 @@ export const sharedValues = {
     MOMENTUM_DAMPING: 0.8,
     MOMENTUM_CARRY: 0.6,
   },
+  ISR_TIMEOUT: 5,
 };
