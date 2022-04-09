@@ -8,15 +8,12 @@ export const CopyInfo = () => {
   return (
     <>
       <S.GithubWrapper>
-        <LinkHandler
-          isExternal
-          elHref="https://github.com/javusScriptus/raymarching-engine-visualiser/tree/main/src/sections/Visualiser/classes"
-        >
+        <LinkHandler isExternal elHref="https://github.com/javusScriptus/creative-bay">
           <S.GithubLink>GitHub repo</S.GithubLink>
         </LinkHandler>
       </S.GithubWrapper>
       <S.AuthorWrapper>
-        Raymarching 3D engine visualiser by
+        WebGL and GLSL projects 2022
         <LinkHandler isExternal elHref="https://creativeprojects.vercel.app/">
           <S.AuthorLink>Michal Zalobny</S.AuthorLink>
         </LinkHandler>
