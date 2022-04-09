@@ -1,7 +1,7 @@
 import TWEEN from '@tweenjs/tween.js';
 import * as THREE from 'three';
 import debounce from 'lodash.debounce';
-import { OrbitControls, GLTF } from 'three-stdlib';
+import { OrbitControls } from 'three-stdlib';
 import GUI from 'lil-gui';
 
 import { MouseMove } from 'utils/singletons/MouseMove';
@@ -19,11 +19,6 @@ interface Constructor {
 }
 
 export class App extends THREE.EventDispatcher {
-  static startCameraPos = new THREE.Vector3(0.2, 4.3, 14.8);
-  static startLookAt = new THREE.Vector3(0, 3, 0);
-  static defaultCameraPos = new THREE.Vector3(14.5, 6, 11.72);
-  static defaultLookAt = new THREE.Vector3(0, 3.5, 0);
-
   _rendererEl: HTMLDivElement;
   _rafId: number | null = null;
   _isResumed = true;
@@ -85,14 +80,16 @@ export class App extends THREE.EventDispatcher {
     const aspectRatio = rendererBounds.width / rendererBounds.height;
     this._camera.aspect = aspectRatio;
 
-    this._camera.position.copy(App.defaultCameraPos);
-    this._controls.target.copy(App.defaultLookAt);
+    //Set to match pixel size of the elements in three with pixel size of DOM elements
+    this._camera.position.z = 1000;
+    this._camera.fov =
+      2 * Math.atan(rendererBounds.height / 2 / this._camera.position.z) * (180 / Math.PI);
 
     this._renderer.setSize(rendererBounds.width, rendererBounds.height);
     this._renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     this._camera.updateProjectionMatrix();
 
-    this._visualiserScene.rendererBounds = rendererBounds;
+    // this._slideScene.setRendererBounds(rendererBounds);
   }
 
   _onVisibilityChange = () => {
@@ -105,11 +102,11 @@ export class App extends THREE.EventDispatcher {
 
   _onAssetsLoaded = () => {
     this._setShouldRevealReact(true);
-    this._visualiserScene.animateIn();
-    this._visualiserScene.setCameraModel(
-      this._preloader.mediaItems[cameraSrc].item as GLTF,
-      this._preloader.mediaItems[matcapSrc.src].item as THREE.Texture
-    );
+    // this._visualiserScene.animateIn();
+    // this._visualiserScene.setCameraModel(
+    //   this._preloader.mediaItems[cameraSrc].item as GLTF,
+    //   this._preloader.mediaItems[matcapSrc.src].item as THREE.Texture
+    // );
   };
 
   _addListeners() {
@@ -125,8 +122,10 @@ export class App extends THREE.EventDispatcher {
   }
 
   _resumeAppFrame() {
-    this._rafId = window.requestAnimationFrame(this._renderOnFrame);
     this._isResumed = true;
+    if (!this._rafId) {
+      this._rafId = window.requestAnimationFrame(this._renderOnFrame);
+    }
   }
 
   _renderOnFrame = (time: number) => {
@@ -162,6 +161,7 @@ export class App extends THREE.EventDispatcher {
   _stopAppFrame() {
     if (this._rafId) {
       window.cancelAnimationFrame(this._rafId);
+      this._rafId = null;
     }
   }
 
