@@ -1,7 +1,3 @@
-interface GlobalState {
-  hasVisitedLanding: boolean;
-}
+interface GlobalState {}
 
-export const globalState: GlobalState = {
-  hasVisitedLanding: false,
-};
+export const globalState: GlobalState = {};
