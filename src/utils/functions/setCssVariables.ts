@@ -1,7 +1,7 @@
 export const VARIABLES = [
   {
     name: '--transition-duration',
-    value: 100 + 'ms',
+    value: '100' + 'ms',
   },
 ];
 

@@ -53,26 +53,3 @@ interface PreloadItem {
 }
 
 export type PreloadItems = (PreloadItem | null)[];
-
-export interface RaymarchSettings {
-  ro: THREE.Vector3;
-  lookAt: THREE.Vector3;
-  lightPos: THREE.Vector3;
-  lightColor: [number, number, number];
-  zoom: number;
-  sphere: THREE.Vector3;
-  sphere2: THREE.Vector3;
-  sphereOffset: THREE.Vector3;
-  sphere2Offset: THREE.Vector3;
-  animateSpheres: boolean;
-  box: THREE.Vector3;
-  torus: THREE.Vector3;
-  raySmooth: number;
-  isCameraFocused: boolean;
-}
-
-export interface AnimateCamera {
-  lookAt: THREE.Vector3;
-  position: THREE.Vector3;
-  duration?: number;
-}
