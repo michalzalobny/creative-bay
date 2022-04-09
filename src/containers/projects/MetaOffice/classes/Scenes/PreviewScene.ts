@@ -21,15 +21,16 @@ export class PreviewScene extends InteractiveScene {
 
   constructor({ gui, controls, camera, mouseMove }: Constructor) {
     super({ camera, mouseMove, gui });
-
     this._controls = controls;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   animateIn() {}
 
   update(updateInfo: UpdateInfo) {
     super.update(updateInfo);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   destroy() {}
 }
