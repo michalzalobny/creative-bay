@@ -14,9 +14,7 @@ interface Constructor {
   gui: GUI;
 }
 
-export class PreviewScene extends InteractiveScene {
-  static highlightColor = [0.65, 0.792, 0.219];
-
+export class ExperienceScene extends InteractiveScene {
   _controls: OrbitControls;
 
   constructor({ gui, controls, camera, mouseMove }: Constructor) {

@@ -9,7 +9,7 @@ import { Scroll } from 'utils/singletons/Scroll';
 import { sharedValues } from 'utils/sharedValues';
 
 import { Preloader } from './utility/Preloader';
-import { PreviewScene } from './Scenes/PreviewScene';
+import { ExperienceScene } from './Scenes/ExperienceScene';
 import cameraSrc from './assets/camera.glb';
 import matcapSrc from './assets/matcap4.png';
 
@@ -30,7 +30,7 @@ export class App extends THREE.EventDispatcher {
   _scroll = Scroll.getInstance();
   _preloader = new Preloader();
   _controls: OrbitControls;
-  _PreviewScene: PreviewScene;
+  _experienceScene: ExperienceScene;
   _setShouldRevealReact: React.Dispatch<React.SetStateAction<boolean>>;
   _gui = new GUI();
 
@@ -56,7 +56,7 @@ export class App extends THREE.EventDispatcher {
     this._controls.update();
 
     this._gui.title('Scene settings');
-    this._PreviewScene = new PreviewScene({
+    this._experienceScene = new ExperienceScene({
       camera: this._camera,
       mouseMove: this._mouseMove,
       controls: this._controls,
@@ -102,8 +102,8 @@ export class App extends THREE.EventDispatcher {
 
   _onAssetsLoaded = () => {
     this._setShouldRevealReact(true);
-    // this._PreviewScene.animateIn();
-    // this._PreviewScene.setCameraModel(
+    // this._experienceScene.animateIn();
+    // this._experienceScene.setCameraModel(
     //   this._preloader.mediaItems[cameraSrc].item as GLTF,
     //   this._preloader.mediaItems[matcapSrc.src].item as THREE.Texture
     // );
@@ -152,10 +152,10 @@ export class App extends THREE.EventDispatcher {
 
     this._mouseMove.update();
     this._scroll.update({ delta, slowDownFactor, time });
-    this._PreviewScene.update({ delta, slowDownFactor, time });
+    this._experienceScene.update({ delta, slowDownFactor, time });
     this._controls.update();
 
-    this._renderer.render(this._PreviewScene, this._camera);
+    this._renderer.render(this._experienceScene, this._camera);
   };
 
   _stopAppFrame() {
@@ -172,6 +172,6 @@ export class App extends THREE.EventDispatcher {
     this._stopAppFrame();
     this._removeListeners();
 
-    this._PreviewScene.destroy();
+    this._experienceScene.destroy();
   }
 }
