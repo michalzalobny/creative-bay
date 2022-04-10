@@ -31,7 +31,7 @@ export class Preloader extends EventDispatcher {
           image.onload = () => {
             texture.image = image;
             texture.needsUpdate = true;
-            this.loadedAssets[item.src] = {
+            this.loadedAssets[item.targetName || item.src] = {
               asset: texture,
               naturalWidth: image.naturalWidth,
               naturalHeight: image.naturalHeight,
@@ -53,7 +53,7 @@ export class Preloader extends EventDispatcher {
 
           video.oncanplay = () => {
             const texture = new THREE.VideoTexture(video);
-            this.loadedAssets[item.src] = {
+            this.loadedAssets[item.targetName || item.src] = {
               asset: texture,
               naturalWidth: video.videoWidth,
               naturalHeight: video.videoHeight,
@@ -66,7 +66,7 @@ export class Preloader extends EventDispatcher {
           this._gltfLoader.load(
             item.src,
             (gltf: GLTF) => {
-              this.loadedAssets[item.src] = {
+              this.loadedAssets[item.targetName || item.src] = {
                 asset: gltf,
                 naturalWidth: 1,
                 naturalHeight: 1,

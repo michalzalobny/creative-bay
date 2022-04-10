@@ -71,10 +71,10 @@ export class App extends THREE.EventDispatcher {
     this._resumeAppFrame();
 
     this._preloader.setAssetsToPreload([
-      { src: officeSrc, type: 'model3d' },
-      { src: render1Src.src, type: 'image' },
-      { src: render2Src.src, type: 'image' },
-      { src: render3Src.src, type: 'image' },
+      { src: officeSrc, type: 'model3d', targetName: 'officeSrc' },
+      { src: render1Src.src, type: 'image', targetName: 'render1Src' },
+      { src: render2Src.src, type: 'image', targetName: 'render2Src' },
+      { src: render3Src.src, type: 'image', targetName: 'render3Src' },
     ]);
   }
 
@@ -84,11 +84,8 @@ export class App extends THREE.EventDispatcher {
     const rendererBounds = this._rendererEl.getBoundingClientRect();
     const aspectRatio = rendererBounds.width / rendererBounds.height;
     this._camera.aspect = aspectRatio;
-
-    //Set to match pixel size of the elements in three with pixel size of DOM elements
-    this._camera.position.z = 1000;
-    this._camera.fov =
-      2 * Math.atan(rendererBounds.height / 2 / this._camera.position.z) * (180 / Math.PI);
+    this._camera.position.z = 20;
+    this._camera.position.y = 5;
 
     this._renderer.setSize(rendererBounds.width, rendererBounds.height);
     this._renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -107,12 +104,8 @@ export class App extends THREE.EventDispatcher {
 
   _onAssetsLoaded = () => {
     this._setShouldRevealReact(true);
-    console.log(this._preloader.loadedAssets);
-    // this._experienceScene.animateIn();
-    // this._experienceScene.setCameraModel(
-    //   this._preloader.mediaItems[cameraSrc].item as GLTF,
-    //   this._preloader.mediaItems[matcapSrc.src].item as THREE.Texture
-    // );
+    this._experienceScene.setLoadedAssets(this._preloader.loadedAssets);
+    this._experienceScene.animateIn();
   };
 
   _addListeners() {

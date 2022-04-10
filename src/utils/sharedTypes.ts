@@ -17,7 +17,7 @@ export interface UpdateInfo {
   time: number;
 }
 
-export interface LoadedAsset {
+interface LoadedAsset {
   asset: THREE.Texture | GLTF;
   naturalWidth: number;
   naturalHeight: number;
@@ -50,4 +50,5 @@ export interface Mouse {
 export interface AssetToPreload {
   src: string;
   type: 'model3d' | 'image' | 'video';
+  targetName?: string;
 }
