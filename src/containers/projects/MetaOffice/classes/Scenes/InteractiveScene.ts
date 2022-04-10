@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import GUI from 'lil-gui';
 
-import { MouseMove } from 'utils/singletons/MouseMove';
+import { MouseMove } from 'utils/helperClasses/MouseMove';
 import { Bounds, UpdateInfo, Mouse } from 'utils/sharedTypes';
 import { lerp } from 'utils/functions/lerp';
 import { sharedValues } from 'utils/sharedValues';
@@ -150,7 +150,7 @@ export class InteractiveScene extends THREE.Scene {
     this._mouseMove.removeEventListener('click', this._onClick);
   }
 
-  set rendererBounds(bounds: Bounds) {
+  setRendererBounds(bounds: Bounds) {
     this._rendererBounds = bounds;
   }
 

@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three-stdlib';
 import GUI from 'lil-gui';
 
-import { MouseMove } from 'utils/singletons/MouseMove';
+import { MouseMove } from 'utils/helperClasses/MouseMove';
 import { UpdateInfo } from 'utils/sharedTypes';
 
 import { InteractiveScene } from './InteractiveScene';

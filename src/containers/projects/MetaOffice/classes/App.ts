@@ -4,11 +4,11 @@ import debounce from 'lodash.debounce';
 import { OrbitControls } from 'three-stdlib';
 import GUI from 'lil-gui';
 
-import { MouseMove } from 'utils/singletons/MouseMove';
-import { Scroll } from 'utils/singletons/Scroll';
+import { MouseMove } from 'utils/helperClasses/MouseMove';
+import { Scroll } from 'utils/helperClasses/Scroll';
 import { sharedValues } from 'utils/sharedValues';
+import { Preloader } from 'utils/helperClasses/Preloader';
 
-import { Preloader } from './utility/Preloader';
 import { ExperienceScene } from './Scenes/ExperienceScene';
 //Assets imports
 import officeSrc from './assets/office.glb';
@@ -94,7 +94,7 @@ export class App extends THREE.EventDispatcher {
     this._renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     this._camera.updateProjectionMatrix();
 
-    // this._slideScene.setRendererBounds(rendererBounds);
+    this._experienceScene.setRendererBounds(rendererBounds);
   }
 
   _onVisibilityChange = () => {
