@@ -17,13 +17,13 @@ export interface UpdateInfo {
   time: number;
 }
 
-export interface MediaItem {
-  item: THREE.Texture | GLTF;
+export interface LoadedAsset {
+  asset: THREE.Texture | GLTF;
   naturalWidth: number;
   naturalHeight: number;
 }
 
-export type MediaItems = Record<string, MediaItem>;
+export type LoadedAssets = Record<string, LoadedAsset>;
 
 export interface AnimateProps {
   duration?: number;
@@ -47,9 +47,7 @@ export interface Mouse {
   target: Coords;
 }
 
-interface PreloadItem {
+export interface AssetToPreload {
   src: string;
-  type: string;
+  type: 'model3d' | 'image' | 'video';
 }
-
-export type PreloadItems = (PreloadItem | null)[];

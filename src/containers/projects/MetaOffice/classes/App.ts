@@ -10,8 +10,11 @@ import { sharedValues } from 'utils/sharedValues';
 
 import { Preloader } from './utility/Preloader';
 import { ExperienceScene } from './Scenes/ExperienceScene';
-import cameraSrc from './assets/camera.glb';
-import matcapSrc from './assets/matcap4.png';
+//Assets imports
+import officeSrc from './assets/office.glb';
+import render1Src from './assets/render1.jpg';
+import render2Src from './assets/render2.jpg';
+import render3Src from './assets/render3.jpg';
 
 interface Constructor {
   rendererEl: HTMLDivElement;
@@ -67,9 +70,11 @@ export class App extends THREE.EventDispatcher {
     this._addListeners();
     this._resumeAppFrame();
 
-    this._preloader.setPreloadItems([
-      { src: cameraSrc, type: '3dmodel' },
-      { src: matcapSrc.src, type: 'image' },
+    this._preloader.setAssetsToPreload([
+      { src: officeSrc, type: 'model3d' },
+      { src: render1Src.src, type: 'image' },
+      { src: render2Src.src, type: 'image' },
+      { src: render3Src.src, type: 'image' },
     ]);
   }
 
@@ -102,6 +107,7 @@ export class App extends THREE.EventDispatcher {
 
   _onAssetsLoaded = () => {
     this._setShouldRevealReact(true);
+    console.log(this._preloader.loadedAssets);
     // this._experienceScene.animateIn();
     // this._experienceScene.setCameraModel(
     //   this._preloader.mediaItems[cameraSrc].item as GLTF,
