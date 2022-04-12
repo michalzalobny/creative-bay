@@ -133,7 +133,7 @@ export class ExperienceScene extends InteractiveScene {
 
   _handleDepthOfField(updateInfo: UpdateInfo) {
     this._raycaster.setFromCamera(
-      new THREE.Vector2(this._mouse3D.target.x, this._mouse3D.target.y),
+      new THREE.Vector2(this._mouse3D.target.x * 1.6, this._mouse3D.target.y * 1.6), //*1.6 so the use doesnt have to mousemove through the whole screen to get focus quicker
       this._camera
     );
 
