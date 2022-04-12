@@ -120,6 +120,11 @@ export class ExperienceScene extends InteractiveScene {
     ) as THREE.Mesh;
     if (emissionMesh) emissionMesh.material = this._lightMaterial;
 
+    const extraFrameMesh = this._blenderScene.children.find(
+      child => child.name === 'extraFrame'
+    ) as THREE.Mesh;
+    if (extraFrameMesh) extraFrameMesh.material = this._lightMaterial;
+
     const neonMesh = this._blenderScene.children.find(child => child.name === 'neon') as THREE.Mesh;
     if (neonMesh) neonMesh.material = this._neonMaterial;
 
