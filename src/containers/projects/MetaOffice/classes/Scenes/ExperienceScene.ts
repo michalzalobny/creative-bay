@@ -10,6 +10,8 @@ import { sharedValues } from 'utils/sharedValues';
 import { InteractiveScene } from './InteractiveScene';
 import { PostProcess } from '../App';
 import { Particles3D } from '../Components/Particles3D';
+import neonFragment from '../shaders/neon/fragmentShader.glsl';
+import neonVertex from '../shaders/neon/vertexShader.glsl';
 
 interface Constructor {
   camera: THREE.PerspectiveCamera;
@@ -29,6 +31,14 @@ export class ExperienceScene extends InteractiveScene {
   _bakedMaterial4: THREE.MeshBasicMaterial | null = null;
   _lightMaterial = new THREE.MeshBasicMaterial({
     color: 0xffffff,
+  });
+  _neonMaterial = new THREE.ShaderMaterial({
+    depthWrite: false,
+    // blending: THREE.AdditiveBlending,
+    transparent: true,
+    uniforms: { uTime: { value: 0 } },
+    vertexShader: neonVertex,
+    fragmentShader: neonFragment,
   });
   _glassMaterial = new THREE.MeshBasicMaterial({
     color: 0xffffff,
@@ -123,7 +133,7 @@ export class ExperienceScene extends InteractiveScene {
     if (emissionMesh) emissionMesh.material = this._lightMaterial;
 
     const neonMesh = this._blenderScene.children.find(child => child.name === 'neon') as THREE.Mesh;
-    if (neonMesh) neonMesh.material = this._lightMaterial;
+    if (neonMesh) neonMesh.material = this._neonMaterial;
 
     const windowsMesh = this._blenderScene.children.find(
       child => child.name === 'windows'
@@ -164,6 +174,7 @@ export class ExperienceScene extends InteractiveScene {
     super.update(updateInfo);
     this._handleDepthOfField(updateInfo);
     this._particles3D.update(updateInfo);
+    this._neonMaterial.uniforms.uTime.value = updateInfo.time * updateInfo.slowDownFactor * 0.001;
   }
 
   destroy() {
@@ -175,6 +186,7 @@ export class ExperienceScene extends InteractiveScene {
     this._glassMaterial?.dispose();
     this._glassDarkMaterial?.dispose();
     this._lightMaterial?.dispose();
+    this._neonMaterial.dispose();
     this.remove(this._particles3D);
     this._blenderScene && this.remove(this._blenderScene);
   }
