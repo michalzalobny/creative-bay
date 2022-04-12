@@ -19,7 +19,7 @@ export class Particles3D extends InteractiveObject3D {
     const RANDOM_SIZE = 6;
     const COUNT = 100;
 
-    const firefliesGeometry = new THREE.BufferGeometry();
+    this._geometry = new THREE.BufferGeometry();
 
     const positionArray = new Float32Array(COUNT * 3);
     const scaleArray = new Float32Array(COUNT);
@@ -31,7 +31,7 @@ export class Particles3D extends InteractiveObject3D {
       scaleArray[i] = Math.random();
     }
 
-    firefliesGeometry.setAttribute('position', new THREE.BufferAttribute(positionArray, 3));
+    this._geometry.setAttribute('position', new THREE.BufferAttribute(positionArray, 3));
 
     // Material
     this._material = new THREE.ShaderMaterial({
@@ -48,10 +48,9 @@ export class Particles3D extends InteractiveObject3D {
       fragmentShader,
     });
 
-    firefliesGeometry.setAttribute('aScale', new THREE.BufferAttribute(scaleArray, 1));
+    this._geometry.setAttribute('aScale', new THREE.BufferAttribute(scaleArray, 1));
 
-    // Points
-    this._points = new THREE.Points(firefliesGeometry, this._material);
+    this._points = new THREE.Points(this._geometry, this._material);
     this.add(this._points);
   }
 
