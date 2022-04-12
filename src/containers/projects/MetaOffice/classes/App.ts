@@ -68,12 +68,11 @@ export class App extends THREE.EventDispatcher {
 
     this._renderer = new THREE.WebGLRenderer({
       canvas: this._canvas,
-      antialias: true,
-      alpha: true,
+      antialias: false,
+      alpha: false,
     });
 
     this._renderer.setClearColor(0xffffff);
-    // this._renderer.outputEncoding = THREE.sRGBEncoding;
 
     this._controls = new OrbitControls(this._camera, this._rendererEl);
     this._controls.enableDamping = true;
@@ -140,8 +139,8 @@ export class App extends THREE.EventDispatcher {
     this._postProcess.shaderPass = new ShaderPass(GammaCorrectionShader as THREE.ShaderMaterial);
     this._postProcess.bokehPass = new BokehPass(this._experienceScene, this._camera, {
       focus: 21.5,
-      aperture: 0.001,
-      maxblur: 0.005 * 4,
+      aperture: 0.001 * 1.2,
+      maxblur: 0.005 * 2,
     });
 
     this._postProcess.composer = new EffectComposer(this._renderer);

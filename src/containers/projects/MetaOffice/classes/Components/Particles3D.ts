@@ -17,8 +17,8 @@ export class Particles3D extends InteractiveObject3D {
   }
 
   _generateParticles() {
-    const RANDOM_SIZE = 6;
-    const COUNT = 100;
+    const RANDOM_SIZE = 5;
+    const COUNT = 200;
 
     const positionArray = new Float32Array(COUNT * 3);
     const scaleArray = new Float32Array(COUNT);

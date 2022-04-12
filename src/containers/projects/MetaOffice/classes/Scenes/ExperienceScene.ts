@@ -139,15 +139,17 @@ export class ExperienceScene extends InteractiveScene {
 
     const intersects = this._raycaster.intersectObjects(this.children, true);
 
-    if (intersects.length) {
-      const intersect = intersects[0];
-      this._cameraFocus.target = intersect.distance;
+    for (let i = 0; i < intersects.length; ++i) {
+      const intersect = intersects[i];
+      if (intersect.object.name === 'render1') {
+        this._cameraFocus.target = intersect.distance;
+      }
     }
 
     this._cameraFocus.current = lerp(
       this._cameraFocus.current,
       this._cameraFocus.target,
-      sharedValues.motion.LERP_EASE * updateInfo.slowDownFactor * 0.45
+      sharedValues.motion.LERP_EASE * updateInfo.slowDownFactor
     );
 
     if (this._postProcess.bokehPass) {
