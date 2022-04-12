@@ -77,7 +77,7 @@ export class App extends THREE.EventDispatcher {
     this._controls = new OrbitControls(this._camera, this._rendererEl);
     this._controls.enabled = true;
     this._controls.screenSpacePanning = true;
-    this._controls.zoomSpeed = 0.4;
+    this._controls.zoomSpeed = 1.4;
     this._controls.enableDamping = true;
 
     this._controls.minPolarAngle = 0; // radians
