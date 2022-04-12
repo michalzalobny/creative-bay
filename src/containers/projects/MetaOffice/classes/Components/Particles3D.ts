@@ -61,7 +61,7 @@ export class Particles3D extends InteractiveObject3D {
     super.update(updateInfo);
 
     if (this._material) {
-      this._material.uniforms.uTime.value = updateInfo.time * updateInfo.slowDownFactor * 0.001;
+      this._material.uniforms.uTime.value = updateInfo.time * 0.001;
     }
   }
 

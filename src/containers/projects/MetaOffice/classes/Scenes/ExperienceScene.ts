@@ -149,7 +149,7 @@ export class ExperienceScene extends InteractiveScene {
     this._cameraFocus.current = lerp(
       this._cameraFocus.current,
       this._cameraFocus.target,
-      sharedValues.motion.LERP_EASE * updateInfo.slowDownFactor
+      sharedValues.motion.LERP_EASE
     );
 
     if (this._postProcess.bokehPass) {
@@ -164,7 +164,7 @@ export class ExperienceScene extends InteractiveScene {
     super.update(updateInfo);
     this._handleDepthOfField(updateInfo);
     this._particles3D.update(updateInfo);
-    this._neonMaterial.uniforms.uTime.value = updateInfo.time * updateInfo.slowDownFactor * 0.001;
+    this._neonMaterial.uniforms.uTime.value = updateInfo.time * 0.001;
   }
 
   destroy() {
