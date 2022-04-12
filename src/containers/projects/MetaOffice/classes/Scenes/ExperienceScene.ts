@@ -9,6 +9,7 @@ import { sharedValues } from 'utils/sharedValues';
 
 import { InteractiveScene } from './InteractiveScene';
 import { PostProcess } from '../App';
+import { Particles3D } from '../Components/Particles3D';
 
 interface Constructor {
   camera: THREE.PerspectiveCamera;
@@ -43,13 +44,14 @@ export class ExperienceScene extends InteractiveScene {
     current: 1,
     target: 1,
   };
-
   _postProcess: PostProcess;
+  _particles3D = new Particles3D();
 
   constructor({ gui, controls, camera, mouseMove, postProcess }: Constructor) {
     super({ camera, mouseMove, gui });
     this._controls = controls;
     this._postProcess = postProcess;
+    this.add(this._particles3D);
   }
 
   setLoadedAssets(assets: LoadedAssets) {
@@ -161,6 +163,7 @@ export class ExperienceScene extends InteractiveScene {
   update(updateInfo: UpdateInfo) {
     super.update(updateInfo);
     this._handleDepthOfField(updateInfo);
+    this._particles3D.update(updateInfo);
   }
 
   destroy() {
@@ -172,5 +175,7 @@ export class ExperienceScene extends InteractiveScene {
     this._glassMaterial?.dispose();
     this._glassDarkMaterial?.dispose();
     this._lightMaterial?.dispose();
+    this.remove(this._particles3D);
+    this._blenderScene && this.remove(this._blenderScene);
   }
 }
