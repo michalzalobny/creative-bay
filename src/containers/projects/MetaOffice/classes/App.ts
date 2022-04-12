@@ -15,6 +15,7 @@ import officeSrc from './assets/office.glb';
 import render1Src from './assets/render1.jpg';
 import render2Src from './assets/render2.jpg';
 import render3Src from './assets/render3.jpg';
+import render4Src from './assets/render4.jpg';
 
 interface Constructor {
   rendererEl: HTMLDivElement;
@@ -53,6 +54,7 @@ export class App extends THREE.EventDispatcher {
     });
 
     this._renderer.shadowMap.enabled = true;
+    this._renderer.outputEncoding = THREE.sRGBEncoding;
 
     this._controls = new OrbitControls(this._camera, this._rendererEl);
     this._controls.enableDamping = true;
@@ -75,6 +77,7 @@ export class App extends THREE.EventDispatcher {
       { src: render1Src.src, type: 'image', targetName: 'render1Src' },
       { src: render2Src.src, type: 'image', targetName: 'render2Src' },
       { src: render3Src.src, type: 'image', targetName: 'render3Src' },
+      { src: render4Src.src, type: 'image', targetName: 'render4Src' },
     ]);
   }
 
@@ -84,8 +87,8 @@ export class App extends THREE.EventDispatcher {
     const rendererBounds = this._rendererEl.getBoundingClientRect();
     const aspectRatio = rendererBounds.width / rendererBounds.height;
     this._camera.aspect = aspectRatio;
-    this._camera.position.z = 20;
-    this._camera.position.y = 5;
+    this._camera.position.z = 5;
+    this._camera.position.y = 6;
 
     this._renderer.setSize(rendererBounds.width, rendererBounds.height);
     this._renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
