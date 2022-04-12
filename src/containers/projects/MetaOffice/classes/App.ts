@@ -18,7 +18,6 @@ import officeSrc from './assets/office.glb';
 import render1Src from './assets/render1.jpg';
 import render2Src from './assets/render2.jpg';
 import render3Src from './assets/render3.jpg';
-import render4Src from './assets/render4.jpg';
 
 interface Constructor {
   rendererEl: HTMLDivElement;
@@ -99,7 +98,6 @@ export class App extends THREE.EventDispatcher {
       { src: render1Src.src, type: 'image', targetName: 'render1Src' },
       { src: render2Src.src, type: 'image', targetName: 'render2Src' },
       { src: render3Src.src, type: 'image', targetName: 'render3Src' },
-      { src: render4Src.src, type: 'image', targetName: 'render4Src' },
     ]);
   }
 

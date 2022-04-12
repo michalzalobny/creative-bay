@@ -34,7 +34,6 @@ export class ExperienceScene extends InteractiveScene {
   });
   _neonMaterial = new THREE.ShaderMaterial({
     depthWrite: false,
-    // blending: THREE.AdditiveBlending,
     transparent: true,
     uniforms: { uTime: { value: 0 } },
     vertexShader: neonVertex,
@@ -86,16 +85,10 @@ export class ExperienceScene extends InteractiveScene {
       map: this._loadedAssets['render3Src'].asset as THREE.Texture,
     });
 
-    (this._loadedAssets['render4Src'].asset as THREE.Texture).flipY = false;
-    (this._loadedAssets['render4Src'].asset as THREE.Texture).encoding = THREE.sRGBEncoding;
-    this._bakedMaterial4 = new THREE.MeshBasicMaterial({
-      map: this._loadedAssets['render4Src'].asset as THREE.Texture,
-    });
-
-    const render1Meshes = this._blenderScene.children.filter(child => child.name.includes('books'));
-    render1Meshes.forEach(mesh => {
-      if (mesh && this._bakedMaterial1) (mesh as THREE.Mesh).material = this._bakedMaterial1;
-    });
+    const render1Mesh = this._blenderScene.children.find(
+      child => child.name === 'render1'
+    ) as THREE.Mesh;
+    if (render1Mesh) render1Mesh.material = this._bakedMaterial1;
 
     const render2Mesh = this._blenderScene.children.find(
       child => child.name === 'render2'
@@ -106,11 +99,6 @@ export class ExperienceScene extends InteractiveScene {
       child => child.name === 'render3'
     ) as THREE.Mesh;
     if (render3Mesh) render3Mesh.material = this._bakedMaterial3;
-
-    const render4Mesh = this._blenderScene.children.find(
-      child => child.name === 'render4'
-    ) as THREE.Mesh;
-    if (render4Mesh) render4Mesh.material = this._bakedMaterial4;
 
     const champGlassMesh = this._blenderScene.children.find(
       child => child.name === 'champGlass'
@@ -123,7 +111,7 @@ export class ExperienceScene extends InteractiveScene {
     if (glassMesh) glassMesh.material = this._glassMaterial;
 
     const barGlassMesh = this._blenderScene.children.find(
-      child => child.name === 'displayGlass'
+      child => child.name === 'bufet'
     ) as THREE.Mesh;
     if (barGlassMesh) barGlassMesh.material = this._glassDarkMaterial;
 
