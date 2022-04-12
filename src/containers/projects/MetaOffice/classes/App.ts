@@ -1,8 +1,11 @@
 import TWEEN from '@tweenjs/tween.js';
 import * as THREE from 'three';
 import debounce from 'lodash.debounce';
-import { OrbitControls } from 'three-stdlib';
+import { OrbitControls, UnrealBloomPass, GammaCorrectionShader, ShaderPass } from 'three-stdlib';
 import GUI from 'lil-gui';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
+import { BokehPass } from 'three/examples/jsm/postprocessing/BokehPass.js';
 
 import { MouseMove } from 'utils/helperClasses/MouseMove';
 import { Scroll } from 'utils/helperClasses/Scroll';
@@ -22,6 +25,14 @@ interface Constructor {
   setShouldReveal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+export interface PostProcess {
+  renderPass: RenderPass | null;
+  bokehPass: BokehPass | null;
+  unrealBloomPass: UnrealBloomPass | null;
+  composer: EffectComposer | null;
+  shaderPass: ShaderPass | null;
+}
+
 export class App extends THREE.EventDispatcher {
   _rendererEl: HTMLDivElement;
   _rafId: number | null = null;
@@ -37,6 +48,15 @@ export class App extends THREE.EventDispatcher {
   _experienceScene: ExperienceScene;
   _setShouldRevealReact: React.Dispatch<React.SetStateAction<boolean>>;
   _gui = new GUI();
+  //Post process
+  _postProcess: PostProcess = {
+    renderPass: null,
+    bokehPass: null,
+    unrealBloomPass: null,
+    composer: null,
+    shaderPass: null,
+  };
+  _renderTarget: THREE.WebGLRenderTarget | THREE.WebGLMultisampleRenderTarget | null = null;
 
   constructor({ setShouldReveal, rendererEl }: Constructor) {
     super();
@@ -53,8 +73,8 @@ export class App extends THREE.EventDispatcher {
       alpha: true,
     });
 
-    this._renderer.shadowMap.enabled = true;
-    this._renderer.outputEncoding = THREE.sRGBEncoding;
+    this._renderer.setClearColor(0xffffff);
+    // this._renderer.outputEncoding = THREE.sRGBEncoding;
 
     this._controls = new OrbitControls(this._camera, this._rendererEl);
     this._controls.enableDamping = true;
@@ -66,11 +86,13 @@ export class App extends THREE.EventDispatcher {
       mouseMove: this._mouseMove,
       controls: this._controls,
       gui: this._gui,
+      postProcess: this._postProcess,
     });
 
     this._onResize();
     this._addListeners();
     this._resumeAppFrame();
+    this._setPostProcess();
 
     this._preloader.setAssetsToPreload([
       { src: officeSrc, type: 'model3d', targetName: 'officeSrc' },
@@ -95,6 +117,9 @@ export class App extends THREE.EventDispatcher {
     this._camera.updateProjectionMatrix();
 
     this._experienceScene.setRendererBounds(rendererBounds);
+    if (this._postProcess.composer) {
+      this._postProcess.composer.setSize(rendererBounds.width, rendererBounds.height);
+    }
   }
 
   _onVisibilityChange = () => {
@@ -104,6 +129,30 @@ export class App extends THREE.EventDispatcher {
       this._resumeAppFrame();
     }
   };
+
+  _setPostProcess() {
+    this._postProcess.renderPass = new RenderPass(this._experienceScene, this._camera);
+    this._postProcess.unrealBloomPass = new UnrealBloomPass(
+      new THREE.Vector2(1024, 1024),
+      0.05,
+      10,
+      10
+    );
+
+    this._postProcess.shaderPass = new ShaderPass(GammaCorrectionShader as THREE.ShaderMaterial);
+    this._postProcess.bokehPass = new BokehPass(this._experienceScene, this._camera, {
+      focus: 21.5,
+      aperture: 0.001,
+      maxblur: 0.005 * 4,
+    });
+
+    this._postProcess.composer = new EffectComposer(this._renderer);
+
+    this._postProcess.composer.addPass(this._postProcess.renderPass);
+    this._postProcess.composer.addPass(this._postProcess.unrealBloomPass);
+    this._postProcess.composer.addPass(this._postProcess.shaderPass);
+    this._postProcess.composer.addPass(this._postProcess.bokehPass);
+  }
 
   _onAssetsLoaded = () => {
     this._setShouldRevealReact(true);
@@ -157,7 +206,10 @@ export class App extends THREE.EventDispatcher {
     this._experienceScene.update({ delta, slowDownFactor, time });
     this._controls.update();
 
-    this._renderer.render(this._experienceScene, this._camera);
+    //Instead of this.renderer.render()...
+    if (this._postProcess.composer) {
+      this._postProcess.composer.render();
+    }
   };
 
   _stopAppFrame() {
@@ -175,5 +227,7 @@ export class App extends THREE.EventDispatcher {
     this._removeListeners();
 
     this._experienceScene.destroy();
+    if (this._postProcess.composer) this._postProcess.composer.renderTarget1.dispose();
+    if (this._postProcess.composer) this._postProcess.composer.renderTarget2.dispose();
   }
 }

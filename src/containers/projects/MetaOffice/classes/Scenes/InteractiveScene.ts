@@ -55,7 +55,8 @@ export class InteractiveScene extends THREE.Scene {
     this._mouseMove = mouseMove;
     this._gui = gui;
 
-    this.add(this._intersectiveBackground3D);
+    this._addListeners();
+    // this.add(this._intersectiveBackground3D);
   }
 
   _performRaycast({ x, y, colliderName, fnToCallIfHit }: PerformRaycast) {

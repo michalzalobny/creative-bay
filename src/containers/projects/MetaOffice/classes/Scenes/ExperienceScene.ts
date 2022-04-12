@@ -4,14 +4,18 @@ import GUI from 'lil-gui';
 
 import { MouseMove } from 'utils/helperClasses/MouseMove';
 import { UpdateInfo, LoadedAssets } from 'utils/sharedTypes';
+import { lerp } from 'utils/functions/lerp';
+import { sharedValues } from 'utils/sharedValues';
 
 import { InteractiveScene } from './InteractiveScene';
+import { PostProcess } from '../App';
 
 interface Constructor {
   camera: THREE.PerspectiveCamera;
   mouseMove: MouseMove;
   controls: OrbitControls;
   gui: GUI;
+  postProcess: PostProcess;
 }
 
 export class ExperienceScene extends InteractiveScene {
@@ -35,10 +39,17 @@ export class ExperienceScene extends InteractiveScene {
     transparent: true,
     opacity: 0.3,
   });
+  _cameraFocus = {
+    current: 1,
+    target: 1,
+  };
 
-  constructor({ gui, controls, camera, mouseMove }: Constructor) {
+  _postProcess: PostProcess;
+
+  constructor({ gui, controls, camera, mouseMove, postProcess }: Constructor) {
     super({ camera, mouseMove, gui });
     this._controls = controls;
+    this._postProcess = postProcess;
   }
 
   setLoadedAssets(assets: LoadedAssets) {
@@ -115,9 +126,33 @@ export class ExperienceScene extends InteractiveScene {
     const windowsMesh = this._blenderScene.children.find(
       child => child.name === 'windows'
     ) as THREE.Mesh;
-    if (windowsMesh) windowsMesh.material = this._glassDarkMaterial;
+    if (windowsMesh) windowsMesh.material = this._lightMaterial;
 
     if (this._blenderScene) this.add(this._blenderScene);
+  }
+
+  _handleDepthOfField(updateInfo: UpdateInfo) {
+    this._raycaster.setFromCamera(
+      new THREE.Vector2(this._mouse3D.target.x, this._mouse3D.target.y),
+      this._camera
+    );
+
+    const intersects = this._raycaster.intersectObjects(this.children, true);
+
+    if (intersects.length) {
+      const intersect = intersects[0];
+      this._cameraFocus.target = intersect.distance;
+    }
+
+    this._cameraFocus.current = lerp(
+      this._cameraFocus.current,
+      this._cameraFocus.target,
+      sharedValues.motion.LERP_EASE * updateInfo.slowDownFactor * 0.45
+    );
+
+    if (this._postProcess.bokehPass) {
+      this._postProcess.bokehPass.materialBokeh.uniforms.focus.value = this._cameraFocus.current;
+    }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -125,6 +160,7 @@ export class ExperienceScene extends InteractiveScene {
 
   update(updateInfo: UpdateInfo) {
     super.update(updateInfo);
+    this._handleDepthOfField(updateInfo);
   }
 
   destroy() {
