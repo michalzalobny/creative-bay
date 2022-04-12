@@ -75,7 +75,11 @@ export class App extends THREE.EventDispatcher {
     this._renderer.setClearColor(0xffffff);
 
     this._controls = new OrbitControls(this._camera, this._rendererEl);
+    this._controls.enabled = false;
+    this._controls.screenSpacePanning = true;
+    this._controls.zoomSpeed = 0.25;
     this._controls.enableDamping = true;
+
     this._controls.update();
 
     this._gui.title('Scene settings');
