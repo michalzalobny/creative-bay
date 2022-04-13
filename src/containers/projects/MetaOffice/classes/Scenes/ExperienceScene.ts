@@ -1,9 +1,10 @@
 import * as THREE from 'three';
-import { GLTF, OrbitControls } from 'three-stdlib';
+import { GLTF } from 'three-stdlib';
 import GUI from 'lil-gui';
+import TWEEN, { Tween } from '@tweenjs/tween.js';
 
 import { MouseMove } from 'utils/helperClasses/MouseMove';
-import { UpdateInfo, LoadedAssets } from 'utils/sharedTypes';
+import { UpdateInfo, LoadedAssets, AnimateCamera } from 'utils/sharedTypes';
 import { lerp } from 'utils/functions/lerp';
 import { sharedValues } from 'utils/sharedValues';
 
@@ -53,6 +54,7 @@ export class ExperienceScene extends InteractiveScene {
   };
   _postProcess: PostProcess;
   _particles3D = new Particles3D();
+  _cameraTween: Tween<{ cameraPosition: THREE.Vector3 }> | null = null;
 
   constructor({ gui, camera, mouseMove, postProcess }: Constructor) {
     super({ camera, mouseMove, gui });
@@ -160,7 +162,36 @@ export class ExperienceScene extends InteractiveScene {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  animateIn() {}
+  animateIn() {
+    this._animateCamera({ position: new THREE.Vector3(5.5, 4.5, 8) });
+  }
+
+  _animateCamera({ duration = 2300, position }: AnimateCamera) {
+    if (this._cameraTween) {
+      this._cameraTween.stop();
+    }
+
+    const from = {
+      cameraPosition: new THREE.Vector3(
+        this._camera.position.x,
+        this._camera.position.y,
+        this._camera.position.z
+      ),
+    };
+
+    const to = { cameraPosition: position };
+
+    this._cameraTween = new TWEEN.Tween(from)
+      .to(to)
+      .delay(duration * 0.6)
+      .duration(duration)
+      .easing(TWEEN.Easing.Exponential.InOut)
+      .onUpdate(obj => {
+        this._camera.position.set(obj.cameraPosition.x, obj.cameraPosition.y, obj.cameraPosition.z);
+      });
+
+    this._cameraTween.start();
+  }
 
   update(updateInfo: UpdateInfo) {
     super.update(updateInfo);

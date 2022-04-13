@@ -126,9 +126,9 @@ export class App extends THREE.EventDispatcher {
     const rendererBounds = this._rendererEl.getBoundingClientRect();
     const aspectRatio = rendererBounds.width / rendererBounds.height;
     this._camera.aspect = aspectRatio;
-    this._camera.position.z = 8;
-    this._camera.position.x = 5.5;
-    this._camera.position.y = 4.5;
+    this._camera.position.z = 5;
+    this._camera.position.x = -3.5;
+    this._camera.position.y = 0;
     this._orbitControls.target.set(0, 1.4, 0);
 
     this._renderer.setSize(rendererBounds.width, rendererBounds.height);

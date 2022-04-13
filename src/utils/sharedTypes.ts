@@ -52,3 +52,9 @@ export interface AssetToPreload {
   type: 'model3d' | 'image' | 'video';
   targetName?: string;
 }
+
+export interface AnimateCamera {
+  lookAt?: THREE.Vector3;
+  position: THREE.Vector3;
+  duration?: number;
+}
