@@ -88,8 +88,6 @@ export class App extends THREE.EventDispatcher {
     this._orbitControls.screenSpacePanning = true;
     this._orbitControls.enableZoom = false;
     this._orbitControls.rotateSpeed = 0.5;
-    this._orbitControls.minDistance = 3;
-    this._orbitControls.maxDistance = 10;
     this._orbitControls.minPolarAngle = 0; // radians
     this._orbitControls.maxPolarAngle = Math.PI / 2; // radians
 
@@ -97,7 +95,8 @@ export class App extends THREE.EventDispatcher {
     this._trackballControls.noRotate = true;
     this._trackballControls.noPan = true;
     this._trackballControls.noZoom = false;
-    this._trackballControls.zoomSpeed = 0.4;
+    this._trackballControls.zoomSpeed = 0.2;
+    this._trackballControls.maxDistance = 10;
     this._trackballControls.dynamicDampingFactor = 0.05; // set dampening factor
 
     this._gui.title('Scene settings');
@@ -161,9 +160,8 @@ export class App extends THREE.EventDispatcher {
 
     this._postProcess.shaderPass = new ShaderPass(GammaCorrectionShader as THREE.ShaderMaterial);
     this._postProcess.bokehPass = new BokehPass(this._experienceScene, this._camera, {
-      focus: 21.5,
-      aperture: 0.001 * 1.1,
-      maxblur: 0.005 * 1.4,
+      aperture: 0.001 * 0.8,
+      maxblur: 0.005 * 1.2,
     });
 
     this._postProcess.composer = new EffectComposer(this._renderer);
@@ -227,10 +225,8 @@ export class App extends THREE.EventDispatcher {
 
     const target = this._orbitControls.target;
     //Restricts the panning Y
-    if (target.y <= 0.5) {
-      this._orbitControls.target.set(target.x, 0.5, target.z);
-    } else if (target.y >= 1.5) {
-      this._orbitControls.target.set(target.x, 1.5, target.z);
+    if (target.y <= 1.3) {
+      this._orbitControls.target.set(target.x, 1.3, target.z);
     }
     this._orbitControls.update();
 
