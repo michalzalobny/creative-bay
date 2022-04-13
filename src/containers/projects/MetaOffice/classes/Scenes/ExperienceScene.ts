@@ -215,6 +215,8 @@ export class ExperienceScene extends InteractiveScene {
 
   destroy() {
     if (this._blenderScene) this.remove(this._blenderScene);
+    this._particles3D.destroy();
+    this.remove(this._particles3D);
     this._bakedMaterial1?.dispose();
     this._bakedMaterial2?.dispose();
     this._bakedMaterial3?.dispose();
@@ -223,7 +225,5 @@ export class ExperienceScene extends InteractiveScene {
     this._glassDarkMaterial?.dispose();
     this._lightMaterial?.dispose();
     this._neonMaterial.dispose();
-    this.remove(this._particles3D);
-    this._blenderScene && this.remove(this._blenderScene);
   }
 }
