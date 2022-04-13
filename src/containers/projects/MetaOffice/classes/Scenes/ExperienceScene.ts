@@ -49,9 +49,10 @@ export class ExperienceScene extends InteractiveScene {
     opacity: 0.3,
   });
   _cameraFocus = {
-    current: 13,
-    target: 13,
+    current: 11,
+    target: 11,
   };
+  _useFocus = false;
   _postProcess: PostProcess;
   _particles3D = new Particles3D();
   _cameraTween: Tween<{ cameraPosition: THREE.Vector3 }> | null = null;
@@ -137,7 +138,8 @@ export class ExperienceScene extends InteractiveScene {
 
   _handleDepthOfField(updateInfo: UpdateInfo) {
     this._raycaster.setFromCamera(
-      new THREE.Vector2(this._mouse3D.target.x * 1.6, this._mouse3D.target.y * 1.6), //*1.6 so the use doesnt have to mousemove through the whole screen to get focus quicker
+      //*1.6 so the use doesnt have to mousemove through the whole screen to get focus quicker
+      new THREE.Vector2(this._mouse3D.target.x * 1.6, this._mouse3D.target.y * 1.6),
       this._camera
     );
 
@@ -146,7 +148,9 @@ export class ExperienceScene extends InteractiveScene {
     for (let i = 0; i < intersects.length; ++i) {
       const intersect = intersects[i];
       if (intersect.object.name === 'render1') {
-        this._cameraFocus.target = intersect.distance;
+        if (this._useFocus) {
+          this._cameraFocus.target = intersect.distance;
+        }
       }
     }
 
@@ -188,6 +192,9 @@ export class ExperienceScene extends InteractiveScene {
       .easing(TWEEN.Easing.Exponential.InOut)
       .onUpdate(obj => {
         this._camera.position.set(obj.cameraPosition.x, obj.cameraPosition.y, obj.cameraPosition.z);
+      })
+      .onComplete(() => {
+        this._useFocus = true;
       });
 
     this._cameraTween.start();
