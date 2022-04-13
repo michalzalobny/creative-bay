@@ -170,7 +170,7 @@ export class ExperienceScene extends InteractiveScene {
     this._animateCamera({ position: new THREE.Vector3(5.5, 4.5, 8) });
   }
 
-  _animateCamera({ duration = 2300, position }: AnimateCamera) {
+  _animateCamera({ duration = 2500, position }: AnimateCamera) {
     if (this._cameraTween) {
       this._cameraTween.stop();
     }
