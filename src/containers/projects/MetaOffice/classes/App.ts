@@ -71,6 +71,10 @@ export class App extends THREE.EventDispatcher {
     this._rendererEl.appendChild(this._canvas);
     this._camera = new THREE.PerspectiveCamera();
 
+    this._camera.position.z = 4;
+    this._camera.position.x = -2.5;
+    this._camera.position.y = 1;
+
     this._setShouldRevealReact = setShouldReveal;
 
     this._renderer = new THREE.WebGLRenderer({
@@ -130,10 +134,6 @@ export class App extends THREE.EventDispatcher {
     const rendererBounds = this._rendererEl.getBoundingClientRect();
     const aspectRatio = rendererBounds.width / rendererBounds.height;
     this._camera.aspect = aspectRatio;
-    this._camera.position.z = 4;
-    this._camera.position.x = -2.5;
-    this._camera.position.y = 1;
-    this._orbitControls.target.set(0, 1.4, 0);
 
     this._renderer.setSize(rendererBounds.width, rendererBounds.height);
     this._renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
