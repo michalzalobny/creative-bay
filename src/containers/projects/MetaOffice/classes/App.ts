@@ -83,6 +83,7 @@ export class App extends THREE.EventDispatcher {
 
     //https://github.com/mrdoob/three.js/issues/13080 - Smooth zooming solution
     this._orbitControls = new OrbitControls(this._camera, this._rendererEl);
+    this._orbitControls.enabled = false;
     this._orbitControls.enableDamping = true;
     this._orbitControls.dampingFactor = 0.05;
     this._orbitControls.screenSpacePanning = true;
@@ -92,6 +93,7 @@ export class App extends THREE.EventDispatcher {
     this._orbitControls.maxPolarAngle = Math.PI / 2; // radians
 
     this._trackballControls = new TrackballControls(this._camera, this._renderer.domElement);
+    this._trackballControls.enabled = false;
     this._trackballControls.noRotate = true;
     this._trackballControls.noPan = true;
     this._trackballControls.noZoom = false;
@@ -105,6 +107,8 @@ export class App extends THREE.EventDispatcher {
       mouseMove: this._mouseMove,
       gui: this._gui,
       postProcess: this._postProcess,
+      trackballControls: this._trackballControls,
+      orbitControls: this._orbitControls,
     });
 
     this._onResize();

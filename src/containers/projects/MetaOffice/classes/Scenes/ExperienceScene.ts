@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { GLTF } from 'three-stdlib';
+import { GLTF, OrbitControls, TrackballControls } from 'three-stdlib';
 import GUI from 'lil-gui';
 import TWEEN, { Tween } from '@tweenjs/tween.js';
 
@@ -19,6 +19,8 @@ interface Constructor {
   mouseMove: MouseMove;
   gui: GUI;
   postProcess: PostProcess;
+  orbitControls: OrbitControls;
+  trackballControls: TrackballControls;
 }
 
 export class ExperienceScene extends InteractiveScene {
@@ -56,10 +58,21 @@ export class ExperienceScene extends InteractiveScene {
   _postProcess: PostProcess;
   _particles3D = new Particles3D();
   _cameraTween: Tween<{ cameraPosition: THREE.Vector3 }> | null = null;
+  _trackballControls: TrackballControls;
+  _orbitControls: OrbitControls;
 
-  constructor({ gui, camera, mouseMove, postProcess }: Constructor) {
+  constructor({
+    gui,
+    camera,
+    mouseMove,
+    postProcess,
+    orbitControls,
+    trackballControls,
+  }: Constructor) {
     super({ camera, mouseMove, gui });
     this._postProcess = postProcess;
+    this._trackballControls = trackballControls;
+    this._orbitControls = orbitControls;
     this.add(this._particles3D);
   }
 
@@ -195,6 +208,8 @@ export class ExperienceScene extends InteractiveScene {
       })
       .onComplete(() => {
         this._useFocus = true;
+        this._orbitControls.enabled = true;
+        this._trackballControls.enabled = true;
       });
 
     this._cameraTween.start();
