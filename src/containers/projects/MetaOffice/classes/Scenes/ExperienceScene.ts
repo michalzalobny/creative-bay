@@ -48,8 +48,8 @@ export class ExperienceScene extends InteractiveScene {
     opacity: 0.3,
   });
   _cameraFocus = {
-    current: 1,
-    target: 1,
+    current: 13,
+    target: 13,
   };
   _postProcess: PostProcess;
   _particles3D = new Particles3D();
@@ -153,6 +153,8 @@ export class ExperienceScene extends InteractiveScene {
       this._cameraFocus.target,
       sharedValues.motion.LERP_EASE
     );
+
+    // console.log(this._cameraFocus.current);
 
     if (this._postProcess.bokehPass) {
       this._postProcess.bokehPass.materialBokeh.uniforms.focus.value = this._cameraFocus.current;
