@@ -8,7 +8,6 @@ import {
   ShaderPass,
   TrackballControls,
 } from 'three-stdlib';
-import GUI from 'lil-gui';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { BokehPass } from 'three/examples/jsm/postprocessing/BokehPass.js';
@@ -53,7 +52,6 @@ export class App extends THREE.EventDispatcher {
   _trackballControls: TrackballControls;
   _experienceScene: ExperienceScene;
   _setShouldRevealReact: React.Dispatch<React.SetStateAction<boolean>>;
-  _gui = new GUI();
   //Post process
   _postProcess: PostProcess = {
     renderPass: null,
@@ -105,11 +103,9 @@ export class App extends THREE.EventDispatcher {
     this._trackballControls.maxDistance = 12;
     this._trackballControls.dynamicDampingFactor = 0.05; // set dampening factor
 
-    this._gui.title('Scene settings');
     this._experienceScene = new ExperienceScene({
       camera: this._camera,
       mouseMove: this._mouseMove,
-      gui: this._gui,
       postProcess: this._postProcess,
       trackballControls: this._trackballControls,
       orbitControls: this._orbitControls,

@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import { GLTF, OrbitControls, TrackballControls } from 'three-stdlib';
-import GUI from 'lil-gui';
 import TWEEN, { Tween } from '@tweenjs/tween.js';
 
 import { MouseMove } from 'utils/helperClasses/MouseMove';
@@ -17,7 +16,6 @@ import neonVertex from '../shaders/neon/vertexShader.glsl';
 interface Constructor {
   camera: THREE.PerspectiveCamera;
   mouseMove: MouseMove;
-  gui: GUI;
   postProcess: PostProcess;
   orbitControls: OrbitControls;
   trackballControls: TrackballControls;
@@ -61,15 +59,8 @@ export class ExperienceScene extends InteractiveScene {
   _trackballControls: TrackballControls;
   _orbitControls: OrbitControls;
 
-  constructor({
-    gui,
-    camera,
-    mouseMove,
-    postProcess,
-    orbitControls,
-    trackballControls,
-  }: Constructor) {
-    super({ camera, mouseMove, gui });
+  constructor({ camera, mouseMove, postProcess, orbitControls, trackballControls }: Constructor) {
+    super({ camera, mouseMove });
     this._postProcess = postProcess;
     this._trackballControls = trackballControls;
     this._orbitControls = orbitControls;
