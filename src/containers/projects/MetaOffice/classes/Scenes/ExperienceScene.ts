@@ -161,7 +161,7 @@ export class ExperienceScene extends InteractiveScene {
     this._cameraFocus.current = lerp(
       this._cameraFocus.current,
       this._cameraFocus.target,
-      sharedValues.motion.LERP_EASE
+      sharedValues.motion.LERP_EASE * updateInfo.slowDownFactor
     );
 
     if (this._postProcess.bokehPass) {
