@@ -103,12 +103,7 @@ export class App extends THREE.EventDispatcher {
 
   _onAssetsLoaded = () => {
     this._setShouldRevealReact(true);
-    console.log(this._preloader.loadedAssets);
-    // this._experienceScene.animateIn();
-    // this._experienceScene.setCameraModel(
-    //   this._preloader.mediaItems[cameraSrc].item as GLTF,
-    //   this._preloader.mediaItems[matcapSrc.src].item as THREE.Texture
-    // );
+    //animate in experience
   };
 
   _addListeners() {

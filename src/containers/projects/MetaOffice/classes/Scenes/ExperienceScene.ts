@@ -154,8 +154,6 @@ export class ExperienceScene extends InteractiveScene {
       sharedValues.motion.LERP_EASE
     );
 
-    // console.log(this._cameraFocus.current);
-
     if (this._postProcess.bokehPass) {
       this._postProcess.bokehPass.materialBokeh.uniforms.focus.value = this._cameraFocus.current;
     }
