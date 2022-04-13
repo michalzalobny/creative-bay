@@ -226,6 +226,8 @@ export class App extends THREE.EventDispatcher {
     this._experienceScene.update({ delta, slowDownFactor, time });
 
     const target = this._orbitControls.target;
+    //Restricts the panning Y
+    if (target.y <= 0.5) this._orbitControls.target.set(target.x, 0.5, target.z);
     this._orbitControls.update();
     /* eslint-disable @typescript-eslint/no-unsafe-member-access */
     /* eslint-disable @typescript-eslint/no-unsafe-call */
