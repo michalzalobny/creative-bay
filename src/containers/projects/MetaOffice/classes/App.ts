@@ -89,7 +89,7 @@ export class App extends THREE.EventDispatcher {
     this._orbitControls.enableZoom = false;
     this._orbitControls.rotateSpeed = 0.5;
     this._orbitControls.minDistance = 3;
-    this._orbitControls.maxDistance = 13;
+    this._orbitControls.maxDistance = 10;
     this._orbitControls.minPolarAngle = 0; // radians
     this._orbitControls.maxPolarAngle = Math.PI / 2; // radians
 
@@ -227,7 +227,11 @@ export class App extends THREE.EventDispatcher {
 
     const target = this._orbitControls.target;
     //Restricts the panning Y
-    if (target.y <= 0.5) this._orbitControls.target.set(target.x, 0.5, target.z);
+    if (target.y <= 0.5) {
+      this._orbitControls.target.set(target.x, 0.5, target.z);
+    } else if (target.y >= 1.5) {
+      this._orbitControls.target.set(target.x, 1.5, target.z);
+    }
     this._orbitControls.update();
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
