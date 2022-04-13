@@ -229,13 +229,10 @@ export class App extends THREE.EventDispatcher {
     //Restricts the panning Y
     if (target.y <= 0.5) this._orbitControls.target.set(target.x, 0.5, target.z);
     this._orbitControls.update();
-    /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-    /* eslint-disable @typescript-eslint/no-unsafe-call */
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    //@ts-ignore
-    this._trackballControls.target.set(target.x, target.y, target.z);
-    /* eslint-enable @typescript-eslint/no-unsafe-member-access */
-    /* eslint-enable @typescript-eslint/no-unsafe-call */
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+    this._trackballControls['target'].set(target.x, target.y, target.z);
+
     this._trackballControls.update();
 
     this._orbitControls.update();
