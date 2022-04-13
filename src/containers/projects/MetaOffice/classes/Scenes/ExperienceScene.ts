@@ -16,13 +16,11 @@ import neonVertex from '../shaders/neon/vertexShader.glsl';
 interface Constructor {
   camera: THREE.PerspectiveCamera;
   mouseMove: MouseMove;
-  controls: OrbitControls;
   gui: GUI;
   postProcess: PostProcess;
 }
 
 export class ExperienceScene extends InteractiveScene {
-  _controls: OrbitControls;
   _loadedAssets: LoadedAssets | null = null;
   _blenderScene: THREE.Group | null = null;
   _bakedMaterial1: THREE.MeshBasicMaterial | null = null;
@@ -56,9 +54,8 @@ export class ExperienceScene extends InteractiveScene {
   _postProcess: PostProcess;
   _particles3D = new Particles3D();
 
-  constructor({ gui, controls, camera, mouseMove, postProcess }: Constructor) {
+  constructor({ gui, camera, mouseMove, postProcess }: Constructor) {
     super({ camera, mouseMove, gui });
-    this._controls = controls;
     this._postProcess = postProcess;
     this.add(this._particles3D);
   }

@@ -1,7 +1,13 @@
 import TWEEN from '@tweenjs/tween.js';
 import * as THREE from 'three';
 import debounce from 'lodash.debounce';
-import { OrbitControls, UnrealBloomPass, GammaCorrectionShader, ShaderPass } from 'three-stdlib';
+import {
+  OrbitControls,
+  UnrealBloomPass,
+  GammaCorrectionShader,
+  ShaderPass,
+  TrackballControls,
+} from 'three-stdlib';
 import GUI from 'lil-gui';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
@@ -43,7 +49,8 @@ export class App extends THREE.EventDispatcher {
   _mouseMove = MouseMove.getInstance();
   _scroll = Scroll.getInstance();
   _preloader = new Preloader();
-  _controls: OrbitControls;
+  _orbitControls: OrbitControls;
+  _trackballControls: TrackballControls;
   _experienceScene: ExperienceScene;
   _setShouldRevealReact: React.Dispatch<React.SetStateAction<boolean>>;
   _gui = new GUI();
@@ -74,22 +81,29 @@ export class App extends THREE.EventDispatcher {
 
     this._renderer.setClearColor(0xffffff);
 
-    this._controls = new OrbitControls(this._camera, this._rendererEl);
-    this._controls.enabled = true;
-    this._controls.screenSpacePanning = true;
-    this._controls.zoomSpeed = 1.4;
-    this._controls.enableDamping = true;
+    //https://github.com/mrdoob/three.js/issues/13080 - Smooth zooming solution
+    this._orbitControls = new OrbitControls(this._camera, this._rendererEl);
+    this._orbitControls.enableDamping = true;
+    this._orbitControls.dampingFactor = 0.05;
+    this._orbitControls.screenSpacePanning = true;
+    this._orbitControls.enableZoom = false;
+    this._orbitControls.rotateSpeed = 0.5;
+    this._orbitControls.minDistance = 3;
+    this._orbitControls.maxDistance = 13;
+    this._orbitControls.minPolarAngle = 0; // radians
+    this._orbitControls.maxPolarAngle = Math.PI / 2; // radians
 
-    this._controls.minPolarAngle = 0; // radians
-    this._controls.maxPolarAngle = Math.PI / 2; // radians
-
-    this._controls.update();
+    this._trackballControls = new TrackballControls(this._camera, this._renderer.domElement);
+    this._trackballControls.noRotate = true;
+    this._trackballControls.noPan = true;
+    this._trackballControls.noZoom = false;
+    this._trackballControls.zoomSpeed = 0.4;
+    this._trackballControls.dynamicDampingFactor = 0.05; // set dampening factor
 
     this._gui.title('Scene settings');
     this._experienceScene = new ExperienceScene({
       camera: this._camera,
       mouseMove: this._mouseMove,
-      controls: this._controls,
       gui: this._gui,
       postProcess: this._postProcess,
     });
@@ -116,7 +130,7 @@ export class App extends THREE.EventDispatcher {
     this._camera.position.z = 8;
     this._camera.position.x = 5.5;
     this._camera.position.y = 4.5;
-    this._controls.target.set(0, 1.4, 0);
+    this._orbitControls.target.set(0, 1.4, 0);
 
     this._renderer.setSize(rendererBounds.width, rendererBounds.height);
     this._renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -210,7 +224,19 @@ export class App extends THREE.EventDispatcher {
     this._mouseMove.update();
     this._scroll.update({ delta, slowDownFactor, time });
     this._experienceScene.update({ delta, slowDownFactor, time });
-    this._controls.update();
+
+    const target = this._orbitControls.target;
+    this._orbitControls.update();
+    /* eslint-disable @typescript-eslint/no-unsafe-member-access */
+    /* eslint-disable @typescript-eslint/no-unsafe-call */
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-ignore
+    this._trackballControls.target.set(target.x, target.y, target.z);
+    /* eslint-enable @typescript-eslint/no-unsafe-member-access */
+    /* eslint-enable @typescript-eslint/no-unsafe-call */
+    this._trackballControls.update();
+
+    this._orbitControls.update();
 
     //Instead of this.renderer.render()...
     if (this._postProcess.composer) {
@@ -233,6 +259,8 @@ export class App extends THREE.EventDispatcher {
     this._removeListeners();
 
     this._experienceScene.destroy();
+    this._orbitControls?.dispose();
+    this._trackballControls?.dispose();
     if (this._postProcess.composer) this._postProcess.composer.renderTarget1.dispose();
     if (this._postProcess.composer) this._postProcess.composer.renderTarget2.dispose();
   }
