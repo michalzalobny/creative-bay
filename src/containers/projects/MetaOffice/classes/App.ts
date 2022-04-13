@@ -96,7 +96,7 @@ export class App extends THREE.EventDispatcher {
     this._trackballControls.noPan = true;
     this._trackballControls.noZoom = false;
     this._trackballControls.zoomSpeed = 0.2;
-    this._trackballControls.maxDistance = 10;
+    this._trackballControls.maxDistance = 12;
     this._trackballControls.dynamicDampingFactor = 0.05; // set dampening factor
 
     this._gui.title('Scene settings');
