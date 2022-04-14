@@ -73,50 +73,14 @@ export class InteractiveScene extends THREE.Scene {
 
     this._mouse3D.target.x = (mouseX / this._rendererBounds.width) * 2 - 1;
     this._mouse3D.target.y = -(mouseY / this._rendererBounds.height) * 2 + 1;
-
-    const objects = this._performRaycast({
-      x: this._mouse3D.target.x,
-      y: this._mouse3D.target.y,
-    });
-
-    if (objects.length > 0 && this._canHoverObject) {
-      const hoveredObject = objects[0];
-      if (hoveredObject !== this._hoveredObject) {
-        if (this._hoveredObject) {
-          this._hoveredObject.onMouseLeave();
-        }
-        this._hoveredObject = hoveredObject;
-        this._hoveredObject.onMouseEnter();
-      }
-    } else if (this._hoveredObject) {
-      this._hoveredObject.onMouseLeave();
-      this._hoveredObject = null;
-    }
-  };
-
-  _onClick = (e: THREE.Event) => {
-    const mouseX = (e.target as MouseMove).mouse.x;
-    const mouseY = (e.target as MouseMove).mouse.y;
-
-    const mouse3DX = (mouseX / this._rendererBounds.width) * 2 - 1;
-    const mouse3DY = -(mouseY / this._rendererBounds.height) * 2 + 1;
-
-    this._performRaycast({
-      x: mouse3DX,
-      y: mouse3DY,
-      colliderName: 'sceneItem',
-      fnToCallIfHit: 'onClick',
-    });
   };
 
   _addListeners() {
     this._mouseMove.addEventListener('mousemove', this._onMouseMove);
-    this._mouseMove.addEventListener('click', this._onClick);
   }
 
   _removeListeners() {
     this._mouseMove.removeEventListener('mousemove', this._onMouseMove);
-    this._mouseMove.removeEventListener('click', this._onClick);
   }
 
   setPixelRatio(ratio: number) {

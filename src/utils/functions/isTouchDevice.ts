@@ -1,3 +1,6 @@
-export const isTouchDevice = () => {
-  return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-};
+export const isBrowser = () => typeof window !== 'undefined';
+export const isTouchDevice = () =>
+  isBrowser() &&
+  ('ontouchstart' in window ||
+    'ontouchstart' in document.documentElement ||
+    navigator.maxTouchPoints > 0);

@@ -6,6 +6,7 @@ import { MouseMove } from 'utils/helperClasses/MouseMove';
 import { UpdateInfo, LoadedAssets, AnimateCamera } from 'utils/sharedTypes';
 import { lerp } from 'utils/functions/lerp';
 import { sharedValues } from 'utils/sharedValues';
+import { isTouchDevice } from 'utils/functions/isTouchDevice';
 
 import { InteractiveScene } from './InteractiveScene';
 import { PostProcess } from '../App';
@@ -58,12 +59,14 @@ export class ExperienceScene extends InteractiveScene {
   _cameraTween: Tween<{ cameraPosition: THREE.Vector3 }> | null = null;
   _trackballControls: TrackballControls;
   _orbitControls: OrbitControls;
+  _shouldHandleDOF = true;
 
   constructor({ camera, mouseMove, postProcess, orbitControls, trackballControls }: Constructor) {
     super({ camera, mouseMove });
     this._postProcess = postProcess;
     this._trackballControls = trackballControls;
     this._orbitControls = orbitControls;
+    this._shouldHandleDOF = !isTouchDevice();
     this.add(this._particles3D);
   }
 
@@ -212,7 +215,10 @@ export class ExperienceScene extends InteractiveScene {
 
   update(updateInfo: UpdateInfo) {
     super.update(updateInfo);
-    this._handleDepthOfField(updateInfo);
+    if (this._shouldHandleDOF) {
+      this._handleDepthOfField(updateInfo);
+    }
+
     this._particles3D.update(updateInfo);
     this._neonMaterial.uniforms.uTime.value = updateInfo.time * 0.001;
   }
