@@ -58,7 +58,6 @@ export class Particles3D extends InteractiveObject3D {
   }
 
   setPixelRatio(ratio: number) {
-    alert(ratio);
     if (this._material) {
       this._material.uniforms.uPixelRatio.value = ratio;
     }
