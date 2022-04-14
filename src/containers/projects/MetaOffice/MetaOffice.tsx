@@ -12,11 +12,12 @@ export default function MetaOffice(props: PageProps) {
 
   const rendererEl = useRef<HTMLDivElement | null>(null);
   const [shouldReveal, setShouldReveal] = useState(false);
+  const [progressValue, setProgressValue] = useState(0);
 
   useEffect(() => {
     if (!rendererEl.current) return;
 
-    appState.app = new App({ rendererEl: rendererEl.current, setShouldReveal });
+    appState.app = new App({ rendererEl: rendererEl.current, setShouldReveal, setProgressValue });
 
     return () => {
       if (appState.app) {
@@ -33,7 +34,7 @@ export default function MetaOffice(props: PageProps) {
         <S.ReadyWrapper shouldReveal={shouldReveal}>
           <S.LoaderContainer>
             <S.LoaderWrapper shouldHide={shouldReveal}>
-              <S.LoaderLine data-loader="meta-loader" />
+              <S.LoaderLine progress={progressValue} />
             </S.LoaderWrapper>
           </S.LoaderContainer>
         </S.ReadyWrapper>

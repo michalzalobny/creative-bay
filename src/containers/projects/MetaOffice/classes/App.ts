@@ -27,6 +27,7 @@ import render3Src from './assets/render3.jpg';
 interface Constructor {
   rendererEl: HTMLDivElement;
   setShouldReveal: React.Dispatch<React.SetStateAction<boolean>>;
+  setProgressValue: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export interface PostProcess {
@@ -52,6 +53,7 @@ export class App extends THREE.EventDispatcher {
   _trackballControls: TrackballControls;
   _experienceScene: ExperienceScene;
   _setShouldRevealReact: React.Dispatch<React.SetStateAction<boolean>>;
+  _setProgressValueReact: React.Dispatch<React.SetStateAction<number>>;
   //Post process
   _postProcess: PostProcess = {
     renderPass: null,
@@ -63,9 +65,8 @@ export class App extends THREE.EventDispatcher {
   _pixelRatio = 1;
   _renderTarget: THREE.WebGLRenderTarget | THREE.WebGLMultisampleRenderTarget | null = null;
   _animateInTimeoutId: ReturnType<typeof setTimeout> | null = null;
-  _progressBarHTML: HTMLElement;
 
-  constructor({ setShouldReveal, rendererEl }: Constructor) {
+  constructor({ setShouldReveal, rendererEl, setProgressValue }: Constructor) {
     super();
     this._rendererEl = rendererEl;
     this._canvas = document.createElement('canvas');
@@ -77,6 +78,7 @@ export class App extends THREE.EventDispatcher {
     this._camera.position.y = 1;
 
     this._setShouldRevealReact = setShouldReveal;
+    this._setProgressValueReact = setProgressValue;
 
     this._renderer = new THREE.WebGLRenderer({
       canvas: this._canvas,
@@ -85,10 +87,6 @@ export class App extends THREE.EventDispatcher {
     });
 
     this._renderer.setClearColor(0xffffff);
-
-    this._progressBarHTML = Array.from(
-      document.querySelectorAll('[data-loader="meta-loader"]')
-    )[0] as HTMLElement;
 
     //https://github.com/mrdoob/three.js/issues/13080 - Smooth zooming solution
     this._orbitControls = new OrbitControls(this._camera, this._rendererEl);
@@ -193,9 +191,7 @@ export class App extends THREE.EventDispatcher {
   };
 
   _onPreloaderProgress = (e: THREE.Event) => {
-    if (this._progressBarHTML) {
-      this._progressBarHTML.style.transform = `scaleX(${e.progress as number})`;
-    }
+    this._setProgressValueReact(e.progress as number);
   };
 
   _addListeners() {

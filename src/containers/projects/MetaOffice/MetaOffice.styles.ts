@@ -64,14 +64,18 @@ export const LoaderWrapper = styled.div<LoaderWrapperProps>`
     `}
 `;
 
-export const LoaderLine = styled.div`
+interface LoaderLineProps {
+  progress: number;
+}
+
+export const LoaderLine = styled.div<LoaderLineProps>`
   position: absolute;
   left: 0;
   top: 0;
   height: 100%;
   width: 100%;
   transition: transform 0.3s ${sharedValues.timings.t1};
-  transform: scaleX(0);
+  transform: ${props => `scaleX(${props.progress})`};
   transform-origin: left;
   background-color: black;
 `;
