@@ -62,6 +62,7 @@ export class App extends THREE.EventDispatcher {
   };
   _pixelRatio = 1;
   _renderTarget: THREE.WebGLRenderTarget | THREE.WebGLMultisampleRenderTarget | null = null;
+  _animateInTimeoutId: ReturnType<typeof setTimeout> | null = null;
 
   constructor({ setShouldReveal, rendererEl }: Constructor) {
     super();
@@ -175,22 +176,39 @@ export class App extends THREE.EventDispatcher {
     this._postProcess.composer.addPass(this._postProcess.bokehPass);
   }
 
+  _animateIn = () => {
+    this._experienceScene.animateIn();
+  };
+
   _onAssetsLoaded = () => {
     this._setShouldRevealReact(true);
     this._experienceScene.setLoadedAssets(this._preloader.loadedAssets);
-    this._experienceScene.animateIn();
+    if (this._animateInTimeoutId) clearTimeout(this._animateInTimeoutId);
+    this._animateInTimeoutId = setTimeout(this._animateIn, 500);
+  };
+
+  _onPreloaderProgress = (e: THREE.Event) => {
+    const progressBar = Array.from(
+      document.querySelectorAll('[data-loader="meta-loader"]')
+    )[0] as HTMLElement;
+
+    if (progressBar) {
+      progressBar.style.transform = `scaleX(${e.progress as number})`;
+    }
   };
 
   _addListeners() {
     window.addEventListener('resize', this._onResizeDebounced);
     window.addEventListener('visibilitychange', this._onVisibilityChange);
     this._preloader.addEventListener('loaded', this._onAssetsLoaded);
+    this._preloader.addEventListener('progress', this._onPreloaderProgress);
   }
 
   _removeListeners() {
     window.removeEventListener('resize', this._onResizeDebounced);
     window.removeEventListener('visibilitychange', this._onVisibilityChange);
     this._preloader.removeEventListener('loaded', this._onAssetsLoaded);
+    this._preloader.removeEventListener('progress', this._onPreloaderProgress);
   }
 
   _resumeAppFrame() {
@@ -268,7 +286,7 @@ export class App extends THREE.EventDispatcher {
       this._postProcess.composer.renderTarget1.dispose();
       this._postProcess.composer.renderTarget2.dispose();
     }
-
+    if (this._animateInTimeoutId) clearTimeout(this._animateInTimeoutId);
     this._preloader.destroy();
   }
 }

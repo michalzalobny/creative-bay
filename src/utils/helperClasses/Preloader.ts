@@ -98,6 +98,8 @@ export class Preloader extends EventDispatcher {
 
     const loadRatio = this._assetsLoadedCounter / this._assetsToPreload.length;
 
+    this.dispatchEvent({ type: 'progress', progress: loadRatio });
+
     if (loadRatio === 1) {
       this._onLoadingComplete();
     }

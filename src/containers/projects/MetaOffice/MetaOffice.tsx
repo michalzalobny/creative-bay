@@ -30,7 +30,11 @@ export default function MetaOffice(props: PageProps) {
     <>
       <Head {...head} />
       <S.Wrapper>
-        <S.ReadyWrapper shouldReveal={shouldReveal} />
+        <S.ReadyWrapper shouldReveal={shouldReveal}>
+          <S.LoaderWrapper>
+            <S.LoaderLine data-loader="meta-loader" />
+          </S.LoaderWrapper>
+        </S.ReadyWrapper>
         <S.CanvasWrapper ref={rendererEl} />
       </S.Wrapper>
     </>
