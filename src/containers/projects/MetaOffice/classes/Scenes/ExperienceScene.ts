@@ -191,7 +191,6 @@ export class ExperienceScene extends InteractiveScene {
 
     this._cameraTween = new TWEEN.Tween(from)
       .to(to)
-      .delay(duration * 0.6)
       .duration(duration)
       .easing(TWEEN.Easing.Exponential.InOut)
       .onUpdate(obj => {
