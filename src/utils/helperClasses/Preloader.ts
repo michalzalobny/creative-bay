@@ -78,7 +78,7 @@ export class Preloader extends EventDispatcher {
 
               this._onAssetLoaded();
             },
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
             progress => {},
             error => {
               console.warn('3D model loading failed', error);
