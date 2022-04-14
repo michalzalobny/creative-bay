@@ -60,6 +60,7 @@ export class App extends THREE.EventDispatcher {
     composer: null,
     shaderPass: null,
   };
+  _pixelRatio = 1;
   _renderTarget: THREE.WebGLRenderTarget | THREE.WebGLMultisampleRenderTarget | null = null;
 
   constructor({ setShouldReveal, rendererEl }: Constructor) {
@@ -132,9 +133,11 @@ export class App extends THREE.EventDispatcher {
     this._camera.aspect = aspectRatio;
 
     this._renderer.setSize(rendererBounds.width, rendererBounds.height);
-    this._renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    this._pixelRatio = Math.min(window.devicePixelRatio, 2);
+    this._renderer.setPixelRatio(this._pixelRatio);
     this._camera.updateProjectionMatrix();
 
+    this._experienceScene.setPixelRatio(this._pixelRatio);
     this._experienceScene.setRendererBounds(rendererBounds);
     if (this._postProcess.composer) {
       this._postProcess.composer.setSize(rendererBounds.width, rendererBounds.height);

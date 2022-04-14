@@ -44,7 +44,7 @@ export class Particles3D extends InteractiveObject3D {
       blending: THREE.AdditiveBlending,
       transparent: true,
       uniforms: {
-        uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) },
+        uPixelRatio: { value: 1 },
         uSize: { value: 80 },
         uTime: { value: 0 },
         uScale: { value: 2 },
@@ -55,6 +55,13 @@ export class Particles3D extends InteractiveObject3D {
 
     this._points = new THREE.Points(this._geometry, this._material);
     this.add(this._points);
+  }
+
+  setPixelRatio(ratio: number) {
+    alert(ratio);
+    if (this._material) {
+      this._material.uniforms.uPixelRatio.value = ratio;
+    }
   }
 
   update(updateInfo: UpdateInfo) {

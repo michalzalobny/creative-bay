@@ -206,6 +206,11 @@ export class ExperienceScene extends InteractiveScene {
     this._cameraTween.start();
   }
 
+  setPixelRatio(ratio: number) {
+    super.setPixelRatio(ratio);
+    this._particles3D.setPixelRatio(ratio);
+  }
+
   update(updateInfo: UpdateInfo) {
     super.update(updateInfo);
     this._handleDepthOfField(updateInfo);

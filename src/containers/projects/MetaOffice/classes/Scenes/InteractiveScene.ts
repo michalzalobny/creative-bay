@@ -25,6 +25,7 @@ export class InteractiveScene extends THREE.Scene {
   _rendererBounds: Bounds = { height: 100, width: 100 };
   _camera: THREE.PerspectiveCamera;
   _mouseMove: MouseMove;
+  _pixelRatio = 1;
 
   _mouse3D: Mouse = {
     current: { x: 0, y: 0 },
@@ -116,6 +117,10 @@ export class InteractiveScene extends THREE.Scene {
   _removeListeners() {
     this._mouseMove.removeEventListener('mousemove', this._onMouseMove);
     this._mouseMove.removeEventListener('click', this._onClick);
+  }
+
+  setPixelRatio(ratio: number) {
+    this._pixelRatio = ratio;
   }
 
   setRendererBounds(bounds: Bounds) {
