@@ -63,6 +63,7 @@ export class App extends THREE.EventDispatcher {
   _pixelRatio = 1;
   _renderTarget: THREE.WebGLRenderTarget | THREE.WebGLMultisampleRenderTarget | null = null;
   _animateInTimeoutId: ReturnType<typeof setTimeout> | null = null;
+  _progressBarHTML: HTMLElement;
 
   constructor({ setShouldReveal, rendererEl }: Constructor) {
     super();
@@ -84,6 +85,10 @@ export class App extends THREE.EventDispatcher {
     });
 
     this._renderer.setClearColor(0xffffff);
+
+    this._progressBarHTML = Array.from(
+      document.querySelectorAll('[data-loader="meta-loader"]')
+    )[0] as HTMLElement;
 
     //https://github.com/mrdoob/three.js/issues/13080 - Smooth zooming solution
     this._orbitControls = new OrbitControls(this._camera, this._rendererEl);
@@ -188,12 +193,8 @@ export class App extends THREE.EventDispatcher {
   };
 
   _onPreloaderProgress = (e: THREE.Event) => {
-    const progressBar = Array.from(
-      document.querySelectorAll('[data-loader="meta-loader"]')
-    )[0] as HTMLElement;
-
-    if (progressBar) {
-      progressBar.style.transform = `scaleX(${e.progress as number})`;
+    if (this._progressBarHTML) {
+      this._progressBarHTML.style.transform = `scaleX(${e.progress as number})`;
     }
   };
 
