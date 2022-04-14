@@ -23,7 +23,7 @@ export const ReadyWrapper = styled.div<ReadyWrapperProps>`
   z-index: 2;
   opacity: 1;
   transition: opacity 1.2s ${sharedValues.timings.t1};
-  transition-delay: 1.1s;
+  transition-delay: 2s;
   background-color: white;
 
   ${props =>
@@ -54,8 +54,8 @@ export const LoaderWrapper = styled.div<LoaderWrapperProps>`
   overflow: hidden;
   background: rgba(0, 0, 0, 0.2);
   transform: scaleX(1);
-  transition: transform 0.8s ${sharedValues.timings.t1};
-  transition-delay: 0.3s;
+  transition: transform 1s ${sharedValues.timings.t1};
+  transition-delay: 1s;
 
   ${props =>
     props.shouldHide &&
@@ -74,7 +74,7 @@ export const LoaderLine = styled.div<LoaderLineProps>`
   top: 0;
   height: 100%;
   width: 100%;
-  transition: transform 0.3s ${sharedValues.timings.t1};
+  transition: transform 0.2s ${sharedValues.timings.t1};
   transform: ${props => `scaleX(${props.progress})`};
   transform-origin: left;
   background-color: black;

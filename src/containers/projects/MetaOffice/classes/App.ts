@@ -187,7 +187,7 @@ export class App extends THREE.EventDispatcher {
     this._setShouldRevealReact(true);
     this._experienceScene.setLoadedAssets(this._preloader.loadedAssets);
     if (this._animateInTimeoutId) clearTimeout(this._animateInTimeoutId);
-    this._animateInTimeoutId = setTimeout(this._animateIn, 2300);
+    this._animateInTimeoutId = setTimeout(this._animateIn, 3200);
   };
 
   _onPreloaderProgress = (e: THREE.Event) => {
