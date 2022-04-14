@@ -261,7 +261,11 @@ export class App extends THREE.EventDispatcher {
     this._orbitControls.dispose();
     this._trackballControls.dispose();
 
-    if (this._postProcess.composer) this._postProcess.composer.renderTarget1.dispose();
-    if (this._postProcess.composer) this._postProcess.composer.renderTarget2.dispose();
+    if (this._postProcess.composer) {
+      this._postProcess.composer.renderTarget1.dispose();
+      this._postProcess.composer.renderTarget2.dispose();
+    }
+
+    this._preloader.destroy();
   }
 }

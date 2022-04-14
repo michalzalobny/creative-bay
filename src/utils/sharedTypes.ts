@@ -17,7 +17,14 @@ export interface UpdateInfo {
   time: number;
 }
 
+export enum AssetType {
+  MODEL3D = 'model3d',
+  VIDEO = 'video',
+  IMAGE = 'image',
+}
+
 interface LoadedAsset {
+  type: AssetType.IMAGE | AssetType.MODEL3D | AssetType.VIDEO;
   asset: THREE.Texture | GLTF;
   naturalWidth: number;
   naturalHeight: number;

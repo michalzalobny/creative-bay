@@ -2,7 +2,8 @@ import { EventDispatcher } from 'three';
 import * as THREE from 'three';
 import { GLTFLoader, GLTF, DRACOLoader } from 'three-stdlib';
 
-import { LoadedAssets, AssetToPreload } from 'utils/sharedTypes';
+import { disposeModel } from 'utils/functions/disposeModel';
+import { LoadedAssets, AssetToPreload, AssetType } from 'utils/sharedTypes';
 
 export class Preloader extends EventDispatcher {
   _assetsLoadedCounter = 0;
@@ -23,7 +24,7 @@ export class Preloader extends EventDispatcher {
     }
     this._assetsToPreload.forEach(item => {
       switch (item.type) {
-        case 'image': {
+        case AssetType.IMAGE: {
           const texture = new THREE.Texture();
           const image = new window.Image();
           image.crossOrigin = 'anonymous';
@@ -32,6 +33,7 @@ export class Preloader extends EventDispatcher {
             texture.image = image;
             texture.needsUpdate = true;
             this.loadedAssets[item.targetName || item.src] = {
+              type: AssetType.IMAGE,
               asset: texture,
               naturalWidth: image.naturalWidth,
               naturalHeight: image.naturalHeight,
@@ -40,7 +42,7 @@ export class Preloader extends EventDispatcher {
           };
           break;
         }
-        case 'video': {
+        case AssetType.VIDEO: {
           const video = document.createElement('video');
           video.crossOrigin = 'anonymous';
           video.muted = true;
@@ -54,6 +56,7 @@ export class Preloader extends EventDispatcher {
           video.oncanplay = () => {
             const texture = new THREE.VideoTexture(video);
             this.loadedAssets[item.targetName || item.src] = {
+              type: AssetType.VIDEO,
               asset: texture,
               naturalWidth: video.videoWidth,
               naturalHeight: video.videoHeight,
@@ -62,11 +65,12 @@ export class Preloader extends EventDispatcher {
           };
           break;
         }
-        case 'model3d': {
+        case AssetType.MODEL3D: {
           this._gltfLoader.load(
             item.src,
             (gltf: GLTF) => {
               this.loadedAssets[item.targetName || item.src] = {
+                type: AssetType.MODEL3D,
                 asset: gltf,
                 naturalWidth: 1,
                 naturalHeight: 1,
@@ -106,5 +110,25 @@ export class Preloader extends EventDispatcher {
   setAssetsToPreload(items: AssetToPreload[]) {
     this._assetsToPreload = items;
     this._preloadTextures();
+  }
+
+  destroy() {
+    Object.entries(this.loadedAssets).forEach(el => {
+      switch (el[1].type) {
+        case AssetType.IMAGE:
+          (el[1].asset as THREE.Texture).dispose();
+          break;
+        case AssetType.VIDEO:
+          (el[1].asset as THREE.VideoTexture).dispose();
+          break;
+        case AssetType.MODEL3D:
+          (el[1].asset as GLTF).scenes.forEach(scene => {
+            disposeModel(scene);
+          });
+          break;
+        default:
+          break;
+      }
+    });
   }
 }
