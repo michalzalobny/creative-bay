@@ -208,7 +208,7 @@ export class ExperienceScene extends InteractiveScene {
 
   setPixelRatio(ratio: number) {
     super.setPixelRatio(ratio);
-    this._particles3D.setPixelRatio(ratio);
+    this._particles3D.setPixelRatio(this._pixelRatio);
   }
 
   update(updateInfo: UpdateInfo) {
