@@ -25,6 +25,7 @@ export const Layout = (props: Props) => {
   return (
     <>
       <S.ReadyWrapper isReady={isReady}></S.ReadyWrapper>
+      <S.AppBackground />
       <CopyInfo />
       {children}
     </>

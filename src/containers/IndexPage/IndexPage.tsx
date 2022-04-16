@@ -10,9 +10,13 @@ export default function IndexPage() {
     <>
       <Head />
       <S.Wrapper>
-        <Link href="/projects/meta-office" passHref>
-          <a style={{ fontSize: '14px' }}>Go to test</a>
-        </Link>
+        <S.ProjectsWrapper>
+          <S.ProjectContainer>
+            <Link href="/projects/meta-office" passHref>
+              <S.ProjectLink>1. Meta Office</S.ProjectLink>
+            </Link>
+          </S.ProjectContainer>
+        </S.ProjectsWrapper>
       </S.Wrapper>
     </>
   );
