@@ -56,8 +56,13 @@ export const BackBtn = styled.button`
   display: inline-block;
   cursor: pointer;
   position: relative;
-  width: 70px;
-  height: 70px;
+  width: 66px;
+
+  &:after {
+    content: '';
+    display: block;
+    padding-bottom: 100%;
+  }
 
   &:before {
     content: '';
@@ -69,9 +74,13 @@ export const BackBtn = styled.button`
     border-radius: 50%;
     border: 1px solid white;
     transform: translate(-50%, -50%);
+    transition: transform 0.7s ${sharedValues.timings.t1};
   }
 
   &:hover {
+    &:before {
+      transform: translate(-50%, -50%) scale(1.1);
+    }
     span {
       &:before {
         transform: scaleX(1);

@@ -31,7 +31,7 @@ export const underline = css`
     background-color: currentColor;
     transform-origin: left;
     transform: scaleX(0);
-    transition: transform 0.8s ${sharedValues.timings.t1};
+    transition: transform 0.7s ${sharedValues.timings.t1};
   }
 
   &:hover {
