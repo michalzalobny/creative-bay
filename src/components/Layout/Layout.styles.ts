@@ -1,5 +1,7 @@
 import styled, { css } from 'styled-components';
 
+import { sharedValues } from 'utils/sharedValues';
+
 interface ReadyWrapperProps {
   isReady: boolean;
 }
@@ -13,7 +15,7 @@ export const ReadyWrapper = styled.div<ReadyWrapperProps>`
   z-index: 100;
   opacity: 1;
   transition: opacity 0.5s ease-in-out;
-  background-color: white;
+  background-color: ${sharedValues.colors.trueWhite};
 
   ${props =>
     props.isReady &&
