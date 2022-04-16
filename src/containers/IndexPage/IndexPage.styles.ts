@@ -27,7 +27,6 @@ export const ProjectContainer = styled.div`
 
 export const ProjectLink = styled.a`
   font-weight: 800;
-  text-transform: uppercase;
   display: inline-block;
   position: relative;
   ${s1};
