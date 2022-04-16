@@ -24,7 +24,7 @@ export const ReadyWrapper = styled.div<ReadyWrapperProps>`
   opacity: 1;
   transition: opacity 1.2s ${sharedValues.timings.t1};
   transition-delay: 2s;
-  background-color: white;
+  background-color: ${sharedValues.colors.trueWhite};
 
   ${props =>
     props.shouldReveal &&
@@ -87,5 +87,4 @@ export const CanvasWrapper = styled.div`
   width: 100%;
   height: 100%;
   z-index: 1;
-  background: #000;
 `;
