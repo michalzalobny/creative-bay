@@ -45,7 +45,6 @@ export const BackWrapper = styled.h1`
   left: 20px;
   mix-blend-mode: difference;
   color: white;
-  ${s1};
 
   ${media.tablet} {
     top: 20px;
@@ -57,6 +56,35 @@ export const BackBtn = styled.button`
   display: inline-block;
   cursor: pointer;
   position: relative;
+  width: 70px;
+  height: 70px;
+
+  &:before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 1px solid white;
+    transform: translate(-50%, -50%);
+  }
+
+  &:hover {
+    span {
+      &:before {
+        transform: scaleX(1);
+      }
+    }
+  }
+`;
+
+export const BackBtnLabel = styled.span`
+  ${s1};
   ${underline};
-  margin-left: 5px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 `;

@@ -38,7 +38,9 @@ export const Layout = (props: Props) => {
       <S.AppBackground />
       {router.pathname !== '/' && (
         <S.BackWrapper>
-          <S.BackBtn onClick={handleBack}>Back</S.BackBtn>
+          <S.BackBtn onClick={handleBack}>
+            <S.BackBtnLabel>Back</S.BackBtnLabel>
+          </S.BackBtn>
         </S.BackWrapper>
       )}
 
