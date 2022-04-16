@@ -12,7 +12,7 @@ export const ReadyWrapper = styled.div<ReadyWrapperProps>`
   height: 100%;
   z-index: 100;
   opacity: 1;
-  transition: opacity 0.7s ease-in-out;
+  transition: opacity 0.5s ease-in-out;
   background-color: white;
 
   ${props =>
