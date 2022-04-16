@@ -11,9 +11,9 @@ export interface HeadProps {
 
 export const Head = (props: HeadProps) => {
   const {
-    ogImage = 'https://res.cloudinary.com/dpv0ukspz/image/upload/v1645717731/og_qngkfu.jpg',
+    ogImage = 'https://res.cloudinary.com/dpv0ukspz/image/upload/v1650138235/og-100_lbigqv.jpg',
     title = 'Creative Bay',
-    description = 'WebGL and GLSL projects 2022 🌬',
+    description = 'Michal Zalobny portfolio 2022 🌬 WebGL & GLSL',
   } = props;
 
   return (
@@ -22,7 +22,7 @@ export const Head = (props: HeadProps) => {
       <meta name="description" content={description} />
       <link
         rel="icon"
-        href="https://res.cloudinary.com/dpv0ukspz/image/upload/v1645574494/favicon_iwbu8o.ico"
+        href="https://res.cloudinary.com/dpv0ukspz/image/upload/v1650137433/icon_wghyio.ico"
       />
 
       <meta property="og:type" content="website" />

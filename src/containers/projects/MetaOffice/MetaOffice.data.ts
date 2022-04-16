@@ -10,7 +10,7 @@ export interface PageProps {
 export const getStaticProps: GetStaticProps = () => {
   const head: HeadProps = {
     description: 'Metaverse office designed in Blender and moved to WebGL',
-    ogImage: 'https://res.cloudinary.com/dpv0ukspz/image/upload/v1637971809/ogimage-100_ha9nmg.jpg',
+    ogImage: 'https://res.cloudinary.com/dpv0ukspz/image/upload/v1650138235/og-100_lbigqv.jpg',
     title: 'Metaverse office',
   };
 
