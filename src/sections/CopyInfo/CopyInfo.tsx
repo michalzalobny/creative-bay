@@ -16,7 +16,7 @@ export const CopyInfo = () => {
         <LinkHandler isExternal elHref="https://creativeprojects.vercel.app/">
           <S.AuthorLink>Michal Zalobny</S.AuthorLink>
         </LinkHandler>
-        portfolio 2022 - WebGL and GLSL
+        portfolio 2022 - WebGL &#38; GLSL
       </S.AuthorWrapper>
     </>
   );
