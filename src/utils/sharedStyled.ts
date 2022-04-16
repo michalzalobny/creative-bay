@@ -1,10 +1,15 @@
 import { css } from 'styled-components';
 
+import { media } from 'utils/media';
 import { sharedValues } from 'utils/sharedValues';
 
 export const s1 = css`
-  font-size: 15px;
+  font-size: 13px;
   line-height: 1.6;
+
+  ${media.tablet} {
+    font-size: 15px;
+  }
 `;
 
 export const m1 = css`

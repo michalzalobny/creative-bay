@@ -4,13 +4,6 @@ import { media } from 'utils/media';
 import { underline, s1 } from 'utils/sharedStyled';
 
 export const GithubWrapper = styled.div`
-  position: fixed;
-  z-index: 20;
-  bottom: 20px;
-  left: 30px;
-`;
-
-export const AuthorWrapper = styled.h1`
   display: none;
 
   ${media.tablet} {
@@ -18,10 +11,26 @@ export const AuthorWrapper = styled.h1`
     position: fixed;
     z-index: 20;
     bottom: 20px;
+    left: 30px;
+    mix-blend-mode: difference;
+    color: white;
+  }
+`;
+
+export const AuthorWrapper = styled.h1`
+  position: fixed;
+  z-index: 20;
+  bottom: 10px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  mix-blend-mode: difference;
+  color: white;
+  ${s1};
+
+  ${media.tablet} {
+    bottom: 20px;
     right: 30px;
-    display: flex;
-    align-items: center;
-    ${s1};
   }
 `;
 
