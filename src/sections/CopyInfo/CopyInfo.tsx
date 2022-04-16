@@ -13,10 +13,10 @@ export const CopyInfo = () => {
         </LinkHandler>
       </S.GithubWrapper>
       <S.AuthorWrapper>
-        WebGL and GLSL portfolio 2022 -
         <LinkHandler isExternal elHref="https://creativeprojects.vercel.app/">
           <S.AuthorLink>Michal Zalobny</S.AuthorLink>
         </LinkHandler>
+        portfolio 2022 - WebGL and GLSL
       </S.AuthorWrapper>
     </>
   );

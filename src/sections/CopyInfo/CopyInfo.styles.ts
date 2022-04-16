@@ -46,5 +46,5 @@ export const AuthorLink = styled.span`
   font-weight: 800;
   position: relative;
   ${underline};
-  margin-left: 5px;
+  margin-right: 5px;
 `;
