@@ -5,16 +5,16 @@ import { underline, s1 } from 'utils/sharedStyled';
 
 export const Wrapper = styled.div`
   margin: 0 auto;
-  width: 90%;
-  margin-top: 10rem;
+  width: 80%;
+  margin-top: 4rem;
 
   ${media.tablet} {
     width: 120rem;
+    margin-top: 10rem;
   }
 `;
 
 export const ProjectsWrapper = styled.div`
-  margin: 4rem;
   display: flex;
   flex-direction: column;
 `;
@@ -27,6 +27,7 @@ export const ProjectContainer = styled.div`
 
 export const ProjectLink = styled.a`
   font-weight: 800;
+  text-transform: uppercase;
   display: inline-block;
   position: relative;
   ${s1};
