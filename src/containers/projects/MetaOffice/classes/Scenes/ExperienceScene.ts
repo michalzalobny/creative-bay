@@ -3,7 +3,7 @@ import { GLTF, OrbitControls, TrackballControls } from 'three-stdlib';
 import TWEEN, { Tween } from '@tweenjs/tween.js';
 
 import { MouseMove } from 'utils/helperClasses/MouseMove';
-import { UpdateInfo, LoadedAssets, AnimateCamera } from 'utils/sharedTypes';
+import { UpdateInfo, LoadedAssets, AnimateCamera, Bounds } from 'utils/sharedTypes';
 import { lerp } from 'utils/functions/lerp';
 import { sharedValues } from 'utils/sharedValues';
 import { isTouchDevice } from 'utils/functions/isTouchDevice';
@@ -66,7 +66,7 @@ export class ExperienceScene extends InteractiveScene {
     this._postProcess = postProcess;
     this._trackballControls = trackballControls;
     this._orbitControls = orbitControls;
-    this._shouldHandleDOF = !isTouchDevice();
+    this._shouldHandleDOF = false;
     this.add(this._particles3D);
   }
 
@@ -206,6 +206,11 @@ export class ExperienceScene extends InteractiveScene {
       });
 
     this._cameraTween.start();
+  }
+
+  setRendererBounds(bounds: Bounds) {
+    super.setRendererBounds(bounds);
+    this._shouldHandleDOF = !isTouchDevice();
   }
 
   setPixelRatio(ratio: number) {
