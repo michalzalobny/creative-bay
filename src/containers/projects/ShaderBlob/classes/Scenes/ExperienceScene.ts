@@ -6,6 +6,7 @@ import { MouseMove } from 'utils/helperClasses/MouseMove';
 import { UpdateInfo } from 'utils/sharedTypes';
 
 import { InteractiveScene } from './InteractiveScene';
+import { Sphere3D } from '../Components/Sphere3D';
 
 interface Constructor {
   camera: THREE.PerspectiveCamera;
@@ -16,15 +17,13 @@ interface Constructor {
 
 export class ExperienceScene extends InteractiveScene {
   _controls: OrbitControls;
+  _sphere1 = new Sphere3D();
 
   constructor({ gui, controls, camera, mouseMove }: Constructor) {
     super({ camera, mouseMove, gui });
     this._controls = controls;
 
-    const geometry = new THREE.PlaneGeometry(300, 300);
-    const material = new THREE.MeshBasicMaterial({ color: 0xff0000, side: THREE.DoubleSide });
-    const plane = new THREE.Mesh(geometry, material);
-    this.add(plane);
+    this.add(this._sphere1);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -32,8 +31,11 @@ export class ExperienceScene extends InteractiveScene {
 
   update(updateInfo: UpdateInfo) {
     super.update(updateInfo);
+    this._sphere1.update(updateInfo);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  destroy() {}
+  destroy() {
+    this.remove(this._sphere1);
+    this._sphere1.destroy();
+  }
 }
