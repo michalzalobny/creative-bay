@@ -2,11 +2,11 @@ import * as THREE from 'three';
 
 import { UpdateInfo } from 'utils/sharedTypes';
 
-import vertexShader from '../shaders/sphere/vertex.glsl';
-import fragmentShader from '../shaders/sphere/fragment.glsl';
+import vertexShader from '../shaders/blobSphere/vertex.glsl';
+import fragmentShader from '../shaders/blobSphere/fragment.glsl';
 import { InteractiveObject3D } from './InteractiveObject3D';
 
-export class Sphere3D extends InteractiveObject3D {
+export class BlobSphere3D extends InteractiveObject3D {
   _mesh: THREE.Mesh<THREE.SphereBufferGeometry, THREE.ShaderMaterial> | null = null;
   _geometry: THREE.SphereBufferGeometry | null = null;
   _material: THREE.ShaderMaterial | null = null;
@@ -17,7 +17,7 @@ export class Sphere3D extends InteractiveObject3D {
   }
 
   _drawSphere() {
-    this._geometry = new THREE.SphereBufferGeometry(1000, 32, 32);
+    this._geometry = new THREE.SphereBufferGeometry(200, 32, 32);
     this._material = new THREE.ShaderMaterial({
       side: THREE.DoubleSide,
       vertexShader,
