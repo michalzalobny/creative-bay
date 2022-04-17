@@ -30,7 +30,7 @@ export class App extends THREE.EventDispatcher {
   _mouseMove = MouseMove.getInstance();
   _scroll = Scroll.getInstance();
   _preloader = new Preloader();
-  _controls: OrbitControls;
+  _orbitControls: OrbitControls;
   _experienceScene: ExperienceScene;
   _setShouldRevealReact: React.Dispatch<React.SetStateAction<boolean>>;
   _gui = new GUI();
@@ -52,15 +52,15 @@ export class App extends THREE.EventDispatcher {
 
     this._renderer.shadowMap.enabled = true;
 
-    this._controls = new OrbitControls(this._camera, this._rendererEl);
-    this._controls.enableDamping = true;
-    this._controls.update();
+    this._orbitControls = new OrbitControls(this._camera, this._rendererEl);
+    this._orbitControls.enableDamping = true;
+    this._orbitControls.update();
 
     this._gui.title('Scene settings');
     this._experienceScene = new ExperienceScene({
       camera: this._camera,
       mouseMove: this._mouseMove,
-      controls: this._controls,
+      controls: this._orbitControls,
       gui: this._gui,
     });
 
@@ -150,7 +150,7 @@ export class App extends THREE.EventDispatcher {
     this._mouseMove.update();
     this._scroll.update({ delta, slowDownFactor, time });
     this._experienceScene.update({ delta, slowDownFactor, time });
-    this._controls.update();
+    this._orbitControls.update();
 
     this._renderer.render(this._experienceScene, this._camera);
   };
