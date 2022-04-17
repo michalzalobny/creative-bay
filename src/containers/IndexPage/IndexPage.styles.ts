@@ -21,7 +21,7 @@ export const ProjectsWrapper = styled.div`
 
 export const ProjectContainer = styled.div`
   &:not(:last-child) {
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
   }
 `;
 

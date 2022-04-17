@@ -22,6 +22,11 @@ export default function IndexPage() {
               <S.ProjectLink>1. Meta Office</S.ProjectLink>
             </Link>
           </S.ProjectContainer>
+          <S.ProjectContainer>
+            <Link href="/projects/shader-blob" passHref>
+              <S.ProjectLink>2. Shader Blob</S.ProjectLink>
+            </Link>
+          </S.ProjectContainer>
         </S.ProjectsWrapper>
       </S.Wrapper>
     </>
