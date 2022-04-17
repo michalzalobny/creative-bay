@@ -27,7 +27,7 @@ export class Sphere3D extends InteractiveObject3D {
       uniforms: {
         uTime: { value: 0 },
       },
-      wireframe: true,
+      wireframe: false,
     });
 
     this._mesh = new THREE.Mesh(this._geometry, this._material);
@@ -38,8 +38,7 @@ export class Sphere3D extends InteractiveObject3D {
     super.update(updateInfo);
 
     if (this._mesh) {
-      this._mesh.material.uniforms.uTime.value =
-        updateInfo.time * 0.001 * updateInfo.slowDownFactor;
+      this._mesh.material.uniforms.uTime.value = updateInfo.time * 0.001;
     }
   }
 
