@@ -54,8 +54,6 @@ export class App extends THREE.EventDispatcher {
       alpha: true,
     });
 
-    this._renderer.shadowMap.enabled = true;
-
     this._orbitControls = new OrbitControls(this._camera, this._rendererEl);
     this._orbitControls.enableDamping = true;
     this._orbitControls.update();
