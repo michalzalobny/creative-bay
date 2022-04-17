@@ -24,6 +24,7 @@ export class BlobSphere3D extends InteractiveObject3D {
       fragmentShader,
       uniforms: {
         uTime: { value: 0 },
+        tCube: { value: 0 },
       },
       wireframe: false,
     });

@@ -20,6 +20,7 @@ export class ExperienceScene extends InteractiveScene {
   _controls: OrbitControls;
   _sphere1 = new Sphere3D();
   _blobSphere1 = new BlobSphere3D();
+  _renderTarget: THREE.WebGLRenderTarget | THREE.WebGLMultisampleRenderTarget | null = null;
 
   constructor({ gui, controls, camera, mouseMove }: Constructor) {
     super({ camera, mouseMove, gui });
@@ -43,5 +44,6 @@ export class ExperienceScene extends InteractiveScene {
     this._sphere1.destroy();
     this.remove(this._blobSphere1);
     this._blobSphere1.destroy();
+    if (this._renderTarget) this._renderTarget.dispose();
   }
 }

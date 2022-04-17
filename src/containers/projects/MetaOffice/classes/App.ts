@@ -63,7 +63,6 @@ export class App extends THREE.EventDispatcher {
     shaderPass: null,
   };
   _pixelRatio = 1;
-  _renderTarget: THREE.WebGLRenderTarget | THREE.WebGLMultisampleRenderTarget | null = null;
   _animateInTimeoutId: ReturnType<typeof setTimeout> | null = null;
 
   constructor({ setShouldReveal, rendererEl, setProgressValue }: Constructor) {
