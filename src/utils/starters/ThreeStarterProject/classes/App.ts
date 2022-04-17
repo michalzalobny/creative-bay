@@ -17,6 +17,7 @@ import render1Src from './assets/render1.jpg';
 interface Constructor {
   rendererEl: HTMLDivElement;
   setShouldReveal: React.Dispatch<React.SetStateAction<boolean>>;
+  setProgressValue: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export class App extends THREE.EventDispatcher {
@@ -33,9 +34,11 @@ export class App extends THREE.EventDispatcher {
   _orbitControls: OrbitControls;
   _experienceScene: ExperienceScene;
   _setShouldRevealReact: React.Dispatch<React.SetStateAction<boolean>>;
+  _setProgressValueReact: React.Dispatch<React.SetStateAction<number>>;
   _gui = new GUI();
+  _pixelRatio = 1;
 
-  constructor({ setShouldReveal, rendererEl }: Constructor) {
+  constructor({ setShouldReveal, rendererEl, setProgressValue }: Constructor) {
     super();
     this._rendererEl = rendererEl;
     this._canvas = document.createElement('canvas');
@@ -43,6 +46,7 @@ export class App extends THREE.EventDispatcher {
     this._camera = new THREE.PerspectiveCamera();
 
     this._setShouldRevealReact = setShouldReveal;
+    this._setProgressValueReact = setProgressValue;
 
     this._renderer = new THREE.WebGLRenderer({
       canvas: this._canvas,
@@ -87,9 +91,10 @@ export class App extends THREE.EventDispatcher {
       2 * Math.atan(rendererBounds.height / 2 / this._camera.position.z) * (180 / Math.PI);
 
     this._renderer.setSize(rendererBounds.width, rendererBounds.height);
-    this._renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    this._pixelRatio = Math.min(window.devicePixelRatio, 2);
+    this._renderer.setPixelRatio(this._pixelRatio);
     this._camera.updateProjectionMatrix();
-
+    this._experienceScene.setPixelRatio(this._pixelRatio);
     this._experienceScene.setRendererBounds(rendererBounds);
   }
 
@@ -106,16 +111,22 @@ export class App extends THREE.EventDispatcher {
     //animate in experience
   };
 
+  _onPreloaderProgress = (e: THREE.Event) => {
+    this._setProgressValueReact(e.progress as number);
+  };
+
   _addListeners() {
     window.addEventListener('resize', this._onResizeDebounced);
     window.addEventListener('visibilitychange', this._onVisibilityChange);
     this._preloader.addEventListener('loaded', this._onAssetsLoaded);
+    this._preloader.addEventListener('progress', this._onPreloaderProgress);
   }
 
   _removeListeners() {
     window.removeEventListener('resize', this._onResizeDebounced);
     window.removeEventListener('visibilitychange', this._onVisibilityChange);
     this._preloader.removeEventListener('loaded', this._onAssetsLoaded);
+    this._preloader.removeEventListener('progress', this._onPreloaderProgress);
   }
 
   _resumeAppFrame() {
@@ -170,5 +181,6 @@ export class App extends THREE.EventDispatcher {
     this._removeListeners();
 
     this._experienceScene.destroy();
+    this._preloader.destroy();
   }
 }

@@ -29,6 +29,7 @@ export class InteractiveScene extends THREE.Scene {
   _camera: THREE.PerspectiveCamera;
   _mouseMove: MouseMove;
   _gui: GUI;
+  _pixelRatio = 1;
 
   _mouse2D: Mouse = {
     current: { x: 0, y: 0 },
@@ -206,6 +207,10 @@ export class InteractiveScene extends THREE.Scene {
     );
 
     this._intersectPointLerp.set(intersectLerpX, intersectLerpY, intersectLerpZ);
+  }
+
+  setPixelRatio(ratio: number) {
+    this._pixelRatio = ratio;
   }
 
   destroy() {
