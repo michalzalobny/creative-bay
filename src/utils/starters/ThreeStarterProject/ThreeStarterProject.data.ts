@@ -9,9 +9,9 @@ export interface PageProps {
 
 export const getStaticProps: GetStaticProps = () => {
   const head: HeadProps = {
-    description: 'Three starter',
-    ogImage: 'https://res.cloudinary.com/dpv0ukspz/image/upload/v1637971809/ogimage-100_ha9nmg.jpg',
-    title: 'Three starter',
+    ogImage: 'https://res.cloudinary.com/dpv0ukspz/image/upload/v1650138958/og-100_mvbgru.jpg',
+    title: 'Three Starter project',
+    description: 'Michal Zalobny portfolio 2022 🌬 WebGL & GLSL',
   };
 
   return {
