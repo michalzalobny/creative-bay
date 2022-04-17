@@ -182,5 +182,6 @@ export class App extends THREE.EventDispatcher {
 
     this._experienceScene.destroy();
     this._preloader.destroy();
+    this._gui.destroy();
   }
 }
