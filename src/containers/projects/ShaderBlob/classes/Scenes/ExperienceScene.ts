@@ -20,6 +20,11 @@ export class ExperienceScene extends InteractiveScene {
   constructor({ gui, controls, camera, mouseMove }: Constructor) {
     super({ camera, mouseMove, gui });
     this._controls = controls;
+
+    const geometry = new THREE.PlaneGeometry(300, 300);
+    const material = new THREE.MeshBasicMaterial({ color: 0xff0000, side: THREE.DoubleSide });
+    const plane = new THREE.Mesh(geometry, material);
+    this.add(plane);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
