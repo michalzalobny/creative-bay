@@ -40,6 +40,7 @@ export class App extends THREE.EventDispatcher {
 
   constructor({ setShouldReveal, rendererEl, setProgressValue }: Constructor) {
     super();
+    console.log('app init');
     this._rendererEl = rendererEl;
     this._canvas = document.createElement('canvas');
     this._rendererEl.appendChild(this._canvas);

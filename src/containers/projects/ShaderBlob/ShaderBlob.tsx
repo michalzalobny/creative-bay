@@ -18,6 +18,7 @@ export default function ShaderBlob(props: PageProps) {
     if (!rendererEl.current) return;
 
     appState.app = new App({ rendererEl: rendererEl.current, setShouldReveal, setProgressValue });
+    console.log('? shaderBlob page');
 
     return () => {
       if (appState.app) {
