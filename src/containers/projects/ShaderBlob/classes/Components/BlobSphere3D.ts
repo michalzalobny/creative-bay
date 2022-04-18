@@ -65,8 +65,8 @@ export class BlobSphere3D extends InteractiveObject3D {
   }
 
   _setGui() {
-    //Fresnel
     const fresnel = this._gui.addFolder('Blob fresnel');
+    fresnel.close();
     fresnel
       .add(this._fresnelSettings, 'mRefractionRatio', 0, 1.2, 0.01)
       .name('mRefractionRatio')

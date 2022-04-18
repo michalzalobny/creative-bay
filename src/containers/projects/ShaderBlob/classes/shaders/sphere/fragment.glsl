@@ -1,5 +1,8 @@
 #pragma glslify: cnoise = require('glsl-noise/classic/3d')
 
+uniform vec3 uColor1;
+uniform vec3 uColor2;
+uniform vec3 uColorAccent;
 uniform float uTime;
 varying vec2 vUv;
 varying vec3 vPosition;
@@ -26,14 +29,10 @@ void main()
     float n = cnoise(position + uTime * 0.1);
     vec2 baseUv = rotate2d(PI * 0.25 + n) * position.xy * 0.5;
 
-    vec3 color1 = vec3(1.0, 0.0, 0.0);
-    vec3 color2 = vec3(0.0, 1.0, 0.0);
-    vec3 color3 = vec3(0.0, 0.0, 1.0);
-
     float basePattern = lines(baseUv, 1.0);
     float secondPattern = lines(baseUv, 0.2);
 
-    vec3 baseColor = mix(color1, color2, basePattern);
-    vec3 secondBaseColor = mix(baseColor, color3, secondPattern);
+    vec3 baseColor = mix(uColor1, uColor2, basePattern);
+    vec3 secondBaseColor = mix(baseColor, uColorAccent, secondPattern);
     gl_FragColor = vec4(secondBaseColor, 1.0);
 }
