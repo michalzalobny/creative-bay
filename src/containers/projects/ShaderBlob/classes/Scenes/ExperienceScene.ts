@@ -22,7 +22,7 @@ interface Constructor {
 export class ExperienceScene extends InteractiveScene {
   _controls: OrbitControls;
   _sphere1 = new Sphere3D();
-  _blobSphere1 = new BlobSphere3D();
+  _blobSphere1: BlobSphere3D;
   _cubeRenderTarget: THREE.WebGLCubeRenderTarget | null = null;
   _cubeCamera: THREE.CubeCamera | null = null;
   _renderer: THREE.WebGLRenderer;
@@ -31,6 +31,8 @@ export class ExperienceScene extends InteractiveScene {
     super({ camera, mouseMove, gui });
     this._controls = controls;
     this._renderer = renderer;
+
+    this._blobSphere1 = new BlobSphere3D({ gui: this._gui });
 
     this._addCubeRenderTarget();
 

@@ -1,11 +1,10 @@
+uniform float  mRefractionRatio; 
+uniform float  mFresnelBias; 
+uniform float  mFresnelScale; 
+uniform float  mFresnelPower;
 varying vec3 vReflect;
 varying vec3 vRefract[3];
 varying float vReflectionFactor;
-
-#define mRefractionRatio 1.02
-#define mFresnelBias 0.1
-#define mFresnelScale 4.0 //2.0 - default
-#define mFresnelPower 2.0 //1.0 - default
 
 void main() {
     vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
