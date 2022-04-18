@@ -25,9 +25,8 @@ void main()
 {
     
     vec2 uv = vUv;
-    vec3 position = vPosition * 0.001;
-    float n = cnoise(position + uTime * 0.1);
-    vec2 baseUv = rotate2d(PI * 0.25 + n) * position.xy * 0.5;
+    float n = cnoise(vPosition + uTime * 0.1);
+    vec2 baseUv = rotate2d(PI * 0.25 + n) * vPosition.xy * 0.5;
 
     float basePattern = lines(baseUv, 1.0);
     float secondPattern = lines(baseUv, 0.2);

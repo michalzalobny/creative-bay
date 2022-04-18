@@ -70,6 +70,7 @@ export class App extends THREE.EventDispatcher {
     this._orbitControls = new OrbitControls(this._camera, this._rendererEl);
     this._orbitControls.enableDamping = true;
     this._orbitControls.enableZoom = false;
+    this._orbitControls.enablePan = false;
 
     this._gui.title('Scene settings');
     this._experienceScene = new ExperienceScene({
@@ -98,7 +99,9 @@ export class App extends THREE.EventDispatcher {
     this._camera.aspect = aspectRatio;
 
     //Set to match pixel size of the elements in three with pixel size of DOM elements
-    this._camera.position.z = 800;
+    this._camera.position.z = 900;
+    this._camera.position.x = 0;
+    this._camera.position.y = 0;
     this._camera.fov =
       2 * Math.atan(rendererBounds.height / 2 / this._camera.position.z) * (180 / Math.PI);
 

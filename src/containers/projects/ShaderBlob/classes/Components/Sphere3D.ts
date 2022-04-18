@@ -29,7 +29,7 @@ export class Sphere3D extends InteractiveObject3D {
   }
 
   _drawSphere() {
-    this._geometry = new THREE.SphereBufferGeometry(1000, 32, 32);
+    this._geometry = new THREE.SphereBufferGeometry(1, 32, 32);
     this._material = new THREE.ShaderMaterial({
       side: THREE.DoubleSide,
       vertexShader,
@@ -53,6 +53,12 @@ export class Sphere3D extends InteractiveObject3D {
     background.addColor(this._background, 'color1', 1).name('Color 1');
     background.addColor(this._background, 'color2', 1).name('Color 2');
     background.addColor(this._background, 'colorAccent', 1).name('Color accent');
+  }
+
+  setSize(size: number) {
+    if (this._mesh) {
+      this._mesh.scale.set(size, size, size);
+    }
   }
 
   update(updateInfo: UpdateInfo) {

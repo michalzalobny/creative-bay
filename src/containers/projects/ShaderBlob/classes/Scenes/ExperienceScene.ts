@@ -5,7 +5,8 @@ import { OrbitControls } from 'three-stdlib';
 import GUI from 'lil-gui';
 
 import { MouseMove } from 'utils/helperClasses/MouseMove';
-import { UpdateInfo } from 'utils/sharedTypes';
+import { UpdateInfo, Bounds } from 'utils/sharedTypes';
+import { breakpoints } from 'utils/media';
 
 import { InteractiveScene } from './InteractiveScene';
 import { Sphere3D } from '../Components/Sphere3D';
@@ -65,6 +66,16 @@ export class ExperienceScene extends InteractiveScene {
       this._blobSphere1.visible = false;
       this._cubeCamera.update(this._renderer, this);
       this._blobSphere1.visible = true;
+    }
+  }
+
+  setRendererBounds(bounds: Bounds) {
+    super.setRendererBounds(bounds);
+
+    this._sphere1.setSize(1000); //It's 1000 due to the camera Z position (it has to be bigger, because it wraps the camera)
+    this._blobSphere1.setSize(this._rendererBounds.width * 0.25);
+    if (this._rendererBounds.width >= breakpoints.tablet) {
+      this._blobSphere1.setSize(this._rendererBounds.width * 0.12);
     }
   }
 

@@ -31,7 +31,7 @@ export class BlobSphere3D extends InteractiveObject3D {
   }
 
   _drawSphere() {
-    this._geometry = new THREE.SphereBufferGeometry(200, 32, 32);
+    this._geometry = new THREE.SphereBufferGeometry(1, 64, 64);
     this._material = new THREE.ShaderMaterial({
       side: THREE.DoubleSide,
       vertexShader,
@@ -61,6 +61,12 @@ export class BlobSphere3D extends InteractiveObject3D {
   setTCube(tCube: THREE.CubeTexture) {
     if (this._mesh) {
       this._mesh.material.uniforms.tCube.value = tCube;
+    }
+  }
+
+  setSize(size: number) {
+    if (this._mesh) {
+      this._mesh.scale.set(size, size, size);
     }
   }
 
