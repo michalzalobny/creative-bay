@@ -41,6 +41,12 @@ export class BlobSphere3D extends InteractiveObject3D {
     }
   }
 
+  setTCube(tCube: THREE.CubeTexture) {
+    if (this._mesh) {
+      this._mesh.material.uniforms.tCube.value = tCube;
+    }
+  }
+
   destroy() {
     super.destroy();
     this._geometry?.dispose();

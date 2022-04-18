@@ -64,6 +64,7 @@ export class App extends THREE.EventDispatcher {
       mouseMove: this._mouseMove,
       controls: this._orbitControls,
       gui: this._gui,
+      renderer: this._renderer,
     });
 
     this._onResize();
