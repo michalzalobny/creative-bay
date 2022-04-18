@@ -27,9 +27,10 @@ export class BlobSphere3D extends InteractiveObject3D {
   _scaleTween: Tween<{ progress: number }> | null = null;
   _colorFactorTween: Tween<{ progress: number }> | null = null;
   _isBlobAnimated = false;
-  _blobScale = 1.2;
+  _blobScale = 1.4;
   _colorFactor = 1;
   _rendererBounds: Bounds = { height: 100, width: 100 };
+  _isInit = false;
 
   constructor({ gui }: Constructor) {
     super();
@@ -155,6 +156,14 @@ export class BlobSphere3D extends InteractiveObject3D {
   setRendererBounds(bounds: Bounds) {
     this._rendererBounds = bounds;
 
+    if (!this._isInit) {
+      let finalSize = this._rendererBounds.width * 0.25;
+      if (this._rendererBounds.width >= breakpoints.tablet) {
+        finalSize = this._rendererBounds.width * 0.12;
+      }
+      this.setSize(finalSize * this._blobScale);
+    }
+
     if (this._isBlobAnimated) {
       this.setSize(this._rendererBounds.width * 0.25);
       if (this._rendererBounds.width >= breakpoints.tablet) {
@@ -170,8 +179,13 @@ export class BlobSphere3D extends InteractiveObject3D {
   }
 
   animateIn() {
-    this._animateScale({ destination: 1, duration: 2000 });
-    this._animateColorFactor({ destination: 0, duration: 2000 });
+    this._animateScale({ destination: 1, duration: 2000, delay: 1000 });
+    this._animateColorFactor({
+      destination: 0,
+      delay: 500,
+      duration: 1400,
+      easing: TWEEN.Easing.Sinusoidal.In,
+    });
   }
 
   destroy() {
