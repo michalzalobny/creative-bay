@@ -16,9 +16,9 @@ export class Sphere3D extends InteractiveObject3D {
   _material: THREE.ShaderMaterial | null = null;
   _gui: GUI;
   _background = {
-    color1: [1, 0, 0],
-    color2: [0, 1, 0],
-    colorAccent: [0, 0, 1],
+    color1: [255 / 255, 255 / 255, 229 / 255],
+    color2: [255 / 255, 113 / 255, 66 / 255],
+    colorAccent: [61 / 255, 66 / 255, 148 / 255],
   };
 
   constructor({ gui }: Constructor) {
