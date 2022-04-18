@@ -172,7 +172,6 @@ export class ExperienceScene extends InteractiveScene {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   animateIn() {
     this._animateCamera({ position: new THREE.Vector3(5.5, 4.5, 8) });
   }

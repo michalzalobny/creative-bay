@@ -131,7 +131,7 @@ export class App extends THREE.EventDispatcher {
 
   _onAssetsLoaded = () => {
     this._setShouldRevealReact(true);
-    //animate in experience
+    this._experienceScene.animateIn();
   };
 
   _onPreloaderProgress = (e: THREE.Event) => {

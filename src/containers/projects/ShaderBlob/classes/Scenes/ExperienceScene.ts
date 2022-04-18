@@ -3,9 +3,10 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three-stdlib';
 import GUI from 'lil-gui';
+import TWEEN, { Tween } from '@tweenjs/tween.js';
 
 import { MouseMove } from 'utils/helperClasses/MouseMove';
-import { UpdateInfo, Bounds } from 'utils/sharedTypes';
+import { UpdateInfo, Bounds, AnimateProps } from 'utils/sharedTypes';
 import { breakpoints } from 'utils/media';
 
 import { InteractiveScene } from './InteractiveScene';
@@ -27,6 +28,9 @@ export class ExperienceScene extends InteractiveScene {
   _cubeRenderTarget: THREE.WebGLCubeRenderTarget | null = null;
   _cubeCamera: THREE.CubeCamera | null = null;
   _renderer: THREE.WebGLRenderer;
+  _blobTween: Tween<{ progress: number }> | null = null;
+  _isBlobAnimated = false;
+  _blobScaleProgress = 0.8;
 
   constructor({ gui, controls, camera, mouseMove, renderer }: Constructor) {
     super({ camera, mouseMove, gui });
@@ -54,8 +58,35 @@ export class ExperienceScene extends InteractiveScene {
     this._blobSphere1.setTCube(this._cubeRenderTarget.texture);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  animateIn() {}
+  animateIn() {
+    this._blobScaleCamera({ destination: 1 });
+  }
+
+  _blobScaleCamera({ duration = 2000, destination }: AnimateProps) {
+    if (this._blobTween) {
+      this._blobTween.stop();
+    }
+
+    this._blobTween = new TWEEN.Tween({ progress: this._blobScaleProgress })
+      .to({ progress: destination })
+      .duration(duration)
+      .easing(TWEEN.Easing.Exponential.InOut)
+      .onUpdate(obj => {
+        this._blobScaleProgress = obj.progress;
+
+        let finalSize = this._rendererBounds.width * 0.25;
+        if (this._rendererBounds.width >= breakpoints.tablet) {
+          finalSize = this._rendererBounds.width * 0.12;
+        }
+
+        this._blobSphere1.setSize(finalSize * this._blobScaleProgress);
+      })
+      .onComplete(() => {
+        this._isBlobAnimated = true;
+      });
+
+    this._blobTween.start();
+  }
 
   update(updateInfo: UpdateInfo) {
     super.update(updateInfo);
@@ -73,9 +104,11 @@ export class ExperienceScene extends InteractiveScene {
     super.setRendererBounds(bounds);
 
     this._sphere1.setSize(1000); //It's 1000 due to the camera Z position (it has to be bigger, because it wraps the camera)
-    this._blobSphere1.setSize(this._rendererBounds.width * 0.25);
-    if (this._rendererBounds.width >= breakpoints.tablet) {
-      this._blobSphere1.setSize(this._rendererBounds.width * 0.12);
+    if (this._isBlobAnimated) {
+      this._blobSphere1.setSize(this._rendererBounds.width * 0.25);
+      if (this._rendererBounds.width >= breakpoints.tablet) {
+        this._blobSphere1.setSize(this._rendererBounds.width * 0.12);
+      }
     }
   }
 
