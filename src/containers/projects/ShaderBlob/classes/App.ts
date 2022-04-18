@@ -69,7 +69,7 @@ export class App extends THREE.EventDispatcher {
 
     this._orbitControls = new OrbitControls(this._camera, this._rendererEl);
     this._orbitControls.enableDamping = true;
-    this._orbitControls.update();
+    this._orbitControls.enableZoom = false;
 
     this._gui.title('Scene settings');
     this._experienceScene = new ExperienceScene({
