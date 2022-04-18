@@ -183,7 +183,7 @@ export class BlobSphere3D extends InteractiveObject3D {
     this._animateColorFactor({
       destination: 0,
       delay: 500,
-      duration: 1400,
+      duration: 2000,
       easing: TWEEN.Easing.Sinusoidal.In,
     });
   }
