@@ -4,8 +4,8 @@ varying float vReflectionFactor;
 
 #define mRefractionRatio 1.02
 #define mFresnelBias 0.1
-#define mFresnelScale 2.0
-#define mFresnelPower 1.0
+#define mFresnelScale 4.0 //2.0 - default
+#define mFresnelPower 2.0 //1.0 - default
 
 void main() {
     vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );

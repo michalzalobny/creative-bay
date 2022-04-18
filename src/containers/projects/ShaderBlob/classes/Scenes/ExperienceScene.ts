@@ -1,3 +1,5 @@
+//Based on https://www.youtube.com/watch?v=sPBb-0al7Y0
+
 import * as THREE from 'three';
 import { OrbitControls } from 'three-stdlib';
 import GUI from 'lil-gui';
