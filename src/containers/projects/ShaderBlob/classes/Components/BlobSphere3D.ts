@@ -1,7 +1,9 @@
 import * as THREE from 'three';
 import GUI from 'lil-gui';
+import TWEEN, { Tween } from '@tweenjs/tween.js';
 
-import { UpdateInfo } from 'utils/sharedTypes';
+import { UpdateInfo, Bounds, AnimateProps } from 'utils/sharedTypes';
+import { breakpoints } from 'utils/media';
 
 import vertexShader from '../shaders/blobSphere/vertex.glsl';
 import fragmentShader from '../shaders/blobSphere/fragment.glsl';
@@ -22,6 +24,12 @@ export class BlobSphere3D extends InteractiveObject3D {
     mFresnelScale: 4.0, //2.0 - default
     mFresnelPower: 2.0, //1.0 - default
   };
+  _scaleTween: Tween<{ progress: number }> | null = null;
+  _colorFactorTween: Tween<{ progress: number }> | null = null;
+  _isBlobAnimated = false;
+  _blobScale = 1.2;
+  _colorFactor = 1;
+  _rendererBounds: Bounds = { height: 100, width: 100 };
 
   constructor({ gui }: Constructor) {
     super();
@@ -38,6 +46,7 @@ export class BlobSphere3D extends InteractiveObject3D {
       uniforms: {
         uTime: { value: 0 },
         tCube: { value: 0 },
+        uColorFactor: { value: this._colorFactor },
         mRefractionRatio: { value: this._fresnelSettings.mRefractionRatio },
         mFresnelBias: { value: this._fresnelSettings.mFresnelBias },
         mFresnelScale: { value: this._fresnelSettings.mFresnelScale },
@@ -47,26 +56,6 @@ export class BlobSphere3D extends InteractiveObject3D {
 
     this._mesh = new THREE.Mesh(this._geometry, this._material);
     this.add(this._mesh);
-  }
-
-  update(updateInfo: UpdateInfo) {
-    super.update(updateInfo);
-
-    if (this._mesh) {
-      this._mesh.material.uniforms.uTime.value = updateInfo.time * 0.001;
-    }
-  }
-
-  setTCube(tCube: THREE.CubeTexture) {
-    if (this._mesh) {
-      this._mesh.material.uniforms.tCube.value = tCube;
-    }
-  }
-
-  setSize(size: number) {
-    if (this._mesh) {
-      this._mesh.scale.set(size, size, size);
-    }
   }
 
   _setGui() {
@@ -103,6 +92,86 @@ export class BlobSphere3D extends InteractiveObject3D {
         if (!this._mesh) return;
         this._mesh.material.uniforms.mFresnelPower.value = value;
       });
+  }
+
+  _animateScale({ duration = 0, delay = 0, destination }: AnimateProps) {
+    if (this._scaleTween) this._scaleTween.stop();
+
+    this._scaleTween = new TWEEN.Tween({ progress: this._blobScale })
+      .to({ progress: destination })
+      .delay(delay)
+      .duration(duration)
+      .easing(TWEEN.Easing.Exponential.InOut)
+      .onUpdate(obj => {
+        this._blobScale = obj.progress;
+        let finalSize = this._rendererBounds.width * 0.25;
+        if (this._rendererBounds.width >= breakpoints.tablet) {
+          finalSize = this._rendererBounds.width * 0.12;
+        }
+        this.setSize(finalSize * this._blobScale);
+      })
+      .onComplete(() => {
+        this._isBlobAnimated = true;
+      });
+
+    this._scaleTween.start();
+  }
+
+  _animateColorFactor({ duration = 0, delay = 0, destination }: AnimateProps) {
+    if (this._colorFactorTween) this._colorFactorTween.stop();
+
+    this._colorFactorTween = new TWEEN.Tween({ progress: this._colorFactor })
+      .to({ progress: destination })
+      .delay(delay)
+      .duration(duration)
+      .easing(TWEEN.Easing.Exponential.InOut)
+      .onUpdate(obj => {
+        this._colorFactor = obj.progress;
+        this._setColorFactor(this._colorFactor);
+      });
+    this._colorFactorTween.start();
+  }
+
+  update(updateInfo: UpdateInfo) {
+    super.update(updateInfo);
+
+    if (this._mesh) {
+      this._mesh.material.uniforms.uTime.value = updateInfo.time * 0.001;
+    }
+  }
+
+  setTCube(tCube: THREE.CubeTexture) {
+    if (this._mesh) {
+      this._mesh.material.uniforms.tCube.value = tCube;
+    }
+  }
+
+  _setColorFactor(value: number) {
+    if (this._mesh) {
+      this._mesh.material.uniforms.uColorFactor.value = value;
+    }
+  }
+
+  setRendererBounds(bounds: Bounds) {
+    this._rendererBounds = bounds;
+
+    if (this._isBlobAnimated) {
+      this.setSize(this._rendererBounds.width * 0.25);
+      if (this._rendererBounds.width >= breakpoints.tablet) {
+        this.setSize(this._rendererBounds.width * 0.12);
+      }
+    }
+  }
+
+  setSize(size: number) {
+    if (this._mesh) {
+      this._mesh.scale.set(size, size, size);
+    }
+  }
+
+  animateIn() {
+    this._animateScale({ destination: 1, duration: 2000 });
+    this._animateColorFactor({ destination: 0, duration: 2000 });
   }
 
   destroy() {
