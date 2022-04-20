@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import GUI from 'lil-gui';
 
-import { UpdateInfo, Bounds } from 'utils/sharedTypes';
+import { UpdateInfo, Bounds, Mouse } from 'utils/sharedTypes';
 
 import vertexShader from '../shaders/background/vertex.glsl';
 import fragmentShader from '../shaders/background/fragment.glsl';
@@ -20,6 +20,7 @@ export class Background3D extends InteractiveObject3D {
     color2: [255 / 255, 113 / 255, 66 / 255],
     colorAccent: [61 / 255, 66 / 255, 148 / 255],
   };
+  _mouse2D = [0, 0];
 
   constructor({ gui }: Constructor) {
     super();
@@ -39,7 +40,12 @@ export class Background3D extends InteractiveObject3D {
         uColor1: { value: this._background.color1 },
         uColor2: { value: this._background.color2 },
         uColorAccent: { value: this._background.colorAccent },
-        uPlaneRes: { value: [1, 1] }, //Plane size in pixels
+        uPlaneRes: {
+          value: [1, 1], //Plane size in pixels
+        },
+        uMouse2D: {
+          value: [1, 1], //Mouse coords from [0,0] (top left corner) to [screenWidth , screenHeight]
+        },
       },
       wireframe: false,
     });
@@ -61,6 +67,12 @@ export class Background3D extends InteractiveObject3D {
       this._mesh.scale.x = bounds.width;
       this._mesh.scale.y = bounds.height;
       this._mesh.material.uniforms.uPlaneRes.value = [this._mesh.scale.x, this._mesh.scale.y];
+    }
+  }
+
+  setMouse2D(mouse: Mouse) {
+    if (this._mesh) {
+      this._mesh.material.uniforms.uMouse2D.value = [mouse.current.x, mouse.current.y];
     }
   }
 

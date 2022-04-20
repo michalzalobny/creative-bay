@@ -32,13 +32,14 @@ export class ExperienceScene extends InteractiveScene {
 
   update(updateInfo: UpdateInfo) {
     super.update(updateInfo);
+    this._background3D.setMouse2D(this._mouse2D);
   }
 
   setRendererBounds(bounds: Bounds) {
     super.setRendererBounds(bounds);
     this._background3D.setSize({
-      width: this._rendererBounds.width * 0.8,
-      height: this._rendererBounds.height * 0.8,
+      width: this._rendererBounds.width * 1.001,
+      height: this._rendererBounds.height * 1.001,
     });
   }
 

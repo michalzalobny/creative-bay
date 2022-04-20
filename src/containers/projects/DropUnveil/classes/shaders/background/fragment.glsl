@@ -4,6 +4,7 @@ uniform vec3 uColor1;
 uniform vec3 uColor2;
 uniform vec3 uColorAccent;
 uniform vec2 uPlaneRes;
+uniform vec2 uMouse2D;
 
 uniform float uTime;
 varying vec2 vUv;
@@ -26,8 +27,7 @@ void main()
 {
     vec2 uv = vUv;
     uv.x *= uPlaneRes.x / uPlaneRes.y; // Take care of aspect ratio
-
-    float n = cnoise(uv + uTime * 0.1);
+    float n = cnoise(uv + uMouse2D * 0.0005);
     vec2 baseUv = rotate2d(PI * 0.25 + n) * uv * 0.5;
 
     float basePattern = lines(baseUv, 1.0);
