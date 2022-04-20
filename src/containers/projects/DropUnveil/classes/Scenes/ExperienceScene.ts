@@ -3,10 +3,10 @@ import { OrbitControls } from 'three-stdlib';
 import GUI from 'lil-gui';
 
 import { MouseMove } from 'utils/helperClasses/MouseMove';
-import { UpdateInfo } from 'utils/sharedTypes';
+import { UpdateInfo, Bounds } from 'utils/sharedTypes';
 
 import { InteractiveScene } from './InteractiveScene';
-import { Plane3D } from '../Components/Plane3D';
+import { Background3D } from '../Components/Background3D';
 
 interface Constructor {
   camera: THREE.PerspectiveCamera;
@@ -17,14 +17,14 @@ interface Constructor {
 
 export class ExperienceScene extends InteractiveScene {
   _controls: OrbitControls;
-  _plane3D: Plane3D;
+  _background3D: Background3D;
 
   constructor({ gui, controls, camera, mouseMove }: Constructor) {
     super({ camera, mouseMove, gui });
     this._controls = controls;
 
-    this._plane3D = new Plane3D({ gui });
-    this.add(this._plane3D);
+    this._background3D = new Background3D({ gui });
+    this.add(this._background3D);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -34,9 +34,16 @@ export class ExperienceScene extends InteractiveScene {
     super.update(updateInfo);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  setRendererBounds(bounds: Bounds) {
+    super.setRendererBounds(bounds);
+    this._background3D.setSize({
+      width: this._rendererBounds.width * 0.8,
+      height: this._rendererBounds.height * 0.8,
+    });
+  }
+
   destroy() {
-    this._plane3D.destroy();
-    this.remove(this._plane3D);
+    this._background3D.destroy();
+    this.remove(this._background3D);
   }
 }
