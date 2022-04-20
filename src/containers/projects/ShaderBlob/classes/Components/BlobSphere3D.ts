@@ -42,6 +42,7 @@ export class BlobSphere3D extends InteractiveObject3D {
   _drawSphere() {
     this._geometry = new THREE.SphereBufferGeometry(1, 64, 64);
     this._material = new THREE.ShaderMaterial({
+      side: THREE.FrontSide,
       vertexShader,
       fragmentShader,
       uniforms: {

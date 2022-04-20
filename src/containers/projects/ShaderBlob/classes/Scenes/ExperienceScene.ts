@@ -49,7 +49,7 @@ export class ExperienceScene extends InteractiveScene {
       encoding: THREE.sRGBEncoding,
     });
 
-    this._cubeCamera = new THREE.CubeCamera(0.1, 1000, this._cubeRenderTarget);
+    this._cubeCamera = new THREE.CubeCamera(0.1, 1200, this._cubeRenderTarget);
     this._blobSphere1.setTCube(this._cubeRenderTarget.texture);
   }
 

@@ -31,7 +31,7 @@ export class Sphere3D extends InteractiveObject3D {
   _drawSphere() {
     this._geometry = new THREE.SphereBufferGeometry(1, 32, 32);
     this._material = new THREE.ShaderMaterial({
-      side: THREE.DoubleSide,
+      side: THREE.BackSide,
       vertexShader,
       fragmentShader,
       uniforms: {
