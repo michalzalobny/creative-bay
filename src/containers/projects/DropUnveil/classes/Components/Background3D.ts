@@ -19,6 +19,7 @@ export class Background3D extends InteractiveObject3D {
     color1: [255 / 255, 255 / 255, 229 / 255],
     color2: [255 / 255, 113 / 255, 66 / 255],
     colorAccent: [61 / 255, 66 / 255, 148 / 255],
+    uLinesBlur: 0.3,
   };
   _mouse2D = [0, 0];
 
@@ -40,6 +41,7 @@ export class Background3D extends InteractiveObject3D {
         uColor1: { value: this._background.color1 },
         uColor2: { value: this._background.color2 },
         uColorAccent: { value: this._background.colorAccent },
+        uLinesBlur: { value: this._background.uLinesBlur },
         uPlaneRes: {
           value: [1, 1], //Plane size in pixels
         },
@@ -60,6 +62,13 @@ export class Background3D extends InteractiveObject3D {
     background.addColor(this._background, 'color1', 1).name('Color 1');
     background.addColor(this._background, 'color2', 1).name('Color 2');
     background.addColor(this._background, 'colorAccent', 1).name('Color accent');
+    background
+      .add(this._background, 'uLinesBlur', 0.01, 1, 0.01)
+      .name('LinesBlur')
+      .onChange((value: number) => {
+        if (!this._mesh) return;
+        this._mesh.material.uniforms.uLinesBlur.value = value;
+      });
   }
 
   setSize(bounds: Bounds) {

@@ -33,6 +33,7 @@ export class ExperienceScene extends InteractiveScene {
   update(updateInfo: UpdateInfo) {
     super.update(updateInfo);
     this._background3D.setMouse2D(this._mouse2D);
+    this._background3D.update(updateInfo);
   }
 
   setRendererBounds(bounds: Bounds) {
