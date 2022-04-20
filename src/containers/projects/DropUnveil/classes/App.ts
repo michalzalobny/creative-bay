@@ -11,8 +11,7 @@ import { Preloader } from 'utils/helperClasses/Preloader';
 
 import { ExperienceScene } from './Scenes/ExperienceScene';
 //Assets imports
-import officeSrc from './assets/office.glb';
-import render1Src from './assets/render1.jpg';
+import lenseSrc from './assets/lense.png';
 
 interface Constructor {
   rendererEl: HTMLDivElement;
@@ -71,10 +70,7 @@ export class App extends THREE.EventDispatcher {
     this._addListeners();
     this._resumeAppFrame();
 
-    this._preloader.setAssetsToPreload([
-      { src: officeSrc, type: 'model3d' },
-      { src: render1Src.src, type: 'image' },
-    ]);
+    this._preloader.setAssetsToPreload([{ src: lenseSrc.src, type: 'image' }]);
   }
 
   _onResizeDebounced = debounce(() => this._onResize(), 300);
