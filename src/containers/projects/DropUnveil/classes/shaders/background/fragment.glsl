@@ -47,7 +47,7 @@ void main()
     uv.x += 0.35;
     uv.x *= uPlaneRes.x / uPlaneRes.y; // Takes care of aspect ratio
     float n = cnoise(uv + mouse2DNormalized);
-    vec2 baseUv = rotate2d( n - mouse2DNormalized.x * 0.2) * (uv * 0.15);
+    vec2 baseUv = rotate2d( n - mouse2DNormalized.x * 0.7) * (uv * 0.15);
 
     float basePattern = lines(baseUv, 1.0);
     float secondPattern = lines(baseUv, 0.1);
