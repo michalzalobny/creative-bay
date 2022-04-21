@@ -46,7 +46,7 @@ void main()
     mouse2DNormalized *= 0.8;
 
     vec2 uv = vUv;
-    uv.y -= uOffsetY * (mouse2DNormalized.y * 0.2 + 0.2);
+    uv.y -= uOffsetY * ((mouse2DNormalized.y + 0.8) * 0.2 + 0.2);
     uv.x += uOffsetX;
     uv.x *= uPlaneRes.x / uPlaneRes.y; // Takes care of aspect ratio
     float n = cnoise(uv) * (mouse2DNormalized.x + 0.9) * 2.2 + (mouse2DNormalized.y + 0.5) * 0.2;
