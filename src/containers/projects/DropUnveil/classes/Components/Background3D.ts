@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import GUI from 'lil-gui';
 
 import { UpdateInfo, Bounds, Mouse } from 'utils/sharedTypes';
+import { breakpoints } from 'utils/media';
 
 import vertexShader from '../shaders/background/vertex.glsl';
 import fragmentShader from '../shaders/background/fragment.glsl';
@@ -26,6 +27,7 @@ export class Background3D extends InteractiveObject3D {
     uLinesAmount: 5.0,
   };
   _mouse2D = [0, 0];
+  _planeBounds: Bounds = { height: 100, width: 100 };
 
   constructor({ gui }: Constructor) {
     super();
@@ -49,7 +51,7 @@ export class Background3D extends InteractiveObject3D {
         uNoise: { value: this._background.uNoise },
         uOffsetX: { value: this._background.uOffsetX },
         uOffsetY: { value: this._background.uOffsetY },
-        uLinesAmount: { value: this._background.uLinesAmount },
+        uLinesAmount: { value: this._setLinesAmount(this._background.uLinesAmount) },
         uPlaneRes: {
           value: [1, 1], //Plane size in pixels
         },
@@ -107,14 +109,27 @@ export class Background3D extends InteractiveObject3D {
       .name('Lines amount')
       .onChange((value: number) => {
         if (!this._mesh) return;
-        this._mesh.material.uniforms.uLinesAmount.value = value;
+        this._setLinesAmount(value);
       });
   }
 
-  setSize(bounds: Bounds) {
+  _setLinesAmount(value: number) {
     if (this._mesh) {
-      this._mesh.scale.x = bounds.width;
-      this._mesh.scale.y = bounds.height;
+      if (this._planeBounds.width >= breakpoints.tablet) {
+        this._mesh.material.uniforms.uLinesAmount.value = value;
+      } else {
+        this._mesh.material.uniforms.uLinesAmount.value = value * 3.8;
+      }
+    }
+  }
+
+  setSize(bounds: Bounds) {
+    this._planeBounds = bounds;
+
+    if (this._mesh) {
+      this._setLinesAmount(this._background.uLinesAmount);
+      this._mesh.scale.x = this._planeBounds.width;
+      this._mesh.scale.y = this._planeBounds.height;
       this._mesh.material.uniforms.uPlaneRes.value = [this._mesh.scale.x, this._mesh.scale.y];
     }
   }
