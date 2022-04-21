@@ -7,6 +7,9 @@ uniform vec2 uPlaneRes;
 uniform vec2 uMouse2D;
 uniform float uLinesBlur;
 uniform float uNoise;
+uniform float uOffsetX;
+uniform float uOffsetY;
+uniform float uLinesAmount;
 
 uniform float uTime;
 varying vec2 vUv;
@@ -15,7 +18,7 @@ varying vec2 vUv;
 
 
 float lines(vec2 uv, float offset){
-    float a = abs(0.5 * sin(uv.y * 7.0) + offset * uLinesBlur);
+    float a = abs(0.5 * sin(uv.y * uLinesAmount) + offset * uLinesBlur);
     return smoothstep(0.0, uLinesBlur + offset * uLinesBlur, a);
 }
 
@@ -43,21 +46,21 @@ void main()
     mouse2DNormalized *= 0.8;
 
     vec2 uv = vUv;
-    uv.y -= 0.35;
-    uv.x += 0.35;
+    uv.y -= uOffsetY;
+    uv.x += uOffsetX;
     uv.x *= uPlaneRes.x / uPlaneRes.y; // Takes care of aspect ratio
-    float n = cnoise(uv + mouse2DNormalized);
-    vec2 baseUv = rotate2d( n - mouse2DNormalized.x * 0.7) * (uv * 0.15);
+    float n = cnoise(uv) * (mouse2DNormalized.x + 0.5) * 2.2 + (mouse2DNormalized.y) * -0.2;
+    vec2 baseUv = rotate2d(n) * (uv * 0.15);
 
     float basePattern = lines(baseUv, 1.0);
-    float secondPattern = lines(baseUv, 0.1);
+    float secondPattern = lines(baseUv, 0.25);
 
     vec3 baseColor = mix(uColor1, uColor2, basePattern);
     vec3 secondBaseColor = mix(baseColor, uColorAccent, secondPattern);
 
 
     vec2 uvRandom = vUv;
-    uvRandom.y *= random(vec2(uvRandom.y, 0.4));
+    uvRandom.y *= random(vec2(uvRandom.y, 0.5));
     secondBaseColor.rgb += random(uvRandom) * uNoise;
 
     gl_FragColor = vec4(secondBaseColor, 1.0);

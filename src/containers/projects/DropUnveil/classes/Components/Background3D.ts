@@ -21,6 +21,9 @@ export class Background3D extends InteractiveObject3D {
     colorAccent: [0 / 255, 0 / 255, 0 / 255],
     uLinesBlur: 0.25,
     uNoise: 0.075,
+    uOffsetX: 0.5,
+    uOffsetY: 0.5,
+    uLinesAmount: 5.0,
   };
   _mouse2D = [0, 0];
 
@@ -44,6 +47,9 @@ export class Background3D extends InteractiveObject3D {
         uColorAccent: { value: this._background.colorAccent },
         uLinesBlur: { value: this._background.uLinesBlur },
         uNoise: { value: this._background.uNoise },
+        uOffsetX: { value: this._background.uOffsetX },
+        uOffsetY: { value: this._background.uOffsetY },
+        uLinesAmount: { value: this._background.uLinesAmount },
         uPlaneRes: {
           value: [1, 1], //Plane size in pixels
         },
@@ -73,11 +79,35 @@ export class Background3D extends InteractiveObject3D {
       });
 
     background
-      .add(this._background, 'uNoise', 0.01, 1, 0.05)
+      .add(this._background, 'uNoise', 0.01, 1, 0.01)
       .name('Noise')
       .onChange((value: number) => {
         if (!this._mesh) return;
         this._mesh.material.uniforms.uNoise.value = value;
+      });
+
+    background
+      .add(this._background, 'uOffsetX', -5, 5, 0.01)
+      .name('Offset X')
+      .onChange((value: number) => {
+        if (!this._mesh) return;
+        this._mesh.material.uniforms.uOffsetX.value = value;
+      });
+
+    background
+      .add(this._background, 'uOffsetY', -5, 5, 0.01)
+      .name('Offset Y')
+      .onChange((value: number) => {
+        if (!this._mesh) return;
+        this._mesh.material.uniforms.uOffsetY.value = value;
+      });
+
+    background
+      .add(this._background, 'uLinesAmount', 0, 15, 0.01)
+      .name('Lines amount')
+      .onChange((value: number) => {
+        if (!this._mesh) return;
+        this._mesh.material.uniforms.uLinesAmount.value = value;
       });
   }
 
