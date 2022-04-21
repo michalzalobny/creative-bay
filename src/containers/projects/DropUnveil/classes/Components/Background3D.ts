@@ -16,8 +16,8 @@ export class Background3D extends InteractiveObject3D {
   _material: THREE.ShaderMaterial | null = null;
   _gui: GUI;
   _background = {
-    color1: [219 / 255, 77 / 255, 2 / 255],
-    color2: [0 / 255, 145 / 255, 255 / 255],
+    color1: [77 / 255, 255 / 255, 130 / 255],
+    color2: [0 / 255, 255 / 255, 213 / 255],
     colorAccent: [0 / 255, 0 / 255, 0 / 255],
     uLinesBlur: 0.25,
     uNoise: 0.075,
