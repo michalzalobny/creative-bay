@@ -16,9 +16,9 @@ export class Background3D extends InteractiveObject3D {
   _material: THREE.ShaderMaterial | null = null;
   _gui: GUI;
   _background = {
-    color1: [255 / 255, 255 / 255, 229 / 255],
-    color2: [255 / 255, 113 / 255, 66 / 255],
-    colorAccent: [61 / 255, 66 / 255, 148 / 255],
+    color1: [255 / 255, 108 / 255, 10 / 255],
+    color2: [0 / 255, 145 / 255, 255 / 255],
+    colorAccent: [0 / 255, 0 / 255, 0 / 255],
     uLinesBlur: 0.3,
   };
   _mouse2D = [0, 0];
