@@ -46,11 +46,11 @@ void main()
     mouse2DNormalized *= 0.8;
 
     vec2 uv = vUv;
-    uv.y -= uOffsetY;
+    uv.y -= uOffsetY * (mouse2DNormalized.y * 0.2 + 0.2);
     uv.x += uOffsetX;
     uv.x *= uPlaneRes.x / uPlaneRes.y; // Takes care of aspect ratio
-    float n = cnoise(uv) * (mouse2DNormalized.x + 0.5) * 2.2 + (mouse2DNormalized.y) * -0.2;
-    vec2 baseUv = rotate2d(n) * (uv * 0.15);
+    float n = cnoise(uv) * (mouse2DNormalized.x + 0.9) * 2.2 + (mouse2DNormalized.y) * 0.2;
+    vec2 baseUv = rotate2d(n) * (uv * 0.15 + mouse2DNormalized.y * 0.2);
 
     float basePattern = lines(baseUv, 1.0);
     float secondPattern = lines(baseUv, 0.25);
