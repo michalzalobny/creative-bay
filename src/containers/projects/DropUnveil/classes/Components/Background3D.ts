@@ -19,7 +19,7 @@ export class Background3D extends InteractiveObject3D {
     color1: [219 / 255, 77 / 255, 2 / 255],
     color2: [0 / 255, 145 / 255, 255 / 255],
     colorAccent: [0 / 255, 0 / 255, 0 / 255],
-    uLinesBlur: 0.42,
+    uLinesBlur: 0.25,
     uNoise: 0.075,
   };
   _mouse2D = [0, 0];

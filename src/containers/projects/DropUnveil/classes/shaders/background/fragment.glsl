@@ -15,7 +15,7 @@ varying vec2 vUv;
 
 
 float lines(vec2 uv, float offset){
-    float a = abs(0.5 * sin(uv.y * 9.0) + offset * uLinesBlur);
+    float a = abs(0.5 * sin(uv.y * 7.0) + offset * uLinesBlur);
     return smoothstep(0.0, uLinesBlur + offset * uLinesBlur, a);
 }
 
@@ -47,7 +47,7 @@ void main()
     uv.x += 0.35;
     uv.x *= uPlaneRes.x / uPlaneRes.y; // Takes care of aspect ratio
     float n = cnoise(uv + mouse2DNormalized);
-    vec2 baseUv = rotate2d(PI * 0.25 + n - mouse2DNormalized.x * 0.2) * (uv * 0.3);
+    vec2 baseUv = rotate2d( n - mouse2DNormalized.x * 0.2) * (uv * 0.15);
 
     float basePattern = lines(baseUv, 1.0);
     float secondPattern = lines(baseUv, 0.1);
