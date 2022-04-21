@@ -16,10 +16,11 @@ export class Background3D extends InteractiveObject3D {
   _material: THREE.ShaderMaterial | null = null;
   _gui: GUI;
   _background = {
-    color1: [255 / 255, 108 / 255, 10 / 255],
+    color1: [219 / 255, 77 / 255, 2 / 255],
     color2: [0 / 255, 145 / 255, 255 / 255],
     colorAccent: [0 / 255, 0 / 255, 0 / 255],
     uLinesBlur: 0.3,
+    uNoise: 0.06,
   };
   _mouse2D = [0, 0];
 
@@ -42,6 +43,7 @@ export class Background3D extends InteractiveObject3D {
         uColor2: { value: this._background.color2 },
         uColorAccent: { value: this._background.colorAccent },
         uLinesBlur: { value: this._background.uLinesBlur },
+        uNoise: { value: this._background.uNoise },
         uPlaneRes: {
           value: [1, 1], //Plane size in pixels
         },
@@ -68,6 +70,14 @@ export class Background3D extends InteractiveObject3D {
       .onChange((value: number) => {
         if (!this._mesh) return;
         this._mesh.material.uniforms.uLinesBlur.value = value;
+      });
+
+    background
+      .add(this._background, 'uNoise', 0.01, 1, 0.05)
+      .name('Noise')
+      .onChange((value: number) => {
+        if (!this._mesh) return;
+        this._mesh.material.uniforms.uNoise.value = value;
       });
   }
 
