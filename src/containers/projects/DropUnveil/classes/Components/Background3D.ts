@@ -21,7 +21,7 @@ export class Background3D extends InteractiveObject3D {
     colorAccent: [0 / 255, 0 / 255, 0 / 255],
     uLinesBlur: 0.25,
     uNoise: 0.075,
-    uOffsetX: 0.5,
+    uOffsetX: 0.34,
     uOffsetY: 0.5,
     uLinesAmount: 5.0,
   };
