@@ -15,7 +15,7 @@ interface Constructor {
 }
 
 export class InteractiveScene extends THREE.Scene {
-  static lerpEase = sharedValues.motion.LERP_EASE * 0.8;
+  static lerpEase = sharedValues.motion.LERP_EASE * 1.2;
   _raycaster = new THREE.Raycaster();
   _rendererBounds: Bounds = { height: 100, width: 100 };
   _camera: THREE.PerspectiveCamera;
