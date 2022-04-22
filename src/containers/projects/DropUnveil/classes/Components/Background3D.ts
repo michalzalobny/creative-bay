@@ -63,6 +63,7 @@ export class Background3D extends InteractiveObject3D {
     });
 
     this._mesh = new THREE.Mesh(this._geometry, this._material);
+    this._mesh.renderOrder = -1;
     this.add(this._mesh);
   }
 

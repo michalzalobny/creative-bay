@@ -73,7 +73,7 @@ export class App extends THREE.EventDispatcher {
     this._addListeners();
     this._resumeAppFrame();
 
-    this._preloader.setAssetsToPreload([{ src: lenseSrc.src, type: 'image' }]);
+    this._preloader.setAssetsToPreload([{ src: lenseSrc.src, type: 'image', targetName: 'lense' }]);
   }
 
   _onResizeDebounced = debounce(() => this._onResize(), 300);
@@ -106,6 +106,7 @@ export class App extends THREE.EventDispatcher {
 
   _onAssetsLoaded = () => {
     this._setShouldRevealReact(true);
+    this._experienceScene.setLoadedAssets(this._preloader.loadedAssets);
     //animate in experience
   };
 
