@@ -7,6 +7,8 @@ uniform vec2 uCanvasRes;
 
 varying vec2 vUv;
 
+#define S(a,t) smoothstep(a*0.975, a, t)
+
 void main() {
 
   vec2 mouse2D;
@@ -19,11 +21,10 @@ void main() {
   float dist = distance(mouse2D * aspect, vUv * aspect);
 
   float refractionOffset = 0.035;
-  float refractionPower = 0.005;
+  float refractionPower = 0.007;
 
-  float d1 = step(radius, dist);
-  float d2 = step(radius * (1.0 - refractionOffset), dist) - d1;
-
+  float d1 = S(radius, dist);
+  float d2 = S(radius * (1.0 - refractionOffset), dist) - d1;
 
   vec2 sub = mouse2D - vUv;
   sub *= aspect;
