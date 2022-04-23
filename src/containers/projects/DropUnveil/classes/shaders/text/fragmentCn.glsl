@@ -17,19 +17,25 @@ void main() {
 
   float radius = 0.5 * 250.0 / uPlaneRes.y;
   float dist = distance(mouse2D * aspect, vUv * aspect);
-  float d = smoothstep(radius, radius + 0.005, dist);
+
+  float refractionOffset = 0.035;
+  float refractionPower = 0.005;
+
+  float d1 = step(radius, dist);
+  float d2 = step(radius * (1.0 - refractionOffset), dist) - d1;
+
 
   vec2 sub = mouse2D - vUv;
   sub *= aspect;
 
-  vec2 uv = vUv - sub * pow(dist * 0.7, 0.7);
+  vec2 uv = vUv - sub * pow(dist * 0.7, 0.7) + d2 * refractionPower;
   vec4 tex_r = texture2D(tMap, uv);
   vec4 tex_g = texture2D(tMap, uv + sub * 0.03);
   vec4 tex_b = texture2D(tMap, uv + sub * 0.01);
   float a = max(max(tex_r.a, tex_g.a), tex_b.a);
   vec4 tex = vec4(tex_r.r, tex_g.g, tex_b.b, a);
 
-  tex.a = mix(tex.a, 0.0, d);
+  tex.a = mix(tex.a, 0.0, d1);
 
   gl_FragColor = tex;
 }

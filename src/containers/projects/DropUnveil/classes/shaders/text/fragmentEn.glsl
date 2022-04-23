@@ -17,7 +17,7 @@ void main() {
 
   float radius = 0.5 * 250.0 / uPlaneRes.y;
   float dist = distance(mouse2D * aspect, vUv * aspect);
-  float d = 1.0 -  smoothstep(radius, radius + 0.005, dist);
+  float d = 1.0 - smoothstep(radius, radius + 0.005, dist);
 
   vec2 sub = mouse2D - vUv;
   sub *= aspect;
