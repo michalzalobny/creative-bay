@@ -12,6 +12,7 @@ import fragmentLense from '../shaders/lense/fragment.glsl';
 import vertexLense from '../shaders/lense/vertex.glsl';
 import { TextPlane3D } from '../Components/TextPlane3D';
 import fragmentTextCn from '../shaders/text/fragmentCn.glsl';
+import fragmentTextEn from '../shaders/text/fragmentEn.glsl';
 
 interface Constructor {
   camera: THREE.PerspectiveCamera;
@@ -33,13 +34,21 @@ export class ExperienceScene extends InteractiveScene {
     super({ camera, mouseMove, gui });
     this._controls = controls;
 
-    this._textPlaneEn = new TextPlane3D({ geometry: this._planeGeometry, gui });
-    // this.add(this._textPlaneEn);
+    this._textPlaneEn = new TextPlane3D({
+      geometry: this._planeGeometry,
+      gui,
+      fragmentShader: fragmentTextEn,
+      text: ['We are a brand', 'of collective', 'creativity'],
+      offsetsArray: [-0.1, 0.4, 0.1, 0, 0, 0],
+    });
+    this.add(this._textPlaneEn);
 
     this._textPlaneCn = new TextPlane3D({
       geometry: this._planeGeometry,
       gui,
       fragmentShader: fragmentTextCn,
+      text: ['我們是', '集體創', '意的品牌'],
+      offsetsArray: [-0.9, 0.4, 0.1, 0.24, 0.05, -0.15],
     });
     this.add(this._textPlaneCn);
 

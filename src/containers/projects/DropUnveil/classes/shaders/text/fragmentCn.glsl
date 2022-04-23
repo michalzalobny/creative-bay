@@ -15,7 +15,7 @@ void main() {
   
   vec2 aspect = vec2(uCanvasRes.x / uCanvasRes.y, 1.0);
 
-  float radius = 0.126;
+  float radius = 0.48 * 250.0 / uPlaneRes.y;
   float dist = distance(mouse2D * aspect, vUv * aspect);
   float d = smoothstep(radius, radius + 0.005, dist);
 

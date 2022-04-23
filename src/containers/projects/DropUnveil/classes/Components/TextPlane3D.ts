@@ -11,14 +11,21 @@ interface Constructor {
   vertexShader?: string;
   fragmentShader?: string;
   geometry: THREE.PlaneBufferGeometry;
+  text: [string, string, string];
+  offsetsArray: [number, number, number, number, number, number];
 }
 
 export class TextPlane3D extends MediaPlane3D {
   _gui: GUI;
   _textTexture: TextTexture | null = null;
+  _text;
+  _offsetsArray;
 
-  constructor({ gui, fragmentShader, vertexShader, geometry }: Constructor) {
+  constructor({ gui, fragmentShader, vertexShader, geometry, text, offsetsArray }: Constructor) {
     super({ geometry, fragmentShader, vertexShader });
+    this._text = text;
+    this._offsetsArray = offsetsArray;
+
     this._gui = gui;
     this._setGui();
   }
@@ -35,7 +42,7 @@ export class TextPlane3D extends MediaPlane3D {
   _createTextTexture(bounds: Bounds) {
     this._textTexture?.destroy();
     this._textTexture = null;
-    this._textTexture = new TextTexture();
+    this._textTexture = new TextTexture({ text: this._text, offsetsArray: this._offsetsArray });
     this._textTexture.setRendererBounds(bounds);
 
     const asset: LoadedAsset = {
@@ -45,6 +52,8 @@ export class TextPlane3D extends MediaPlane3D {
       type: AssetType.IMAGE,
     };
     this.setAsset(asset);
+
+    this._textTexture.animateIn();
   }
 
   update(updateInfo: UpdateInfo) {
