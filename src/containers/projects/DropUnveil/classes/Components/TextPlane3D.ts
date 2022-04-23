@@ -27,8 +27,7 @@ export class TextPlane3D extends MediaPlane3D {
   _setGui() {}
 
   setRendererBounds(bounds: Bounds) {
-    this._rendererBounds = bounds;
-
+    super.setRendererBounds(bounds);
     //Updating previous one creates errors, so it's better to create new one when viewport is resized
     this._createTextTexture(this._rendererBounds);
   }

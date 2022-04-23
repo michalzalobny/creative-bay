@@ -32,6 +32,7 @@ export class TextTexture extends THREE.EventDispatcher {
   setRendererBounds(bounds: Bounds) {
     this._rendererBounds = bounds;
     this._setSizes();
+    this.texture.needsUpdate = true;
   }
 
   update(updateInfo: UpdateInfo) {
@@ -43,12 +44,7 @@ export class TextTexture extends THREE.EventDispatcher {
     this._ctx.font = `bold ${fontSize}px 'OpenSans'`;
     this._ctx.fillStyle = '#fff';
 
-    this._ctx.fillText(
-      'Test',
-      60 + Math.sin(updateInfo.time * 0.0005) * 60,
-      this._rendererBounds.height / 2
-    );
-    this.texture.needsUpdate = true;
+    this._ctx.fillText('Test', this._rendererBounds.width / 2, this._rendererBounds.height / 2);
   }
 
   destroy() {

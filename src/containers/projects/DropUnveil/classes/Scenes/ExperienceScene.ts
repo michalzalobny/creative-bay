@@ -11,6 +11,7 @@ import { Lense3D } from '../Components/Lense3D';
 import fragmentLense from '../shaders/lense/fragment.glsl';
 import vertexLense from '../shaders/lense/vertex.glsl';
 import { TextPlane3D } from '../Components/TextPlane3D';
+import fragmentTextCn from '../shaders/text/fragmentCn.glsl';
 
 interface Constructor {
   camera: THREE.PerspectiveCamera;
@@ -26,13 +27,21 @@ export class ExperienceScene extends InteractiveScene {
   _lense3D: Lense3D;
   _planeGeometry = new THREE.PlaneGeometry(1, 1, 32, 32);
   _textPlaneEn: TextPlane3D;
+  _textPlaneCn: TextPlane3D;
 
   constructor({ gui, controls, camera, mouseMove }: Constructor) {
     super({ camera, mouseMove, gui });
     this._controls = controls;
 
     this._textPlaneEn = new TextPlane3D({ geometry: this._planeGeometry, gui });
-    this.add(this._textPlaneEn);
+    // this.add(this._textPlaneEn);
+
+    this._textPlaneCn = new TextPlane3D({
+      geometry: this._planeGeometry,
+      gui,
+      fragmentShader: fragmentTextCn,
+    });
+    this.add(this._textPlaneCn);
 
     this._lense3D = new Lense3D({
       gui,
@@ -59,6 +68,9 @@ export class ExperienceScene extends InteractiveScene {
 
     this._textPlaneEn.setMouse2D(this._mouse2D);
     this._textPlaneEn.update(updateInfo);
+
+    this._textPlaneCn.setMouse2D(this._mouse2D);
+    this._textPlaneCn.update(updateInfo);
   }
 
   setLoadedAssets(assets: LoadedAssets) {
@@ -81,6 +93,9 @@ export class ExperienceScene extends InteractiveScene {
 
     this._textPlaneEn.setRendererBounds(bounds);
     this._textPlaneEn.setSize(bounds);
+
+    this._textPlaneCn.setRendererBounds(bounds);
+    this._textPlaneCn.setSize(bounds);
   }
 
   destroy() {
@@ -92,6 +107,9 @@ export class ExperienceScene extends InteractiveScene {
 
     this._textPlaneEn.destroy();
     this.remove(this._textPlaneEn);
+
+    this._textPlaneCn.destroy();
+    this.remove(this._textPlaneCn);
 
     this._planeGeometry.dispose();
   }
