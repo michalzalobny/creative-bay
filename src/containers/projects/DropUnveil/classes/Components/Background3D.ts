@@ -136,6 +136,8 @@ export class Background3D extends InteractiveObject3D {
       if (this._planeBounds.width < breakpoints.tablet) {
         this._mesh.material.uniforms.uBackgroundScale.value =
           this._planeBounds.width * 0.001 * 1.45;
+      } else {
+        this._mesh.material.uniforms.uBackgroundScale.value = 1.0;
       }
     }
   }
