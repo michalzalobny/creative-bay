@@ -23,7 +23,7 @@ export class Background3D extends InteractiveObject3D {
     uLinesBlur: 0.25,
     uNoise: 0.075,
     uOffsetX: 0.34,
-    uOffsetY: 0.5,
+    uOffsetY: 0.0,
     uLinesAmount: 5.0,
   };
   _mouse2D = [0, 0];

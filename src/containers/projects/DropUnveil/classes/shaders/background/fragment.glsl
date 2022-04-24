@@ -38,8 +38,12 @@ float random(vec2 p) {
 }
 
 vec3 fadeLine(vec2 uv, vec2 mouse2D,  vec3 col1, vec3 col2, vec3 col3){
-    float n = cnoise(uv) * (mouse2D.x + 0.9) * 2.2 + (mouse2D.y + 0.5) * 0.2;
-    vec2 baseUv = rotate2d(n) * ((uv + mouse2D.y * 1.2) * 0.15 + (mouse2D.y + 2.5) * 0.02 );
+    mouse2D = (mouse2D + 1.0) * 0.5;
+    float n1 = cnoise(uv); //(*|/ ) -> scale (+|-) -> offset
+    float n2 = cnoise(uv + uOffsetX * 20.0);
+    float n3 = cnoise(uv * 0.3 + uOffsetY * 10.0);
+    float nFinal = mix(mix(n1, n2, mouse2D.x), n3, mouse2D.y);
+    vec2 baseUv = vec2(nFinal + 2.0); // (+|-) -> frequency (*|/ ) -> lines count
 
     float basePattern = lines(baseUv, 1.0);
     float secondPattern = lines(baseUv, 0.25);
@@ -53,10 +57,10 @@ vec3 fadeLine(vec2 uv, vec2 mouse2D,  vec3 col1, vec3 col2, vec3 col3){
 void main()
 {
     vec2 mouse2D = uMouse2D;
-    mouse2D *= 0.8;
+    
 
     vec2 uv = vUv;
-    uv.y -= uOffsetY * ((mouse2D.y - 0.8) * 0.2 + 0.2);
+    uv.y += uOffsetY;
     uv.x += uOffsetX;
     uv.x *= uPlaneRes.x / uPlaneRes.y; // Takes care of aspect ratio
 
