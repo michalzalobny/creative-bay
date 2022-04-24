@@ -58,6 +58,7 @@ export class Background3D extends InteractiveObject3D {
         uMouse2D: {
           value: [1, 1], //Mouse coords from [0,0] (top left corner) to [screenWidth , screenHeight]
         },
+        uBackgroundScale: { value: 1.0 },
       },
       wireframe: false,
     });
@@ -132,6 +133,10 @@ export class Background3D extends InteractiveObject3D {
       this._mesh.scale.x = this._planeBounds.width;
       this._mesh.scale.y = this._planeBounds.height;
       this._mesh.material.uniforms.uPlaneRes.value = [this._mesh.scale.x, this._mesh.scale.y];
+      if (this._planeBounds.width < breakpoints.tablet) {
+        this._mesh.material.uniforms.uBackgroundScale.value =
+          this._planeBounds.width * 0.001 * 1.45;
+      }
     }
   }
 
