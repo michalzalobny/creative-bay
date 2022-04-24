@@ -22,7 +22,10 @@ export const AuthorInfo = (props: Props) => {
 
   return (
     <>
-      <S.Wrapper elWidth={isExpanded ? photoSize + 4.5 * iconMargin + 4 * iconSize : photoSize}>
+      <S.Wrapper
+        isLoaded={isLoaded}
+        elWidth={isExpanded ? photoSize + 4.5 * iconMargin + 4 * iconSize : photoSize}
+      >
         <S.IconsWrapper>
           <LinkHandler isExternal elHref={'https://twitter.com/zalobnymichal'}>
             <S.TwitterSvgComp />
@@ -44,7 +47,7 @@ export const AuthorInfo = (props: Props) => {
         offsetX={isExpanded ? 4.5 * iconMargin + 4 * iconSize : 0}
       >
         <S.ImageContainer onClick={() => setIsExpanded(prev => !prev)}>
-          <S.AuthorImage isLoaded={isLoaded} src={authorSrc.src} />
+          <S.AuthorImage src={authorSrc.src} />
         </S.ImageContainer>
       </S.ImageWrapper>
     </>

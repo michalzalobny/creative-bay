@@ -1,5 +1,7 @@
 import styled, { css } from 'styled-components';
 
+import { media } from 'utils/media';
+
 import { sharedValues } from 'utils/sharedValues';
 import { GithubSvg } from './svg/GithubSvg';
 import { WebSvg } from './svg/WebSvg';
@@ -13,10 +15,13 @@ import {
   expandDuration,
   fixedBottom,
   fixedRight,
+  fixedBottomTablet,
+  fixedRightTablet,
 } from './AuthorInfo.constants';
 
 interface WrapperProps {
   elWidth: number;
+  isLoaded: boolean;
 }
 
 export const Wrapper = styled.div<WrapperProps>`
@@ -31,9 +36,22 @@ export const Wrapper = styled.div<WrapperProps>`
   align-items: center;
   height: ${photoSize}px;
   width: ${props => props.elWidth}px;
-  transition: width ${expandDuration}s ${sharedValues.timings.t1};
+  transition: width ${expandDuration}s ${sharedValues.timings.t1}, opacity 0.4s;
   overflow: hidden;
   border: 2px solid white;
+
+  ${media.tablet} {
+    bottom: ${fixedBottomTablet}px;
+    right: ${fixedRightTablet}px;
+  }
+
+  opacity: 0;
+
+  ${props =>
+    props.isLoaded &&
+    css`
+      opacity: 1;
+    `}
 `;
 
 export const IconsWrapper = styled.div`
@@ -63,6 +81,11 @@ export const ImageWrapper = styled.div<ImageWrapperProps>`
   bottom: ${fixedBottom}px;
   transform: ${props => `translateX(-${props.offsetX}px)`};
   transition: transform ${expandDuration}s ${sharedValues.timings.t1};
+
+  ${media.tablet} {
+    bottom: ${fixedBottomTablet}px;
+    right: ${fixedRightTablet}px;
+  }
 `;
 
 export const ImageContainer = styled.div`
@@ -79,11 +102,7 @@ export const ImageContainer = styled.div`
   }
 `;
 
-interface AuthorImageProps {
-  isLoaded: boolean;
-}
-
-export const AuthorImage = styled.img<AuthorImageProps>`
+export const AuthorImage = styled.img`
   user-select: none;
   pointer-events: none;
   position: absolute;
@@ -93,14 +112,7 @@ export const AuthorImage = styled.img<AuthorImageProps>`
   height: 100%;
   object-fit: cover;
   display: flex;
-  opacity: 0;
-  transition: opacity 0.4s, transform ${expandDuration}s ${sharedValues.timings.t1};
-
-  ${props =>
-    props.isLoaded &&
-    css`
-      opacity: 1;
-    `}
+  transition: transform ${expandDuration}s ${sharedValues.timings.t1};
 `;
 
 export const GithubSvgComp = styled(GithubSvg)`
