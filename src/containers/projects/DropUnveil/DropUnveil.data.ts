@@ -9,7 +9,7 @@ export interface PageProps {
 
 export const getStaticProps: GetStaticProps = () => {
   const head: HeadProps = {
-    ogImage: 'https://res.cloudinary.com/dpv0ukspz/image/upload/v1650138958/og-100_mvbgru.jpg',
+    ogImage: 'https://res.cloudinary.com/dpv0ukspz/image/upload/v1650804189/ogdrop_yvrwue.jpg',
     title: 'Drop unveil',
     description: 'Michal Zalobny portfolio 2022 🌬 WebGL & GLSL',
   };
