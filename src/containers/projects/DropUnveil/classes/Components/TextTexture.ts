@@ -60,6 +60,7 @@ export class TextTexture extends THREE.EventDispatcher {
       progress: this._show,
     })
       .to({ progress: destination }, 1600)
+      .delay(250)
       .easing(TWEEN.Easing.Exponential.InOut)
       .onUpdate(obj => {
         this._show = obj.progress;
@@ -105,7 +106,7 @@ export class TextTexture extends THREE.EventDispatcher {
     const lineHeightOffset = 0.45 * fontSize;
     const signatureHeight = lineHeightOffset * 2 + text1Height * 3;
     const verticalOffset = this._rendererBounds.height / 2 - signatureHeight / 2;
-    const animateX = (1 - this._show) * this._rendererBounds.width * 0.1;
+    const animateX = (1 - this._show) * this._rendererBounds.width * 0.11;
 
     this._ctx.fillText(
       this._text1,
