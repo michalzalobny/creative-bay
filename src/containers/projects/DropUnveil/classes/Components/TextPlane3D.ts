@@ -2,9 +2,11 @@ import * as THREE from 'three';
 import GUI from 'lil-gui';
 
 import { UpdateInfo, Bounds, LoadedAsset, AssetType } from 'utils/sharedTypes';
+import { breakpoints } from 'utils/media';
 
 import { MediaPlane3D } from './MediaPlane3D';
 import { TextTexture } from './TextTexture';
+import { Lense3D } from './Lense3D';
 
 interface Constructor {
   gui: GUI;
@@ -38,6 +40,12 @@ export class TextPlane3D extends MediaPlane3D {
     super.setRendererBounds(bounds);
     //Updating previous one creates errors, so it's better to create new one when viewport is resized
     this._createTextTexture(this._rendererBounds);
+
+    if (this._rendererBounds.width >= breakpoints.tablet) {
+      this._mesh.material.uniforms.uLenseSize.value = Lense3D.tabletSize;
+    } else {
+      this._mesh.material.uniforms.uLenseSize.value = Lense3D.mobileSize;
+    }
   }
 
   _createTextTexture(bounds: Bounds) {

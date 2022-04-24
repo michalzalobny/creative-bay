@@ -4,6 +4,7 @@ uniform sampler2D tMap;
 uniform float uTime;
 uniform vec2 uMouse2D;
 uniform vec2 uCanvasRes;
+uniform float uLenseSize;
 
 varying vec2 vUv;
 
@@ -17,7 +18,7 @@ void main() {
   
   vec2 aspect = vec2(uCanvasRes.x / uCanvasRes.y, 1.0);
 
-  float radius = 0.5 * 250.0 / uPlaneRes.y;
+  float radius = 0.5 * uLenseSize / uPlaneRes.y;
   float dist = distance(mouse2D * aspect, vUv * aspect);
   float d = 1.0 - S(radius, dist);
 

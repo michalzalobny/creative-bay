@@ -48,6 +48,9 @@ export class MediaPlane3D extends InteractiveObject3D {
         uMouse2D: {
           value: [1, 1], //Mouse coords from [0,0] (top left corner) to [screenWidth , screenHeight]
         },
+        uLenseSize: {
+          value: 1,
+        },
       },
     });
 

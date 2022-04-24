@@ -95,10 +95,6 @@ export class ExperienceScene extends InteractiveScene {
     });
 
     this._lense3D.setRendererBounds(bounds);
-    this._lense3D.setSize({
-      width: 250,
-      height: 250,
-    });
 
     this._textPlaneEn.setRendererBounds(bounds);
     this._textPlaneEn.setSize(bounds);
