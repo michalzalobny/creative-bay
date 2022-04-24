@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 
 import { globalState } from 'utils/globalState';
 import { CopyInfo } from 'sections/CopyInfo/CopyInfo';
+import { AuthorInfo } from 'sections/AuthorInfo/AuthorInfo';
 
 import * as S from './Layout.styles';
 
@@ -46,6 +47,8 @@ export const Layout = (props: Props) => {
           </S.BackBtn>
         </S.BackWrapper>
       )}
+
+      <AuthorInfo />
 
       <CopyInfo
         repoHref={repoHref}
