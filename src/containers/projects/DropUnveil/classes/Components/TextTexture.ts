@@ -103,7 +103,7 @@ export class TextTexture extends THREE.EventDispatcher {
     const text3Size = this._ctx.measureText(this._text3);
     const offset3 = this._offsetsArray[2];
 
-    const lineHeightOffset = 0.45 * fontSize;
+    const lineHeightOffset = 0.32 * fontSize;
     const signatureHeight = lineHeightOffset * 2 + text1Height * 3;
     const verticalOffset = this._rendererBounds.height / 2 - signatureHeight / 2;
     const animateX = (1 - this._show) * this._rendererBounds.width * 0.11;

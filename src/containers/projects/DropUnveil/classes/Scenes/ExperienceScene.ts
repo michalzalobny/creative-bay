@@ -38,8 +38,8 @@ export class ExperienceScene extends InteractiveScene {
       geometry: this._planeGeometry,
       gui,
       fragmentShader: fragmentTextEn,
-      text: ['We are a brand', 'of collective', 'creativity'],
-      offsetsArray: [-0.1, 0.4, 0.1, 0, 0, 0],
+      text: ['Any variations', 'that fit your', 'imagination'],
+      offsetsArray: [-0.18, 0.28, -0.08, 0, 0, 0],
     });
     this.add(this._textPlaneEn);
 
@@ -47,8 +47,8 @@ export class ExperienceScene extends InteractiveScene {
       geometry: this._planeGeometry,
       gui,
       fragmentShader: fragmentTextCn,
-      text: ['我們是', '集體創', '意的品牌'],
-      offsetsArray: [-0.9, 0.4, 0.1, 0.24, 0.05, -0.15],
+      text: ['あなたの想像', '力に合う', 'バリエーション'],
+      offsetsArray: [-0.28, 0.255, 0.05, 0, -0.05, 0.12],
     });
     this.add(this._textPlaneCn);
 
