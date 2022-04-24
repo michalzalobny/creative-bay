@@ -37,7 +37,7 @@ void main() {
   sub *= aspect;
 
   vec2 uv = vUv - sub * pow(dist * 0.7, 0.7) + d2 * refractionPower;
-  vec4 tex_r = texture2D(tMap, uv - sub * 0.03);
+  vec4 tex_r = texture2D(tMap, uv - sub * 0.01);
   vec4 tex_g = texture2D(tMap, uv + sub * 0.02);
   vec4 tex_b = texture2D(tMap, uv + sub * 0.02);
   float a = max(max(tex_r.a, tex_g.a), tex_b.a);
