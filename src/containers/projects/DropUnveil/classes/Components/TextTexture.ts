@@ -7,6 +7,7 @@ import { UpdateInfo, Bounds } from 'utils/sharedTypes';
 interface Constructor {
   text: [string, string, string];
   offsetsArray: [number, number, number, number, number, number];
+  isAnimatedIn: boolean;
 }
 
 export class TextTexture extends THREE.EventDispatcher {
@@ -21,12 +22,15 @@ export class TextTexture extends THREE.EventDispatcher {
   _showTween: Tween<{ progress: number }> | null = null;
   _offsetsArray;
 
-  constructor({ text, offsetsArray }: Constructor) {
+  constructor({ text, offsetsArray, isAnimatedIn }: Constructor) {
     super();
     this._text1 = text[0];
     this._text2 = text[1];
     this._text3 = text[2];
     this._offsetsArray = offsetsArray;
+    if (isAnimatedIn) {
+      this._show = 1;
+    }
 
     this._canvas = document.createElement('canvas');
     this._ctx = this._canvas.getContext('2d');
@@ -55,8 +59,8 @@ export class TextTexture extends THREE.EventDispatcher {
     this._showTween = new TWEEN.Tween({
       progress: this._show,
     })
-      .to({ progress: destination }, 200)
-      .easing(TWEEN.Easing.Linear.None)
+      .to({ progress: destination }, 1600)
+      .easing(TWEEN.Easing.Exponential.InOut)
       .onUpdate(obj => {
         this._show = obj.progress;
         this.texture.needsUpdate = true;
@@ -89,36 +93,35 @@ export class TextTexture extends THREE.EventDispatcher {
     this._ctx.textBaseline = 'top';
 
     const text1Size = this._ctx.measureText(this._text1);
-    const text1Height = text1Size.actualBoundingBoxAscent + text1Size.actualBoundingBoxDescent;
     const offset1 = this._offsetsArray[0];
+    const text1Height = text1Size.actualBoundingBoxAscent + text1Size.actualBoundingBoxDescent;
 
     const text2Size = this._ctx.measureText(this._text2);
     const offset2 = this._offsetsArray[1];
 
     const text3Size = this._ctx.measureText(this._text3);
-
     const offset3 = this._offsetsArray[2];
 
     const lineHeightOffset = 0.45 * fontSize;
-
     const signatureHeight = lineHeightOffset * 2 + text1Height * 3;
     const verticalOffset = this._rendererBounds.height / 2 - signatureHeight / 2;
+    const animateX = (1 - this._show) * this._rendererBounds.width * 0.1;
 
     this._ctx.fillText(
       this._text1,
-      this._rendererBounds.width / 2 - text1Size.width / 2 + text1Size.width * offset1,
+      this._rendererBounds.width / 2 - text1Size.width / 2 + text1Size.width * offset1 - animateX,
       verticalOffset + text1Height * this._offsetsArray[3]
     );
 
     this._ctx.fillText(
       this._text2,
-      this._rendererBounds.width / 2 - text2Size.width / 2 + text2Size.width * offset2,
+      this._rendererBounds.width / 2 - text2Size.width / 2 + text2Size.width * offset2 + animateX,
       verticalOffset + text1Height + lineHeightOffset + text1Height * this._offsetsArray[4]
     );
 
     this._ctx.fillText(
       this._text3,
-      this._rendererBounds.width / 2 - text3Size.width / 2 + text3Size.width * offset3,
+      this._rendererBounds.width / 2 - text3Size.width / 2 + text3Size.width * offset3 - animateX,
       verticalOffset + text1Height * 2 + lineHeightOffset * 2 + text1Height * this._offsetsArray[5]
     );
   }

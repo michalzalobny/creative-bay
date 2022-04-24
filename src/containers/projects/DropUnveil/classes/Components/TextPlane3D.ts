@@ -20,6 +20,7 @@ export class TextPlane3D extends MediaPlane3D {
   _textTexture: TextTexture | null = null;
   _text;
   _offsetsArray;
+  _isTTAnimatedIn = false;
 
   constructor({ gui, fragmentShader, vertexShader, geometry, text, offsetsArray }: Constructor) {
     super({ geometry, fragmentShader, vertexShader });
@@ -42,7 +43,12 @@ export class TextPlane3D extends MediaPlane3D {
   _createTextTexture(bounds: Bounds) {
     this._textTexture?.destroy();
     this._textTexture = null;
-    this._textTexture = new TextTexture({ text: this._text, offsetsArray: this._offsetsArray });
+    this._textTexture = new TextTexture({
+      text: this._text,
+      offsetsArray: this._offsetsArray,
+      isAnimatedIn: this._isTTAnimatedIn,
+    });
+    this._isTTAnimatedIn = true;
     this._textTexture.setRendererBounds(bounds);
 
     const asset: LoadedAsset = {
