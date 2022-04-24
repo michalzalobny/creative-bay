@@ -5,13 +5,7 @@ import { useMediaPreload } from 'hooks/useMediaPreload';
 
 import * as S from './AuthorInfo.styles';
 import authorSrc from './images/img.jpg';
-import {
-  borderRadius,
-  expandDuration,
-  iconMargin,
-  iconSize,
-  photoSize,
-} from './AuthorInfo.constants';
+import { iconMargin, iconSize, photoSize } from './AuthorInfo.constants';
 
 interface Props {}
 
