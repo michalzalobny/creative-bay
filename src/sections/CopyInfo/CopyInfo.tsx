@@ -7,15 +7,20 @@ import * as S from './CopyInfo.styles';
 interface Props {
   inspirationName?: string;
   inspirationHref?: string;
+  repoHref?: string;
 }
 
 export const CopyInfo = (props: Props) => {
-  const { inspirationHref, inspirationName } = props;
+  const {
+    repoHref = 'https://github.com/javusScriptus/creative-bay',
+    inspirationHref,
+    inspirationName,
+  } = props;
 
   return (
     <>
       <S.GithubWrapper>
-        <LinkHandler isExternal elHref="https://github.com/javusScriptus/creative-bay">
+        <LinkHandler isExternal elHref={repoHref}>
           <S.GithubLink>GitHub repo</S.GithubLink>
         </LinkHandler>
       </S.GithubWrapper>

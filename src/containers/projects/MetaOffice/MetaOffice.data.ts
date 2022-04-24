@@ -13,6 +13,8 @@ export const getStaticProps: GetStaticProps = () => {
   return {
     props: {
       head,
+      repoHref:
+        'https://github.com/javusScriptus/creative-bay/tree/main/src/containers/projects/MetaOffice',
     },
     revalidate: sharedValues.ISR_TIMEOUT,
   };

@@ -72,4 +72,5 @@ export interface PageProps {
   head: HeadProps;
   inspirationName?: string;
   inspirationHref?: string;
+  repoHref?: string;
 }

@@ -40,6 +40,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       <Layout
         inspirationHref={(pageProps as PageProps).inspirationHref}
         inspirationName={(pageProps as PageProps).inspirationName}
+        repoHref={(pageProps as PageProps).repoHref}
         isReady={isReady}
       >
         <Component
