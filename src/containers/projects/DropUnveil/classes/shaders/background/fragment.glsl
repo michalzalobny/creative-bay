@@ -37,6 +37,18 @@ float random(vec2 p) {
     );
 }
 
+vec3 fadeLine(vec2 uv, vec2 mouse2D,  vec3 col1, vec3 col2, vec3 col3){
+    float n = cnoise(uv) * (mouse2D.x + 0.9) * 2.2 + (mouse2D.y + 0.5) * 0.2;
+    vec2 baseUv = rotate2d(n) * ((uv + mouse2D.y * 1.2) * 0.15 + (mouse2D.y + 2.5) * 0.02 );
+
+    float basePattern = lines(baseUv, 1.0);
+    float secondPattern = lines(baseUv, 0.25);
+
+    vec3 baseColor = mix(col1, col2, basePattern);
+    vec3 secondBaseColor = mix(baseColor, col3, secondPattern);
+    return secondBaseColor;
+}
+
 
 void main()
 {
@@ -47,19 +59,14 @@ void main()
     uv.y -= uOffsetY * ((mouse2D.y - 0.8) * 0.2 + 0.2);
     uv.x += uOffsetX;
     uv.x *= uPlaneRes.x / uPlaneRes.y; // Takes care of aspect ratio
-    float n = cnoise(uv) * (mouse2D.x + 0.9) * 2.2 + (mouse2D.y + 0.5) * 0.2;
-    vec2 baseUv = rotate2d(n) * ((uv + mouse2D.y * 1.2) * 0.15 + (mouse2D.y + 2.5) * 0.02 );
 
-    float basePattern = lines(baseUv, 1.0);
-    float secondPattern = lines(baseUv, 0.25);
-
-    vec3 baseColor = mix(uColor1, uColor2, basePattern);
-    vec3 secondBaseColor = mix(baseColor, uColorAccent, secondPattern);
+    vec3 col1 = fadeLine(uv, mouse2D, uColor1, uColor2, uColorAccent);
+    vec3 finalCol = col1;
 
 
     vec2 uvRandom = vUv;
     uvRandom.y *= random(vec2(uvRandom.y, 0.5));
-    secondBaseColor.rgb += random(uvRandom) * uNoise;
+    finalCol.rgb += random(uvRandom) * uNoise;
 
-    gl_FragColor = vec4(secondBaseColor, 1.0);
+    gl_FragColor = vec4(finalCol, 1.0);
 }
