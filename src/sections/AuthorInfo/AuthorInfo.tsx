@@ -21,15 +21,24 @@ export const AuthorInfo = (props: Props) => {
         elWidth={isExpanded ? photoSize + 4.5 * iconMargin + 4 * iconSize : photoSize}
       >
         <S.IconsWrapper>
-          <LinkHandler isExternal elHref={'https://twitter.com/zalobnymichal'}>
-            <S.TwitterSvgComp />
-          </LinkHandler>
-          <LinkHandler isExternal elHref={'https://github.com/javusScriptus'}>
-            <S.GithubSvgComp />
-          </LinkHandler>
-          <LinkHandler isExternal elHref={'https://www.linkedin.com/in/michal-zalobny-1a8257204/'}>
-            <S.LnSvgComp />
-          </LinkHandler>
+          <S.IconWrapper>
+            <LinkHandler isExternal elHref={'https://twitter.com/zalobnymichal'}>
+              <S.TwitterSvgComp />
+            </LinkHandler>
+          </S.IconWrapper>
+          <S.IconWrapper>
+            <LinkHandler isExternal elHref={'https://github.com/javusScriptus'}>
+              <S.GithubSvgComp />
+            </LinkHandler>
+          </S.IconWrapper>
+          <S.IconWrapper>
+            <LinkHandler
+              isExternal
+              elHref={'https://www.linkedin.com/in/michal-zalobny-1a8257204/'}
+            >
+              <S.LnSvgComp />
+            </LinkHandler>
+          </S.IconWrapper>
           <LinkHandler isExternal elHref={'https://creativeprojects.vercel.app/'}>
             <S.WebSvgComp />
           </LinkHandler>

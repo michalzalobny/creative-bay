@@ -73,7 +73,6 @@ interface ImageWrapperProps {
 }
 
 export const ImageWrapper = styled.div<ImageWrapperProps>`
-  cursor: pointer;
   position: fixed;
   z-index: 20;
   display: flex;
@@ -89,6 +88,7 @@ export const ImageWrapper = styled.div<ImageWrapperProps>`
 `;
 
 export const ImageContainer = styled.div`
+  cursor: pointer;
   width: ${photoSize}px;
   border-radius: 50%;
   position: relative;
@@ -115,17 +115,18 @@ export const AuthorImage = styled.img`
   transition: transform ${expandDuration}s ${sharedValues.timings.t1};
 `;
 
+export const IconWrapper = styled.div`
+  margin-right: ${iconMargin}px;
+`;
+
 export const GithubSvgComp = styled(GithubSvg)`
   width: ${iconSize}px;
-  margin-right: ${iconMargin}px;
 `;
 export const LnSvgComp = styled(LnSvg)`
   width: ${iconSize}px;
-  margin-right: ${iconMargin}px;
 `;
 export const TwitterSvgComp = styled(TwitterSvg)`
   width: ${iconSize}px;
-  margin-right: ${iconMargin}px;
 `;
 export const WebSvgComp = styled(WebSvg)`
   width: ${iconSize}px;
