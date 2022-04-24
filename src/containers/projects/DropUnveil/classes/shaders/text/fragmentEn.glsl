@@ -10,10 +10,10 @@ varying vec2 vUv;
 #define S(a,t) smoothstep(a*0.975, a, t)
 
 void main() {
-
-  vec2 mouse2D;
-  mouse2D.x = uMouse2D.x / uCanvasRes.x;
-  mouse2D.y = 1.0 - uMouse2D.y / uCanvasRes.y;
+  vec2 mouse2D = uMouse2D;
+  //reverse normalized mouse
+  mouse2D.x = (mouse2D.x + 1.0) * 0.5; 
+  mouse2D.y = 1.0 - (mouse2D.y - 1.0) * -0.5;
   
   vec2 aspect = vec2(uCanvasRes.x / uCanvasRes.y, 1.0);
 

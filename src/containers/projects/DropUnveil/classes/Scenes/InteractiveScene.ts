@@ -49,8 +49,8 @@ export class InteractiveScene extends THREE.Scene {
     const mouseX = (e.target as MouseMove).mouse.x;
     const mouseY = (e.target as MouseMove).mouse.y;
 
-    this._mouse2D.target.x = mouseX;
-    this._mouse2D.target.y = mouseY;
+    this._mouse2D.target.x = (mouseX / this._rendererBounds.width) * 2 - 1;
+    this._mouse2D.target.y = -(mouseY / this._rendererBounds.height) * 2 + 1;
   };
 
   _addListeners() {

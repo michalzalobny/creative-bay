@@ -11,6 +11,7 @@ export class MouseMove extends EventDispatcher {
   _clickStart: Mouse = { x: 0, y: 0 };
   mouse: Mouse = { x: 0, y: 0 };
   strength = 0;
+  _isInit = false;
 
   static _instance: MouseMove | null;
   static _canCreate = false;
@@ -37,6 +38,7 @@ export class MouseMove extends EventDispatcher {
   }
 
   _onTouchDown = (event: TouchEvent | MouseEvent) => {
+    this._isInit = true;
     this._isTouching = true;
     this._mouseLast.x = 'touches' in event ? event.touches[0].clientX : event.clientX;
     this._mouseLast.y = 'touches' in event ? event.touches[0].clientY : event.clientY;
@@ -50,6 +52,7 @@ export class MouseMove extends EventDispatcher {
   };
 
   _onTouchMove = (event: TouchEvent | MouseEvent) => {
+    this._isInit = true;
     const touchX = 'touches' in event ? event.touches[0].clientX : event.clientX;
     const touchY = 'touches' in event ? event.touches[0].clientY : event.clientY;
 
@@ -75,6 +78,7 @@ export class MouseMove extends EventDispatcher {
   };
 
   _onClick = () => {
+    this._isInit = true;
     const clickBounds = 10;
     const xDiff = Math.abs(this._clickStart.x - this.mouse.x);
     const yDiff = Math.abs(this._clickStart.y - this.mouse.y);
@@ -99,7 +103,10 @@ export class MouseMove extends EventDispatcher {
   }
 
   update() {
-    this.dispatchEvent({ type: 'mousemove' });
+    if (this._isInit) {
+      this.dispatchEvent({ type: 'mousemove' });
+    }
+
     const { mouse, _mouseLast } = this;
 
     _mouseLast.x = mouse.x;
