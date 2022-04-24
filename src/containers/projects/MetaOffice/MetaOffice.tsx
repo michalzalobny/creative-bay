@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 
 import { Head } from 'seo/Head/Head';
+import { PageProps } from 'utils/sharedTypes';
 
-import { PageProps } from './MetaOffice.data';
 import * as S from './MetaOffice.styles';
 import { appState } from './MetaOffice.state';
 import { App } from './classes/App';

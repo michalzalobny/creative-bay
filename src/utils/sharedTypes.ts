@@ -1,5 +1,7 @@
 import { GLTF } from 'three-stdlib';
 
+import { HeadProps } from 'seo/Head/Head';
+
 export interface DomRectSSR {
   bottom: number;
   height: number;
@@ -64,4 +66,10 @@ export interface AnimateCamera {
   lookAt?: THREE.Vector3;
   position: THREE.Vector3;
   duration?: number;
+}
+
+export interface PageProps {
+  head: HeadProps;
+  inspirationName?: string;
+  inspirationHref?: string;
 }

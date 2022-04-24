@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import 'focus-visible';
 import '../styles/index.scss';
+
 import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
 import FontFaceObserver from 'fontfaceobserver';
 import { GlobalStyles } from 'utils/GlobalStyles';
-
 import { Layout } from 'components/Layout/Layout';
+
+import { PageProps } from 'utils/sharedTypes';
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -35,7 +37,11 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <GlobalStyles />
-      <Layout isReady={isReady}>
+      <Layout
+        inspirationHref={(pageProps as PageProps).inspirationHref}
+        inspirationName={(pageProps as PageProps).inspirationName}
+        isReady={isReady}
+      >
         <Component
           key={`${router.route}${router.locale === undefined ? '' : router.locale}`}
           router={router}

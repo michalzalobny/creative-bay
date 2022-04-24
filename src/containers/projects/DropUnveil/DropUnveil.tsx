@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 
 import { Head } from 'seo/Head/Head';
+import { PageProps } from 'utils/sharedTypes';
 
-import { PageProps } from './DropUnveil.data';
 import * as S from './DropUnveil.styles';
 import { appState } from './DropUnveil.state';
 import { App } from './classes/App';

@@ -9,10 +9,12 @@ import * as S from './Layout.styles';
 interface Props {
   isReady: boolean;
   children: React.ReactChild;
+  inspirationName?: string;
+  inspirationHref?: string;
 }
 
 export const Layout = (props: Props) => {
-  const { children, isReady } = props;
+  const { inspirationHref, inspirationName, children, isReady } = props;
   const router = useRouter();
 
   useEffect(() => {
@@ -44,7 +46,7 @@ export const Layout = (props: Props) => {
         </S.BackWrapper>
       )}
 
-      <CopyInfo />
+      <CopyInfo inspirationHref={inspirationHref} inspirationName={inspirationName} />
       {children}
     </>
   );

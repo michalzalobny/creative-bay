@@ -4,16 +4,20 @@ import { media } from 'utils/media';
 import { underline, s1 } from 'utils/sharedStyled';
 
 export const GithubWrapper = styled.div`
-  display: none;
+  display: initial;
+  position: fixed;
+  z-index: 20;
+  bottom: 0px;
+  left: 0px;
+  mix-blend-mode: difference;
+  color: white;
+  transform-origin: bottom left;
+  transform: rotate(-90deg) translateY(calc(100% + 16px)) translateX(15px);
 
   ${media.tablet} {
-    display: initial;
-    position: fixed;
-    z-index: 20;
+    transform: none;
     bottom: 20px;
     left: 30px;
-    mix-blend-mode: difference;
-    color: white;
   }
 `;
 
@@ -47,4 +51,30 @@ export const AuthorLink = styled.span`
   position: relative;
   ${underline};
   margin-right: 5px;
+`;
+
+export const InspirationWrapper = styled.h1`
+  display: none;
+
+  ${media.tabletLand} {
+    display: initial;
+    position: fixed;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    mix-blend-mode: difference;
+    color: white;
+    ${s1};
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+`;
+
+export const InspirationLink = styled.span`
+  display: inline-block;
+  font-weight: 800;
+  position: relative;
+  ${underline};
+  margin-left: 5px;
 `;
