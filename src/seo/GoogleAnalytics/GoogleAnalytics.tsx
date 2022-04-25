@@ -1,7 +1,7 @@
 import React from 'react';
 
 export const GoogleAnalytics = () => {
-  const googleAnalyticsTag = process.env.NEXT_PUBLIC_GA_KEY;
+  const googleAnalyticsTag = process.env.NEXT_PUBLIC_GA_KEY as string;
   return (
     <>
       <script async src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsTag}`} />
