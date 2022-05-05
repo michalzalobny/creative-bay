@@ -17,14 +17,14 @@ export default function IndexPage() {
       <Head />
       <S.Wrapper>
         <S.ProjectsWrapper>
-          {/* <S.ProjectContainer>
-            <Link href="/projects/meta-office" passHref>
-              <S.ProjectLink>1. Meta Office</S.ProjectLink>
-            </Link>
-          </S.ProjectContainer> */}
           <S.ProjectContainer>
             <Link href="/projects/shader-blob" passHref>
               <S.ProjectLink>1. Shader Blob</S.ProjectLink>
+            </Link>
+          </S.ProjectContainer>
+          <S.ProjectContainer>
+            <Link href="/projects/drop-unveil" passHref>
+              <S.ProjectLink>2. Drop Unveil</S.ProjectLink>
             </Link>
           </S.ProjectContainer>
         </S.ProjectsWrapper>
