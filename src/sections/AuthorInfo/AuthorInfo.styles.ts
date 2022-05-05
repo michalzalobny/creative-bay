@@ -78,8 +78,8 @@ export const ImageWrapper = styled.div<ImageWrapperProps>`
   display: flex;
   right: ${fixedRight}px;
   bottom: ${fixedBottom}px;
-  transform: ${props => `translateX(-${props.offsetX}px)`};
-  transition: transform ${expandDuration}s ${sharedValues.timings.t1};
+  width: ${props => `calc(${photoSize}px + ${props.offsetX}px)`};
+  transition: width ${expandDuration}s ${sharedValues.timings.t1};
 
   ${media.tablet} {
     bottom: ${fixedBottomTablet}px;
