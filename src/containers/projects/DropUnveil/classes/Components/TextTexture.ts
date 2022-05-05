@@ -128,6 +128,9 @@ export class TextTexture extends THREE.EventDispatcher {
   }
 
   destroy() {
+    if (this._showTween) {
+      this._showTween.stop();
+    }
     this.texture.dispose();
   }
 }
