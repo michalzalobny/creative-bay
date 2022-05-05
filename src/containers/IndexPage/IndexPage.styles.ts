@@ -6,11 +6,11 @@ import { underline, s1 } from 'utils/sharedStyled';
 export const Wrapper = styled.div`
   margin: 0 auto;
   width: 80%;
-  margin-top: 4rem;
+  margin-top: 5rem;
 
   ${media.tablet} {
-    width: 120rem;
-    margin-top: 10rem;
+    width: 80rem;
+    margin-top: 15rem;
   }
 `;
 
@@ -21,7 +21,13 @@ export const ProjectsWrapper = styled.div`
 
 export const ProjectContainer = styled.div`
   &:not(:last-child) {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  ${media.tablet} {
+    &:not(:last-child) {
+      margin-bottom: 2rem;
+    }
   }
 `;
 
