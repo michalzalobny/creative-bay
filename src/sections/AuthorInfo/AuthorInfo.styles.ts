@@ -80,6 +80,8 @@ export const ImageWrapper = styled.div<ImageWrapperProps>`
   bottom: ${fixedBottom}px;
   width: ${props => `calc(${photoSize}px + ${props.offsetX}px)`};
   transition: width ${expandDuration}s ${sharedValues.timings.t1};
+  user-select: none;
+  pointer-events: none;
 
   ${media.tablet} {
     bottom: ${fixedBottomTablet}px;
@@ -89,6 +91,8 @@ export const ImageWrapper = styled.div<ImageWrapperProps>`
 
 export const ImageContainer = styled.div`
   cursor: pointer;
+  user-select: initial;
+  pointer-events: initial;
   width: ${photoSize}px;
   border-radius: 50%;
   position: relative;
