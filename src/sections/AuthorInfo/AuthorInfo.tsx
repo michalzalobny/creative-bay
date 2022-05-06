@@ -22,7 +22,7 @@ export const AuthorInfo = (props: Props) => {
       >
         <S.IconsWrapper>
           <S.IconWrapper>
-            <LinkHandler isExternal elHref={'https://twitter.com/zalobnymichal'}>
+            <LinkHandler isExternal elHref={'https://twitter.com/michalzalobny'}>
               <S.TwitterSvgComp />
             </LinkHandler>
           </S.IconWrapper>
