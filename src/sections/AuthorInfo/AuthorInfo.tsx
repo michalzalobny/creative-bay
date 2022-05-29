@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { LinkHandler } from 'components/LinkHandler/LinkHandler';
 import { useMediaPreload } from 'hooks/useMediaPreload';
@@ -7,12 +7,30 @@ import * as S from './AuthorInfo.styles';
 import authorSrc from './images/img.jpg';
 import { iconMargin, iconSize, photoSize } from './AuthorInfo.constants';
 
-interface Props {}
-
-export const AuthorInfo = (props: Props) => {
+export const AuthorInfo = () => {
   const { isLoaded } = useMediaPreload({ isImage: true, mediaSrc: authorSrc.src });
-
   const [isExpanded, setIsExpanded] = useState(false);
+  const expandTimeoutId = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const wasExpandedRef = useRef(false);
+
+  useEffect(() => {
+    if (expandTimeoutId.current) clearTimeout(expandTimeoutId.current);
+    const handleAutoExpand = () => {
+      if (wasExpandedRef.current) return;
+      setIsExpanded(true);
+    };
+    expandTimeoutId.current = setTimeout(handleAutoExpand, 4500);
+
+    return () => {
+      if (expandTimeoutId.current) clearTimeout(expandTimeoutId.current);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!wasExpandedRef.current && isExpanded) {
+      wasExpandedRef.current = true;
+    }
+  }, [isExpanded]);
 
   return (
     <>

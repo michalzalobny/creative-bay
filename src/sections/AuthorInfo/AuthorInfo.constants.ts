@@ -6,4 +6,4 @@ export const expandDuration = 0.65;
 export const fixedRight = 20;
 export const fixedBottom = 38;
 export const fixedRightTablet = 30;
-export const fixedBottomTablet = 52;
+export const fixedBottomTablet = 60;
