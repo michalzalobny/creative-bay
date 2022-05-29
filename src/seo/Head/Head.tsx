@@ -13,7 +13,7 @@ export const Head = (props: HeadProps) => {
   const {
     ogImage = 'https://res.cloudinary.com/dpv0ukspz/image/upload/v1650138958/og-100_mvbgru.jpg',
     title = 'Portfolio 2022',
-    description = 'Michal Zalobny portfolio 2022 🌬 WebGL & GLSL',
+    description = 'Michal Zalobny portfolio 2022 WebGL & GLSL',
   } = props;
 
   return (

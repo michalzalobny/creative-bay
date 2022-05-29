@@ -7,7 +7,7 @@ export const getStaticProps: GetStaticProps = () => {
   const head: PageProps['head'] = {
     ogImage: 'https://res.cloudinary.com/dpv0ukspz/image/upload/v1650804189/ogdrop_yvrwue.jpg',
     title: 'Drop unveil',
-    description: 'Michal Zalobny portfolio 2022 🌬 WebGL & GLSL',
+    description: 'Michal Zalobny portfolio 2022 WebGL & GLSL',
   };
 
   return {
