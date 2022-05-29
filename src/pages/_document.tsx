@@ -51,6 +51,7 @@ export default class Document extends NextDocument {
           />
 
           <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+          <meta name="theme-color" content="#000000"></meta>
 
           <script
             dangerouslySetInnerHTML={{
