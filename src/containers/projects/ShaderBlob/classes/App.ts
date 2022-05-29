@@ -61,7 +61,10 @@ export class App extends THREE.EventDispatcher {
     this._setShouldRevealReact = setShouldReveal;
     this._setProgressValueReact = setProgressValue;
 
-    this._renderer = new THREE.WebGLRenderer({ canvas: this._canvas });
+    this._renderer = new THREE.WebGLRenderer({
+      powerPreference: 'high-performance',
+      canvas: this._canvas,
+    });
 
     this._orbitControls = new OrbitControls(this._camera, this._rendererEl);
     this._orbitControls.enableDamping = true;

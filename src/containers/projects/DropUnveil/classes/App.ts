@@ -51,6 +51,7 @@ export class App extends THREE.EventDispatcher {
       canvas: this._canvas,
       antialias: true,
       alpha: true,
+      powerPreference: 'high-performance',
     });
     // this._renderer.setClearColor(0xffffff);
 
