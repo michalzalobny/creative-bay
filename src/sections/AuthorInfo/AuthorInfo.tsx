@@ -5,13 +5,31 @@ import { useMediaPreload } from 'hooks/useMediaPreload';
 
 import * as S from './AuthorInfo.styles';
 import authorSrc from './images/img.jpg';
-import { iconMargin, iconSize, photoSize } from './AuthorInfo.constants';
+import { iconMargin, iconSize, photoSize, expandDuration } from './AuthorInfo.constants';
 
 export const AuthorInfo = () => {
   const { isLoaded } = useMediaPreload({ isImage: true, mediaSrc: authorSrc.src });
   const [isExpanded, setIsExpanded] = useState(false);
+  const [displayIcons, setDisplayIcons] = useState(false);
   const expandTimeoutId = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const displayIconsTimeoutId = useRef<ReturnType<typeof setTimeout> | null>(null);
   const wasExpandedRef = useRef(false);
+
+  useEffect(() => {
+    if (isExpanded) setDisplayIcons(true);
+
+    if (!isExpanded) {
+      if (displayIconsTimeoutId.current) clearTimeout(displayIconsTimeoutId.current);
+      const handleDisplayIcons = () => {
+        setDisplayIcons(false);
+      };
+      displayIconsTimeoutId.current = setTimeout(handleDisplayIcons, expandDuration * 1000);
+    }
+
+    return () => {
+      if (displayIconsTimeoutId.current) clearTimeout(displayIconsTimeoutId.current);
+    };
+  }, [isExpanded]);
 
   useEffect(() => {
     if (expandTimeoutId.current) clearTimeout(expandTimeoutId.current);
@@ -38,7 +56,7 @@ export const AuthorInfo = () => {
         isLoaded={isLoaded}
         elWidth={isExpanded ? photoSize + 4.5 * iconMargin + 4 * iconSize : photoSize}
       >
-        <S.IconsWrapper>
+        <S.IconsWrapper style={{ display: displayIcons ? 'flex' : 'none' }}>
           <S.IconWrapper>
             <LinkHandler isExternal elHref={'https://twitter.com/michalzalobny'}>
               <S.TwitterSvgComp />

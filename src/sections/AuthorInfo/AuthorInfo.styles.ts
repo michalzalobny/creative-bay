@@ -89,7 +89,7 @@ export const ImageWrapper = styled.div<ImageWrapperProps>`
   }
 `;
 
-export const ImageContainer = styled.div`
+export const ImageContainer = styled.button`
   cursor: pointer;
   user-select: initial;
   pointer-events: initial;
