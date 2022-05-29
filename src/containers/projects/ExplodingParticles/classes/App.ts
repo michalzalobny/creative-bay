@@ -11,8 +11,7 @@ import { Preloader } from 'utils/helperClasses/Preloader';
 
 import { ExperienceScene } from './Scenes/ExperienceScene';
 //Assets imports
-import officeSrc from './assets/office.glb';
-import render1Src from './assets/render1.jpg';
+import starterImageSrc from './assets/starter.jpg';
 
 interface Constructor {
   rendererEl: HTMLDivElement;
@@ -52,29 +51,25 @@ export class App extends THREE.EventDispatcher {
       canvas: this._canvas,
       antialias: true,
       alpha: true,
-      powerPreference: 'high-performance',
+      powerPreference: 'default',
     });
-    // this._renderer.setClearColor(0xffffff);
 
     this._orbitControls = new OrbitControls(this._camera, this._rendererEl);
     this._orbitControls.enableDamping = true;
+    // this._orbitControls.enablePan = false;
+    // this._orbitControls.enableRotate = false;
+    // this._orbitControls.enableZoom = false;
     this._orbitControls.update();
 
     this._gui.title('Scene settings');
-    this._experienceScene = new ExperienceScene({
-      camera: this._camera,
-      mouseMove: this._mouseMove,
-      controls: this._orbitControls,
-      gui: this._gui,
-    });
+    this._experienceScene = new ExperienceScene({ camera: this._camera, gui: this._gui });
 
     this._onResize();
     this._addListeners();
     this._resumeAppFrame();
 
     this._preloader.setAssetsToPreload([
-      { src: officeSrc, type: 'model3d' },
-      { src: render1Src.src, type: 'image' },
+      { src: starterImageSrc.src, type: 'image', targetName: 'starterImage' },
     ]);
   }
 
@@ -106,9 +101,10 @@ export class App extends THREE.EventDispatcher {
     }
   };
 
-  _onAssetsLoaded = () => {
+  _onAssetsLoaded = (e: THREE.Event) => {
     this._setShouldRevealReact(true);
-    //animate in experience
+    this._experienceScene.setLoadedAssets((e.target as Preloader).loadedAssets);
+    this._experienceScene.animateIn();
   };
 
   _onPreloaderProgress = (e: THREE.Event) => {

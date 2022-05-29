@@ -11,7 +11,7 @@ import { Preloader } from 'utils/helperClasses/Preloader';
 
 import { ExperienceScene } from './Scenes/ExperienceScene';
 //Assets imports
-import lenseSrc from './assets/lense.png';
+import starterImageSrc from './assets/starter.jpg';
 
 interface Constructor {
   rendererEl: HTMLDivElement;
@@ -56,24 +56,21 @@ export class App extends THREE.EventDispatcher {
 
     this._orbitControls = new OrbitControls(this._camera, this._rendererEl);
     this._orbitControls.enableDamping = true;
-    this._orbitControls.enablePan = false;
-    this._orbitControls.enableRotate = false;
-    this._orbitControls.enableZoom = false;
+    // this._orbitControls.enablePan = false;
+    // this._orbitControls.enableRotate = false;
+    // this._orbitControls.enableZoom = false;
     this._orbitControls.update();
 
     this._gui.title('Scene settings');
-    this._experienceScene = new ExperienceScene({
-      camera: this._camera,
-      mouseMove: this._mouseMove,
-      controls: this._orbitControls,
-      gui: this._gui,
-    });
+    this._experienceScene = new ExperienceScene({ camera: this._camera, gui: this._gui });
 
     this._onResize();
     this._addListeners();
     this._resumeAppFrame();
 
-    this._preloader.setAssetsToPreload([{ src: lenseSrc.src, type: 'image', targetName: 'lense' }]);
+    this._preloader.setAssetsToPreload([
+      { src: starterImageSrc.src, type: 'image', targetName: 'starterImage' },
+    ]);
   }
 
   _onResizeDebounced = debounce(() => this._onResize(), 300);
@@ -104,10 +101,10 @@ export class App extends THREE.EventDispatcher {
     }
   };
 
-  _onAssetsLoaded = () => {
+  _onAssetsLoaded = (e: THREE.Event) => {
     this._setShouldRevealReact(true);
-    this._experienceScene.setLoadedAssets(this._preloader.loadedAssets);
-    //animate in experience
+    this._experienceScene.setLoadedAssets((e.target as Preloader).loadedAssets);
+    this._experienceScene.animateIn();
   };
 
   _onPreloaderProgress = (e: THREE.Event) => {

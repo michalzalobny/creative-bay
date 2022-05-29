@@ -62,7 +62,7 @@ export class App extends THREE.EventDispatcher {
     this._setProgressValueReact = setProgressValue;
 
     this._renderer = new THREE.WebGLRenderer({
-      powerPreference: 'high-performance',
+      powerPreference: 'default',
       canvas: this._canvas,
     });
 

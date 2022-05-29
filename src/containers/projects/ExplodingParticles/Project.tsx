@@ -2,12 +2,12 @@ import React, { useEffect, useState, useRef } from 'react';
 
 import { Head } from 'seo/Head/Head';
 
-import { PageProps } from './ThreeStarterProject.data';
-import * as S from './ThreeStarterProject.styles';
-import { appState } from './ThreeStarterProject.state';
+import { PageProps } from './Project.data';
+import * as S from './Project.styles';
+import { appState } from './Project.state';
 import { App } from './classes/App';
 
-export default function ThreeStarterProject(props: PageProps) {
+export default function Project(props: PageProps) {
   const { head } = props;
 
   const rendererEl = useRef<HTMLDivElement | null>(null);
