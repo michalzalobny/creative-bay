@@ -68,7 +68,7 @@ export const AuthorInfo = () => {
         offsetX={isExpanded ? 4.5 * iconMargin + 4 * iconSize : 0}
       >
         <S.ImageContainer onClick={() => setIsExpanded(prev => !prev)}>
-          <S.AuthorImage src={authorSrc.src} />
+          <S.AuthorImage alt="author's face" src={authorSrc.src} />
         </S.ImageContainer>
       </S.ImageWrapper>
     </>
