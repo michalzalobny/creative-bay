@@ -91,7 +91,7 @@ export class MouseMove extends EventDispatcher {
 
   _addEvents() {
     window.addEventListener('mousedown', this._onTouchDown);
-    window.addEventListener('mousemove', this._onTouchMove);
+    window.addEventListener('mousemove', this._onTouchMove, { passive: true });
     window.addEventListener('mouseup', this._onTouchUp);
     window.addEventListener('click', this._onClick);
 
