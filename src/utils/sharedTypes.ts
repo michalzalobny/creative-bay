@@ -27,7 +27,7 @@ export enum AssetType {
 
 export interface LoadedAsset {
   type: AssetType.IMAGE | AssetType.MODEL3D | AssetType.VIDEO;
-  asset: THREE.Texture | GLTF;
+  asset: THREE.Texture | GLTF | null;
   naturalWidth: number;
   naturalHeight: number;
 }

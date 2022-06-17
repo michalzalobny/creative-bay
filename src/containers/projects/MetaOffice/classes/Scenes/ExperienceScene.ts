@@ -72,7 +72,9 @@ export class ExperienceScene extends InteractiveScene {
 
   setLoadedAssets(assets: LoadedAssets) {
     this._loadedAssets = assets;
-    this._blenderScene = (this._loadedAssets['officeSrc'].asset as GLTF).scene;
+    if (this._loadedAssets['officeSrc'].asset) {
+      this._blenderScene = (this._loadedAssets['officeSrc'].asset as GLTF).scene;
+    }
 
     (this._loadedAssets['render1Src'].asset as THREE.Texture).flipY = false;
     (this._loadedAssets['render1Src'].asset as THREE.Texture).encoding = THREE.sRGBEncoding;
@@ -92,55 +94,59 @@ export class ExperienceScene extends InteractiveScene {
       map: this._loadedAssets['render3Src'].asset as THREE.Texture,
     });
 
-    const render1Mesh = this._blenderScene.children.find(
-      child => child.name === 'render1'
-    ) as THREE.Mesh;
-    if (render1Mesh) render1Mesh.material = this._bakedMaterial1;
+    if (this._blenderScene) {
+      const render1Mesh = this._blenderScene.children.find(
+        child => child.name === 'render1'
+      ) as THREE.Mesh;
+      if (render1Mesh) render1Mesh.material = this._bakedMaterial1;
 
-    const render2Mesh = this._blenderScene.children.find(
-      child => child.name === 'render2'
-    ) as THREE.Mesh;
-    if (render2Mesh) render2Mesh.material = this._bakedMaterial2;
+      const render2Mesh = this._blenderScene.children.find(
+        child => child.name === 'render2'
+      ) as THREE.Mesh;
+      if (render2Mesh) render2Mesh.material = this._bakedMaterial2;
 
-    const render3Mesh = this._blenderScene.children.find(
-      child => child.name === 'render3'
-    ) as THREE.Mesh;
-    if (render3Mesh) render3Mesh.material = this._bakedMaterial3;
+      const render3Mesh = this._blenderScene.children.find(
+        child => child.name === 'render3'
+      ) as THREE.Mesh;
+      if (render3Mesh) render3Mesh.material = this._bakedMaterial3;
 
-    const champGlassMesh = this._blenderScene.children.find(
-      child => child.name === 'champGlass'
-    ) as THREE.Mesh;
-    if (champGlassMesh) champGlassMesh.material = this._glassMaterial;
+      const champGlassMesh = this._blenderScene.children.find(
+        child => child.name === 'champGlass'
+      ) as THREE.Mesh;
+      if (champGlassMesh) champGlassMesh.material = this._glassMaterial;
 
-    const glassMesh = this._blenderScene.children.find(
-      child => child.name === 'glass'
-    ) as THREE.Mesh;
-    if (glassMesh) glassMesh.material = this._glassMaterial;
+      const glassMesh = this._blenderScene.children.find(
+        child => child.name === 'glass'
+      ) as THREE.Mesh;
+      if (glassMesh) glassMesh.material = this._glassMaterial;
 
-    const barGlassMesh = this._blenderScene.children.find(
-      child => child.name === 'bufet'
-    ) as THREE.Mesh;
-    if (barGlassMesh) barGlassMesh.material = this._glassDarkMaterial;
+      const barGlassMesh = this._blenderScene.children.find(
+        child => child.name === 'bufet'
+      ) as THREE.Mesh;
+      if (barGlassMesh) barGlassMesh.material = this._glassDarkMaterial;
 
-    const emissionMesh = this._blenderScene.children.find(
-      child => child.name === 'emission'
-    ) as THREE.Mesh;
-    if (emissionMesh) emissionMesh.material = this._lightMaterial;
+      const emissionMesh = this._blenderScene.children.find(
+        child => child.name === 'emission'
+      ) as THREE.Mesh;
+      if (emissionMesh) emissionMesh.material = this._lightMaterial;
 
-    const extraFrameMesh = this._blenderScene.children.find(
-      child => child.name === 'extraFrame'
-    ) as THREE.Mesh;
-    if (extraFrameMesh) extraFrameMesh.material = this._lightMaterial;
+      const extraFrameMesh = this._blenderScene.children.find(
+        child => child.name === 'extraFrame'
+      ) as THREE.Mesh;
+      if (extraFrameMesh) extraFrameMesh.material = this._lightMaterial;
 
-    const neonMesh = this._blenderScene.children.find(child => child.name === 'neon') as THREE.Mesh;
-    if (neonMesh) neonMesh.material = this._neonMaterial;
+      const neonMesh = this._blenderScene.children.find(
+        child => child.name === 'neon'
+      ) as THREE.Mesh;
+      if (neonMesh) neonMesh.material = this._neonMaterial;
 
-    const windowsMesh = this._blenderScene.children.find(
-      child => child.name === 'windows'
-    ) as THREE.Mesh;
-    if (windowsMesh) windowsMesh.material = this._lightMaterial;
+      const windowsMesh = this._blenderScene.children.find(
+        child => child.name === 'windows'
+      ) as THREE.Mesh;
+      if (windowsMesh) windowsMesh.material = this._lightMaterial;
 
-    if (this._blenderScene) this.add(this._blenderScene);
+      if (this._blenderScene) this.add(this._blenderScene);
+    }
   }
 
   _handleDepthOfField(updateInfo: UpdateInfo) {
