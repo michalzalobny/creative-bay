@@ -13,6 +13,8 @@ export const getStaticProps: GetStaticProps = () => {
   return {
     props: {
       head,
+      inspirationName: 'Le Polish Bureau headquarters',
+      inspirationHref: 'https://lepolishbureau.com/',
       repoHref:
         'https://github.com/javusScriptus/creative-bay/tree/main/src/containers/projects/MetaOffice',
     },
