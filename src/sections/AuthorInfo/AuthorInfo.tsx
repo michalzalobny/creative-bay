@@ -54,7 +54,7 @@ export const AuthorInfo = () => {
     <>
       <S.Wrapper
         isLoaded={isLoaded}
-        elWidth={isExpanded ? photoSize + 5 * iconMargin + 4 * iconSize : photoSize}
+        elWidth={isExpanded ? photoSize + 4.75 * iconMargin + 4 * iconSize : photoSize}
       >
         <S.IconsWrapper style={{ display: displayIcons ? 'flex' : 'none' }}>
           <S.IconWrapper>
@@ -83,7 +83,7 @@ export const AuthorInfo = () => {
 
       <S.ImageWrapper
         isExpanded={isExpanded}
-        offsetX={isExpanded ? 5 * iconMargin + 4 * iconSize : 0}
+        offsetX={isExpanded ? 4.75 * iconMargin + 4 * iconSize : 0}
       >
         <S.ImageContainer onClick={() => setIsExpanded(prev => !prev)}>
           <S.AuthorImage alt="author's face" src={authorSrc.src} />

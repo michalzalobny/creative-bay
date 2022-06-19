@@ -63,7 +63,6 @@ export const IconsWrapper = styled.div`
   height: 100%;
   border-radius: ${borderRadius}px;
   padding-right: ${iconMargin}px;
-  padding-left: ${iconMargin}px;
 `;
 
 interface ImageWrapperProps {
