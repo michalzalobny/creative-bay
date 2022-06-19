@@ -49,13 +49,14 @@ interface LoaderWrapperProps {
 }
 
 export const LoaderWrapper = styled.div<LoaderWrapperProps>`
-  width: 130px;
+  width: 108px;
   height: 2px;
   overflow: hidden;
   background: rgba(0, 0, 0, 0.2);
   transform: scaleX(1);
   transition: transform 1s ${sharedValues.timings.t1};
   transition-delay: 1s;
+  border-radius: 100px;
 
   ${props =>
     props.shouldHide &&
@@ -87,4 +88,32 @@ export const CanvasWrapper = styled.div`
   width: 100%;
   height: 100%;
   z-index: 1;
+`;
+
+export const TitleWrapper = styled.div`
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, calc(-50% - 11px));
+  overflow: hidden;
+`;
+
+interface TitleProps {
+  shouldHide: boolean;
+}
+
+export const Title = styled.h2<TitleProps>`
+  font-size: 12px;
+  text-transform: uppercase;
+  font-weight: 800;
+  letter-spacing: 3px;
+  transition: transform 1s ${sharedValues.timings.t1};
+  transition-delay: 0.5s;
+
+  ${props =>
+    props.shouldHide &&
+    css`
+      transform: translateY(100%);
+    `}
 `;

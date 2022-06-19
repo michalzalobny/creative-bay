@@ -32,6 +32,9 @@ export default function MetaOffice(props: PageProps) {
       <Head {...head} />
       <S.Wrapper>
         <S.ReadyWrapper shouldReveal={shouldReveal}>
+          <S.TitleWrapper>
+            <S.Title shouldHide={shouldReveal}>Meta Office</S.Title>
+          </S.TitleWrapper>
           <S.LoaderContainer>
             <S.LoaderWrapper shouldHide={shouldReveal}>
               <S.LoaderLine progress={progressValue} />
