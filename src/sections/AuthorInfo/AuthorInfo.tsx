@@ -54,6 +54,7 @@ export const AuthorInfo = () => {
     <>
       <S.Wrapper
         isLoaded={isLoaded}
+        // .75 is extra spacing automatically added between photo and left icon
         elWidth={isExpanded ? photoSize + 4.75 * iconMargin + 4 * iconSize : photoSize}
       >
         <S.IconsWrapper style={{ display: displayIcons ? 'flex' : 'none' }}>
@@ -83,6 +84,7 @@ export const AuthorInfo = () => {
 
       <S.ImageWrapper
         isExpanded={isExpanded}
+        // .75 is extra spacing automatically added between photo and left icon
         offsetX={isExpanded ? 4.75 * iconMargin + 4 * iconSize : 0}
       >
         <S.ImageContainer onClick={() => setIsExpanded(prev => !prev)}>
