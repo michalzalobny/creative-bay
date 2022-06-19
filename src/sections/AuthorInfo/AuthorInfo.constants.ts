@@ -1,6 +1,6 @@
-export const iconSize = 18;
-export const iconMargin = 20;
-export const photoSize = 50;
+export const iconSize = 16;
+export const iconMargin = 15;
+export const photoSize = 40;
 export const borderRadius = 50;
 export const expandDuration = 0.65;
 export const fixedRight = 20;

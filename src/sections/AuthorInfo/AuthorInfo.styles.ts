@@ -63,8 +63,7 @@ export const IconsWrapper = styled.div`
   height: 100%;
   border-radius: ${borderRadius}px;
   padding-right: ${iconMargin}px;
-  padding-left: ${iconMargin / 2}px;
-  transform: ${`translateX(calc(30% - ${photoSize}px))`};
+  padding-left: ${iconMargin}px;
 `;
 
 interface ImageWrapperProps {
@@ -97,7 +96,7 @@ export const ImageContainer = styled.button`
   border-radius: 50%;
   position: relative;
   overflow: hidden;
-  transform: scale(0.75);
+  transform: scale(0.8);
 
   &:before {
     content: '';
