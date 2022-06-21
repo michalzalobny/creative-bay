@@ -42,9 +42,9 @@ export class Preloader extends EventDispatcher {
             this._onAssetLoaded();
           };
 
-          if (image.complete) {
-            onLoad();
-          }
+          // if (image.complete) {
+          //   onLoad();
+          // }
 
           image.onload = onLoad;
           break;
