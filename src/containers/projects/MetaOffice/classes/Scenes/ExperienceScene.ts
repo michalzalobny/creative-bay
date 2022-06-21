@@ -74,9 +74,9 @@ export class ExperienceScene extends InteractiveScene {
     console.log('assets in experience scene', assets);
     this._loadedAssets = assets;
     // if (this._loadedAssets['officeSrc'].asset) {
+    console.log('assetsel', assets['officeSrc'].asset);
     this._blenderScene = (assets['officeSrc']?.asset as GLTF)?.scene;
     console.log('blenderScene', this._blenderScene);
-    console.log('assetsel', assets['officeSrc'].asset);
 
     (this._loadedAssets['render1Src'].asset as THREE.Texture).flipY = false;
     (this._loadedAssets['render1Src'].asset as THREE.Texture).encoding = THREE.sRGBEncoding;
