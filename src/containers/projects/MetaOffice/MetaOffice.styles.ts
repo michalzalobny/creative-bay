@@ -49,7 +49,7 @@ interface LoaderWrapperProps {
 }
 
 export const LoaderWrapper = styled.div<LoaderWrapperProps>`
-  width: 108px;
+  width: 109px;
   height: 2px;
   overflow: hidden;
   background: rgba(0, 0, 0, 0.2);
@@ -95,7 +95,7 @@ export const TitleWrapper = styled.div`
   z-index: 3;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, calc(-50% - 11px));
+  transform: translate(calc(-50% + 1.5px), calc(-50% - 11px));
   overflow: hidden;
 `;
 
