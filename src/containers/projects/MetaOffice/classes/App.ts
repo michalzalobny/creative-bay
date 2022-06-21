@@ -122,14 +122,13 @@ export class App extends THREE.EventDispatcher {
     this._setPostProcess();
 
     console.log('preloader', this._preloader);
-    setTimeout(() => {
-      this._preloader.setAssetsToPreload([
-        { src: officeSrc, type: 'model3d', targetName: 'officeSrc' },
-        { src: render1Src.src, type: 'image', targetName: 'render1Src' },
-        { src: render2Src.src, type: 'image', targetName: 'render2Src' },
-        { src: render3Src.src, type: 'image', targetName: 'render3Src' },
-      ]);
-    }, 4000);
+
+    this._preloader.setAssetsToPreload([
+      { src: officeSrc, type: 'model3d', targetName: 'officeSrc' },
+      { src: render1Src.src, type: 'image', targetName: 'render1Src' },
+      { src: render2Src.src, type: 'image', targetName: 'render2Src' },
+      { src: render3Src.src, type: 'image', targetName: 'render3Src' },
+    ]);
   }
 
   _onResizeDebounced = debounce(() => this._onResize(), 300);
@@ -188,7 +187,10 @@ export class App extends THREE.EventDispatcher {
 
   _onAssetsLoaded = () => {
     this._setShouldRevealReact(true);
-    this._experienceScene.setLoadedAssets(this._preloader.loadedAssets);
+    setTimeout(() => {
+      this._experienceScene.setLoadedAssets(this._preloader.loadedAssets);
+    }, 1);
+
     if (this._animateInTimeoutId) clearTimeout(this._animateInTimeoutId);
     this._animateInTimeoutId = setTimeout(this._animateIn, 3200);
   };
