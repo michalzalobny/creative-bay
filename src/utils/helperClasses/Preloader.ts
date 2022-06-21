@@ -76,18 +76,14 @@ export class Preloader extends EventDispatcher {
           this._gltfLoader.load(
             item.src,
             (gltf: GLTF) => {
-              console.log('started');
-              setTimeout(() => {
-                console.log('finished');
-                this.loadedAssets[item.targetName || item.src] = {
-                  type: AssetType.MODEL3D,
-                  asset: gltf,
-                  naturalWidth: 1,
-                  naturalHeight: 1,
-                };
+              this.loadedAssets[item.targetName || item.src] = {
+                type: AssetType.MODEL3D,
+                asset: gltf,
+                naturalWidth: 1,
+                naturalHeight: 1,
+              };
 
-                this._onAssetLoaded();
-              }, 3000);
+              this._onAssetLoaded();
             },
             // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
             progress => {},

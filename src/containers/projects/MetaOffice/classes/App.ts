@@ -117,7 +117,7 @@ export class App extends THREE.EventDispatcher {
     });
 
     this._onResize();
-    this._addListeners();
+
     this._resumeAppFrame();
     this._setPostProcess();
 
@@ -127,6 +127,8 @@ export class App extends THREE.EventDispatcher {
       { src: render2Src.src, type: 'image', targetName: 'render2Src' },
       { src: render3Src.src, type: 'image', targetName: 'render3Src' },
     ]);
+
+    this._addListeners();
   }
 
   _onResizeDebounced = debounce(() => this._onResize(), 300);
