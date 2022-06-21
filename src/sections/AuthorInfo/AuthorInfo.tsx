@@ -37,7 +37,7 @@ export const AuthorInfo = () => {
       if (wasExpandedRef.current) return;
       setIsExpanded(true);
     };
-    expandTimeoutId.current = setTimeout(handleAutoExpand, 4500);
+    expandTimeoutId.current = setTimeout(handleAutoExpand, 12000);
 
     return () => {
       if (expandTimeoutId.current) clearTimeout(expandTimeoutId.current);
