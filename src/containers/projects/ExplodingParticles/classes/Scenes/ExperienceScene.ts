@@ -145,9 +145,6 @@ export class ExperienceScene extends InteractiveScene {
 
     await this._animateVidOpacity(finishedVideo, 0, 0.2);
 
-    finishedVideo.currentTime = 0;
-    this.computeFrame(finishedTargetName);
-
     nextVideo.currentTime = 0;
     this.computeFrame(nextTargetName);
 
@@ -155,6 +152,9 @@ export class ExperienceScene extends InteractiveScene {
     await this._pointPlane3D.showT(nextVideoId, 1);
     await this._pointPlane3D.animateDistortion(0, 1);
     await this._animateVidOpacity(nextVideo, 1, 0.2);
+
+    finishedVideo.currentTime = 0;
+    this.computeFrame(finishedTargetName);
 
     void nextVideo.play();
   }
