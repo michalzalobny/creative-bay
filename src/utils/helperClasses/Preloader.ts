@@ -108,6 +108,7 @@ export class Preloader extends EventDispatcher {
     };
 
     const handleModel3DLoad = (item: AssetToPreload) => {
+      console.log('item', item);
       this._gltfLoader.load(
         item.src,
         (gltf: GLTF) => {
