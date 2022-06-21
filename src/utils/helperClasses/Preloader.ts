@@ -29,7 +29,8 @@ export class Preloader extends EventDispatcher {
           const image = new window.Image();
           image.crossOrigin = 'anonymous';
           image.src = item.src;
-          image.onload = () => {
+
+          const onLoad = () => {
             texture.image = image;
             texture.needsUpdate = true;
             this.loadedAssets[item.targetName || item.src] = {
@@ -40,6 +41,12 @@ export class Preloader extends EventDispatcher {
             };
             this._onAssetLoaded();
           };
+
+          if (image.complete) {
+            onLoad();
+          }
+
+          image.onload = onLoad;
           break;
         }
         case AssetType.VIDEO: {
