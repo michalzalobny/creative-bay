@@ -76,7 +76,7 @@ export class Preloader extends EventDispatcher {
           this._gltfLoader.load(
             item.src,
             (gltf: GLTF) => {
-              window.requestAnimationFrame(() => {
+              setTimeout(() => {
                 this.loadedAssets[item.targetName || item.src] = {
                   type: AssetType.MODEL3D,
                   asset: gltf,
@@ -85,7 +85,7 @@ export class Preloader extends EventDispatcher {
                 };
 
                 this._onAssetLoaded();
-              });
+              }, 3000);
             },
             // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
             progress => {},
