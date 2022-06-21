@@ -16,6 +16,7 @@ export default function MetaOffice(props: PageProps) {
   const [progressValue, setProgressValue] = useState(0);
 
   useEffectOnce(() => {
+    console.log(appState);
     if (!rendererEl.current) return;
 
     appState.app = new App({ rendererEl: rendererEl.current, setShouldReveal, setProgressValue });
