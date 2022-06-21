@@ -59,9 +59,9 @@ export class App extends THREE.EventDispatcher {
 
     this._orbitControls = new OrbitControls(this._camera, this._rendererEl);
     this._orbitControls.enableDamping = true;
-    // this._orbitControls.enablePan = false;
-    // this._orbitControls.enableRotate = false;
-    // this._orbitControls.enableZoom = false;
+    this._orbitControls.enablePan = false;
+    this._orbitControls.enableRotate = false;
+    this._orbitControls.enableZoom = false;
     this._orbitControls.update();
 
     this._gui.title('Scene settings');
@@ -153,7 +153,6 @@ export class App extends THREE.EventDispatcher {
     this._mouseMove.update();
     this._scroll.update({ delta, slowDownFactor, time });
     this._experienceScene.update({ delta, slowDownFactor, time });
-    this._orbitControls.update();
 
     this._renderer.render(this._experienceScene, this._camera);
   };

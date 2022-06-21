@@ -107,7 +107,6 @@ export class App extends THREE.EventDispatcher {
   _onAssetsLoaded = () => {
     this._setShouldRevealReact(true);
     this._experienceScene.setLoadedAssets(this._preloader.loadedAssets);
-    //animate in experience
   };
 
   _onPreloaderProgress = (e: THREE.Event) => {
@@ -160,7 +159,6 @@ export class App extends THREE.EventDispatcher {
     this._mouseMove.update();
     this._scroll.update({ delta, slowDownFactor, time });
     this._experienceScene.update({ delta, slowDownFactor, time });
-    this._orbitControls.update();
 
     this._renderer.render(this._experienceScene, this._camera);
   };
