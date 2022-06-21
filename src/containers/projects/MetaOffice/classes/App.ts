@@ -122,10 +122,10 @@ export class App extends THREE.EventDispatcher {
     this._setPostProcess();
 
     this._preloader.setAssetsToPreload([
+      { src: officeSrc, type: 'model3d', targetName: 'officeSrc' },
       { src: render1Src.src, type: 'image', targetName: 'render1Src' },
       { src: render2Src.src, type: 'image', targetName: 'render2Src' },
       { src: render3Src.src, type: 'image', targetName: 'render3Src' },
-      { src: officeSrc, type: 'model3d', targetName: 'officeSrc' },
     ]);
   }
 
@@ -168,7 +168,7 @@ export class App extends THREE.EventDispatcher {
     this._postProcess.shaderPass = new ShaderPass(GammaCorrectionShader as THREE.ShaderMaterial);
     this._postProcess.bokehPass = new BokehPass(this._experienceScene, this._camera, {
       aperture: 0.001 * 0.8,
-      maxblur: 0.005 * 1.2,
+      maxblur: 0.005 * 0.35,
     });
 
     this._postProcess.composer = new EffectComposer(this._renderer);
@@ -187,7 +187,7 @@ export class App extends THREE.EventDispatcher {
     this._experienceScene.setLoadedAssets(this._preloader.loadedAssets);
     this._setShouldRevealReact(true);
     if (this._animateInTimeoutId) clearTimeout(this._animateInTimeoutId);
-    this._animateInTimeoutId = setTimeout(this._animateIn, 3200);
+    this._animateInTimeoutId = setTimeout(this._animateIn, 3200 - 1000); //-1000 to overlap the fade out animation
   };
 
   _onPreloaderProgress = (e: THREE.Event) => {
