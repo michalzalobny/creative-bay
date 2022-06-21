@@ -71,6 +71,7 @@ export class ExperienceScene extends InteractiveScene {
   }
 
   setLoadedAssets(assets: LoadedAssets) {
+    console.log('assets in experience scene', assets);
     this._loadedAssets = assets;
     if (this._loadedAssets['officeSrc'].asset) {
       this._blenderScene = (this._loadedAssets['officeSrc'].asset as GLTF).scene;
