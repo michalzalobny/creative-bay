@@ -13,12 +13,11 @@ export default function Project(props: PageProps) {
 
   const rendererEl = useRef<HTMLDivElement | null>(null);
   const [shouldReveal, setShouldReveal] = useState(false);
-  const [, setProgressValue] = useState(0);
 
   useEffectOnce(() => {
     if (!rendererEl.current) return;
 
-    appState.app = new App({ rendererEl: rendererEl.current, setShouldReveal, setProgressValue });
+    appState.app = new App({ rendererEl: rendererEl.current, setShouldReveal });
 
     return () => {
       if (appState.app) {

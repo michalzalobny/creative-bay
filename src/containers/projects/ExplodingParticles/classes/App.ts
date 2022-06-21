@@ -13,7 +13,6 @@ import { ExperienceScene } from './Scenes/ExperienceScene';
 interface Constructor {
   rendererEl: HTMLDivElement;
   setShouldReveal: React.Dispatch<React.SetStateAction<boolean>>;
-  setProgressValue: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export enum VideoNames {
@@ -36,11 +35,10 @@ export class App extends THREE.EventDispatcher {
   _orbitControls: OrbitControls;
   _experienceScene: ExperienceScene;
   _setShouldRevealReact: React.Dispatch<React.SetStateAction<boolean>>;
-  _setProgressValueReact: React.Dispatch<React.SetStateAction<number>>;
   _gui = new GUI();
   _pixelRatio = 1;
 
-  constructor({ setShouldReveal, rendererEl, setProgressValue }: Constructor) {
+  constructor({ setShouldReveal, rendererEl }: Constructor) {
     super();
     this._rendererEl = rendererEl;
     this._canvas = document.createElement('canvas');
@@ -48,7 +46,6 @@ export class App extends THREE.EventDispatcher {
     this._camera = new THREE.PerspectiveCamera();
 
     this._setShouldRevealReact = setShouldReveal;
-    this._setProgressValueReact = setProgressValue;
 
     this._renderer = new THREE.WebGLRenderer({
       canvas: this._canvas,
