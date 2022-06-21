@@ -162,14 +162,17 @@ export class PointObject3D extends InteractiveObject3D {
   setAsset(asset: PointAsset) {
     switch (asset.targetName) {
       case VideoNames.VID1:
+        (this._points.material.uniforms.tMap1.value as THREE.Texture | null)?.dispose();
         this._points.material.uniforms.tMap1.value = asset.texture;
         this._points.material.uniforms.uMediaRes1.value = [asset.width, asset.height];
         break;
       case VideoNames.VID2:
+        (this._points.material.uniforms.tMap2.value as THREE.Texture | null)?.dispose();
         this._points.material.uniforms.tMap2.value = asset.texture;
         this._points.material.uniforms.uMediaRes2.value = [asset.width, asset.height];
         break;
       case VideoNames.VID3:
+        (this._points.material.uniforms.tMap3.value as THREE.Texture | null)?.dispose();
         this._points.material.uniforms.tMap3.value = asset.texture;
         this._points.material.uniforms.uMediaRes3.value = [asset.width, asset.height];
         break;
