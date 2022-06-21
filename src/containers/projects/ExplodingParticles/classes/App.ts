@@ -7,13 +7,8 @@ import GUI from 'lil-gui';
 import { MouseMove } from 'utils/helperClasses/MouseMove';
 import { Scroll } from 'utils/helperClasses/Scroll';
 import { sharedValues } from 'utils/sharedValues';
-import { Preloader } from 'utils/helperClasses/Preloader';
 
 import { ExperienceScene } from './Scenes/ExperienceScene';
-//Assets imports
-import vid1 from './assets/videos/1.mp4';
-import vid2 from './assets/videos/2.mp4';
-import vid3 from './assets/videos/3.mp4';
 
 interface Constructor {
   rendererEl: HTMLDivElement;
@@ -38,7 +33,6 @@ export class App extends THREE.EventDispatcher {
   _renderer: THREE.WebGLRenderer;
   _mouseMove = MouseMove.getInstance();
   _scroll = Scroll.getInstance();
-  _preloader = new Preloader();
   _orbitControls: OrbitControls;
   _experienceScene: ExperienceScene;
   _setShouldRevealReact: React.Dispatch<React.SetStateAction<boolean>>;
@@ -70,17 +64,10 @@ export class App extends THREE.EventDispatcher {
     // this._orbitControls.enableZoom = false;
     this._orbitControls.update();
 
-    this._preloader.setAssetsToPreload([
-      { src: vid1, type: 'video', targetName: VideoNames.VID1 },
-      { src: vid2, type: 'video', targetName: VideoNames.VID2 },
-      { src: vid3, type: 'video', targetName: VideoNames.VID3 },
-    ]);
-
     this._gui.title('Scene settings');
     this._experienceScene = new ExperienceScene({
       camera: this._camera,
       gui: this._gui,
-      preloader: this._preloader,
     });
 
     this._onResize();
@@ -116,27 +103,22 @@ export class App extends THREE.EventDispatcher {
     }
   };
 
+  //use for experience scene
   _onAssetsLoaded = () => {
     this._setShouldRevealReact(true);
     this._experienceScene.animateIn();
   };
 
-  _onPreloaderProgress = (e: THREE.Event) => {
-    this._setProgressValueReact(e.progress as number);
-  };
-
   _addListeners() {
     window.addEventListener('resize', this._onResizeDebounced);
     window.addEventListener('visibilitychange', this._onVisibilityChange);
-    this._preloader.addEventListener('loaded', this._onAssetsLoaded);
-    this._preloader.addEventListener('progress', this._onPreloaderProgress);
+    this._experienceScene.addEventListener('loaded', this._onAssetsLoaded);
   }
 
   _removeListeners() {
     window.removeEventListener('resize', this._onResizeDebounced);
     window.removeEventListener('visibilitychange', this._onVisibilityChange);
-    this._preloader.removeEventListener('loaded', this._onAssetsLoaded);
-    this._preloader.removeEventListener('progress', this._onPreloaderProgress);
+    this._experienceScene.removeEventListener('loaded', this._onAssetsLoaded);
   }
 
   _resumeAppFrame() {
@@ -191,7 +173,6 @@ export class App extends THREE.EventDispatcher {
     this._removeListeners();
 
     this._experienceScene.destroy();
-    this._preloader.destroy();
     this._gui.destroy();
   }
 }

@@ -3,18 +3,20 @@ import GUI from 'lil-gui';
 import { gsap } from 'gsap';
 
 import { UpdateInfo, Bounds } from 'utils/sharedTypes';
-import { Preloader } from 'utils/helperClasses/Preloader';
 import { getVideoFrameTexture } from 'utils/functions/getVideoFrameTexture';
 import { Scroll } from 'utils/helperClasses/Scroll';
 
 import { InteractiveScene } from './InteractiveScene';
 import { PointObject3D } from '../Components/PointObject3D';
 import { VideoNames } from '../App';
+//Assets imports
+import vid1 from '../assets/videos/1.mp4';
+import vid2 from '../assets/videos/2.mp4';
+import vid3 from '../assets/videos/3.mp4';
 
 interface Constructor {
   camera: THREE.PerspectiveCamera;
   gui: GUI;
-  preloader: Preloader;
 }
 
 export class ExperienceScene extends InteractiveScene {
@@ -31,7 +33,6 @@ export class ExperienceScene extends InteractiveScene {
     ExperienceScene.particlesAmount,
     ExperienceScene.particlesAmount * ExperienceScene.planeRatio
   );
-  _preloader;
   _videosArray: HTMLVideoElement[] = [];
   _videosWrapper: HTMLElement;
   _scroll = Scroll.getInstance();
@@ -42,12 +43,16 @@ export class ExperienceScene extends InteractiveScene {
     strengthTarget: 0,
     strengthCurrent: 0,
   };
+  _videosToPreload = [
+    { name: VideoNames.VID1, source: vid1 },
+    { name: VideoNames.VID2, source: vid2 },
+    { name: VideoNames.VID3, source: vid3 },
+  ];
   _currentlyPlayedId = 1; //1, 2 or 3
 
-  constructor({ preloader, gui, camera }: Constructor) {
+  constructor({ gui, camera }: Constructor) {
     super({ camera, gui });
 
-    this._preloader = preloader;
     this._videosWrapper = document.querySelector(`[data-particle="wrapper"]`) as HTMLElement;
     this._preloadVideosFully();
     this._addListeners();
@@ -63,17 +68,17 @@ export class ExperienceScene extends InteractiveScene {
     let loaded = 0;
     const onVideoLoaded = () => {
       loaded += 1;
-      if (loaded === this._videosArray.length) this.startVideoLooping();
+      if (loaded === this._videosArray.length) {
+        this.dispatchEvent({ type: 'loaded' });
+        this.startVideoLooping();
+      }
     };
 
-    const namesArr = [VideoNames.VID1, VideoNames.VID2, VideoNames.VID3];
-    namesArr.forEach(name => {
+    this._videosToPreload.forEach(vidEl => {
       const video = document.createElement('video');
-      video.setAttribute('data-particle', name);
+      video.setAttribute('data-particle', vidEl.name);
       this._videosWrapper.appendChild(video);
-      const src =
-        this._preloader.assetsToPreload.find(asset => asset.targetName === name)?.src || '';
-      video.src = src;
+      video.src = vidEl.source;
       video.preload = 'auto'; //fixes canplaythrough firing issues issues
       video.muted = true;
       video.playsInline = true;
