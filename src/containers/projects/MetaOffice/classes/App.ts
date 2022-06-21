@@ -121,13 +121,11 @@ export class App extends THREE.EventDispatcher {
     this._resumeAppFrame();
     this._setPostProcess();
 
-    console.log('preloader', this._preloader);
-
     this._preloader.setAssetsToPreload([
-      { src: officeSrc, type: 'model3d', targetName: 'officeSrc' },
       { src: render1Src.src, type: 'image', targetName: 'render1Src' },
       { src: render2Src.src, type: 'image', targetName: 'render2Src' },
       { src: render3Src.src, type: 'image', targetName: 'render3Src' },
+      { src: officeSrc, type: 'model3d', targetName: 'officeSrc' },
     ]);
   }
 
@@ -186,11 +184,8 @@ export class App extends THREE.EventDispatcher {
   };
 
   _onAssetsLoaded = () => {
+    this._experienceScene.setLoadedAssets(this._preloader.loadedAssets);
     this._setShouldRevealReact(true);
-    setTimeout(() => {
-      this._experienceScene.setLoadedAssets(this._preloader.loadedAssets);
-    }, 1);
-
     if (this._animateInTimeoutId) clearTimeout(this._animateInTimeoutId);
     this._animateInTimeoutId = setTimeout(this._animateIn, 3200);
   };
