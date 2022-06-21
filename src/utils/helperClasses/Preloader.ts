@@ -76,7 +76,9 @@ export class Preloader extends EventDispatcher {
           this._gltfLoader.load(
             item.src,
             (gltf: GLTF) => {
+              console.log('started');
               setTimeout(() => {
+                console.log('finished');
                 this.loadedAssets[item.targetName || item.src] = {
                   type: AssetType.MODEL3D,
                   asset: gltf,
