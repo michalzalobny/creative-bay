@@ -1,7 +1,8 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 
 import { Head } from 'seo/Head/Head';
 import { PageProps } from 'utils/sharedTypes';
+import { useEffectOnce } from 'hooks/useEffectOnce';
 
 import * as S from './MetaOffice.styles';
 import { appState } from './MetaOffice.state';
@@ -14,7 +15,7 @@ export default function MetaOffice(props: PageProps) {
   const [shouldReveal, setShouldReveal] = useState(false);
   const [progressValue, setProgressValue] = useState(0);
 
-  useEffect(() => {
+  useEffectOnce(() => {
     if (!rendererEl.current) return;
 
     appState.app = new App({ rendererEl: rendererEl.current, setShouldReveal, setProgressValue });
@@ -25,7 +26,7 @@ export default function MetaOffice(props: PageProps) {
         appState.app = null;
       }
     };
-  }, []);
+  });
 
   return (
     <>

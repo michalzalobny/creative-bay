@@ -1,6 +1,7 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 
 import { Head } from 'seo/Head/Head';
+import { useEffectOnce } from 'hooks/useEffectOnce';
 
 import { PageProps } from './Project.data';
 import * as S from './Project.styles';
@@ -12,9 +13,9 @@ export default function Project(props: PageProps) {
 
   const rendererEl = useRef<HTMLDivElement | null>(null);
   const [shouldReveal, setShouldReveal] = useState(false);
-  const [progressValue, setProgressValue] = useState(0);
+  const [, setProgressValue] = useState(0);
 
-  useEffect(() => {
+  useEffectOnce(() => {
     if (!rendererEl.current) return;
 
     appState.app = new App({ rendererEl: rendererEl.current, setShouldReveal, setProgressValue });
@@ -25,7 +26,7 @@ export default function Project(props: PageProps) {
         appState.app = null;
       }
     };
-  }, []);
+  });
 
   return (
     <>

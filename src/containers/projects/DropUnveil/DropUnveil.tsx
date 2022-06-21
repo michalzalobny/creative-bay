@@ -1,7 +1,8 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 
 import { Head } from 'seo/Head/Head';
 import { PageProps } from 'utils/sharedTypes';
+import { useEffectOnce } from 'hooks/useEffectOnce';
 
 import * as S from './DropUnveil.styles';
 import { appState } from './DropUnveil.state';
@@ -12,9 +13,9 @@ export default function DropUnveil(props: PageProps) {
 
   const rendererEl = useRef<HTMLDivElement | null>(null);
   const [shouldReveal, setShouldReveal] = useState(false);
-  const [progressValue, setProgressValue] = useState(0);
+  const [, setProgressValue] = useState(0);
 
-  useEffect(() => {
+  useEffectOnce(() => {
     if (!rendererEl.current) return;
 
     appState.app = new App({ rendererEl: rendererEl.current, setShouldReveal, setProgressValue });
@@ -25,7 +26,7 @@ export default function DropUnveil(props: PageProps) {
         appState.app = null;
       }
     };
-  }, []);
+  });
 
   return (
     <>
