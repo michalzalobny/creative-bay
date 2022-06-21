@@ -6,6 +6,7 @@ export const Wrapper = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
+  background: #000000;
 `;
 
 interface ReadyWrapperProps {
@@ -39,5 +40,31 @@ export const CanvasWrapper = styled.div`
   width: 100%;
   height: 100%;
   z-index: 1;
-  background: #000000;
+`;
+
+export const VideoWrapper = styled.div`
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 50%;
+  width: 40vh;
+  transform: translate(-50%, -50%);
+
+  &:before {
+    content: '';
+    display: block;
+    width: 100%;
+    padding-bottom: 171%;
+  }
+
+  video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border: 3px solid red;
+    opacity: 0;
+  }
 `;

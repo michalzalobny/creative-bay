@@ -13,7 +13,7 @@ export class Preloader extends EventDispatcher {
   _assetsLoadedCounter = 0;
   _dracoLoader = new DRACOLoader();
   _gltfLoader = new GLTFLoader();
-  _assetsToPreload: AssetToPreload[] = [];
+  assetsToPreload: AssetToPreload[] = [];
   loadedAssets: LoadedAssets = {};
 
   constructor() {
@@ -34,7 +34,7 @@ export class Preloader extends EventDispatcher {
   }
 
   _preloadTextures() {
-    if (this._assetsToPreload.length === 0) {
+    if (this.assetsToPreload.length === 0) {
       return this._onLoadingComplete();
     }
 
@@ -134,7 +134,7 @@ export class Preloader extends EventDispatcher {
       );
     };
 
-    this._assetsToPreload.forEach(item => {
+    this.assetsToPreload.forEach(item => {
       switch (item.type) {
         case AssetType.IMAGE: {
           handleImageLoad(item);
@@ -157,7 +157,7 @@ export class Preloader extends EventDispatcher {
   _onAssetLoaded() {
     this._assetsLoadedCounter += 1;
 
-    const loadRatio = this._assetsLoadedCounter / this._assetsToPreload.length;
+    const loadRatio = this._assetsLoadedCounter / this.assetsToPreload.length;
 
     this.dispatchEvent({ type: 'progress', progress: loadRatio });
 
@@ -171,7 +171,7 @@ export class Preloader extends EventDispatcher {
   }
 
   setAssetsToPreload(items: AssetToPreload[]) {
-    this._assetsToPreload = items;
+    this.assetsToPreload = items;
     this._preloadTextures();
   }
 

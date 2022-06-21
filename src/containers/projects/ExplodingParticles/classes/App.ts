@@ -11,12 +11,21 @@ import { Preloader } from 'utils/helperClasses/Preloader';
 
 import { ExperienceScene } from './Scenes/ExperienceScene';
 //Assets imports
-import starterImageSrc from './assets/starter.jpg';
+import vid1 from './assets/videos/1.mp4';
+import vid2 from './assets/videos/2.mp4';
+import vid3 from './assets/videos/3.mp4';
 
 interface Constructor {
   rendererEl: HTMLDivElement;
   setShouldReveal: React.Dispatch<React.SetStateAction<boolean>>;
   setProgressValue: React.Dispatch<React.SetStateAction<number>>;
+}
+
+export enum VideoNames {
+  VID_PART = 'vid',
+  VID1 = 'vid1',
+  VID2 = 'vid2',
+  VID3 = 'vid3',
 }
 
 export class App extends THREE.EventDispatcher {
@@ -61,16 +70,22 @@ export class App extends THREE.EventDispatcher {
     // this._orbitControls.enableZoom = false;
     this._orbitControls.update();
 
+    this._preloader.setAssetsToPreload([
+      { src: vid1, type: 'video', targetName: VideoNames.VID1 },
+      { src: vid2, type: 'video', targetName: VideoNames.VID2 },
+      { src: vid3, type: 'video', targetName: VideoNames.VID3 },
+    ]);
+
     this._gui.title('Scene settings');
-    this._experienceScene = new ExperienceScene({ camera: this._camera, gui: this._gui });
+    this._experienceScene = new ExperienceScene({
+      camera: this._camera,
+      gui: this._gui,
+      preloader: this._preloader,
+    });
 
     this._onResize();
     this._addListeners();
     this._resumeAppFrame();
-
-    this._preloader.setAssetsToPreload([
-      { src: starterImageSrc.src, type: 'image', targetName: 'starterImage' },
-    ]);
   }
 
   _onResizeDebounced = debounce(() => this._onResize(), 300);
@@ -101,9 +116,8 @@ export class App extends THREE.EventDispatcher {
     }
   };
 
-  _onAssetsLoaded = (e: THREE.Event) => {
+  _onAssetsLoaded = () => {
     this._setShouldRevealReact(true);
-    this._experienceScene.setLoadedAssets((e.target as Preloader).loadedAssets);
     this._experienceScene.animateIn();
   };
 
