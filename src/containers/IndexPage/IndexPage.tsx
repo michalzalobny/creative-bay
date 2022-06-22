@@ -21,6 +21,11 @@ export default function IndexPage() {
               <S.ProjectLink>2. Drop Unveil</S.ProjectLink>
             </Link>
           </S.ProjectContainer>
+          <S.ProjectContainer>
+            <S.ProjectLink target="_blank" href="https://michalzalobny.com/">
+              3. Portfolio 2021
+            </S.ProjectLink>
+          </S.ProjectContainer>
         </S.ProjectsWrapper>
       </S.Wrapper>
     </>

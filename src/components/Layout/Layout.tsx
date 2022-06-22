@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 
-import { globalState } from 'utils/globalState';
 import { CopyInfo } from 'sections/CopyInfo/CopyInfo';
 import { AuthorInfo } from 'sections/AuthorInfo/AuthorInfo';
 
