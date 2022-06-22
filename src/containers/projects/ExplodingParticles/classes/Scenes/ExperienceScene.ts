@@ -202,7 +202,7 @@ export class ExperienceScene extends InteractiveScene {
         this._animateBloom(5, time1),
         this._animateBloom(0, time1, time1 * 1.25),
         this._pointPlane3D.showT(nextVideoId, time1, 0.8 * time1),
-        this._pointPlane3D.animateDistortion(0, 1, time1),
+        this._pointPlane3D.animateDistortion(0, 1, time1, 'power1.easeOut'),
         this._pointPlane3D.animatePointSize(1, pointSizeDuration, time1),
       ]);
     }
