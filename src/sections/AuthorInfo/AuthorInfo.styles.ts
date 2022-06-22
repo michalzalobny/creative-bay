@@ -38,7 +38,7 @@ export const Wrapper = styled.div<WrapperProps>`
   width: ${props => props.elWidth}px;
   transition: width ${expandDuration}s ${sharedValues.timings.t1}, opacity 0.4s;
   overflow: hidden;
-  border: 2px solid white;
+  border: 2px solid transparent;
 
   ${media.tablet} {
     bottom: ${fixedBottomTablet}px;
@@ -80,6 +80,7 @@ export const ImageWrapper = styled.div<ImageWrapperProps>`
   transition: width ${expandDuration}s ${sharedValues.timings.t1};
   user-select: none;
   pointer-events: none;
+  display: none;
 
   ${media.tablet} {
     bottom: ${fixedBottomTablet}px;

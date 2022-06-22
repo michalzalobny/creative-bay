@@ -7,9 +7,20 @@ import * as S from './AuthorInfo.styles';
 import authorSrc from './images/img.jpg';
 import { iconMargin, iconSize, photoSize, expandDuration } from './AuthorInfo.constants';
 
+/*Revert to expandable:
+  in .constants:
+    1. Remove `- iconMargin` part
+    2. remove `- X` part for fixedBottom/fixedBottomTablet
+  in .styles:
+    1. change border from transparent to white
+    2. remove display:none from ImageWrapper
+  in ./ 
+    1. change `isExpanded` to false as default
+*/
+
 export const AuthorInfo = () => {
   const { isLoaded } = useMediaPreload({ isImage: true, mediaSrc: authorSrc.src });
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
   const [displayIcons, setDisplayIcons] = useState(false);
   const expandTimeoutId = useRef<ReturnType<typeof setTimeout> | null>(null);
   const displayIconsTimeoutId = useRef<ReturnType<typeof setTimeout> | null>(null);
