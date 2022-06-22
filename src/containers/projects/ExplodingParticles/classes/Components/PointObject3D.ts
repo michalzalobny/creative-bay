@@ -189,6 +189,9 @@ export class PointObject3D extends InteractiveObject3D {
 
   destroy() {
     super.destroy();
+    (this._points.material.uniforms.tMap1.value as THREE.Texture | null)?.dispose();
+    (this._points.material.uniforms.tMap2.value as THREE.Texture | null)?.dispose();
+    (this._points.material.uniforms.tMap3.value as THREE.Texture | null)?.dispose();
     this._material.dispose();
     this.remove(this._points);
   }
