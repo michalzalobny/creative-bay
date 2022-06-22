@@ -10,9 +10,9 @@ import { InteractiveScene } from './InteractiveScene';
 import { PointObject3D } from '../Components/PointObject3D';
 import { VideoNames } from '../App';
 //Assets imports
-import vid1 from '../assets/videos/1.mp4';
-import vid2 from '../assets/videos/2.mp4';
-import vid3 from '../assets/videos/3.mp4';
+import vid1 from '../assets/videos/faster/1.mp4';
+import vid2 from '../assets/videos/faster/2.mp4';
+import vid3 from '../assets/videos/faster/3.mp4';
 
 interface Constructor {
   camera: THREE.PerspectiveCamera;
