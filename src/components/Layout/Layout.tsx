@@ -29,11 +29,7 @@ export const Layout = (props: Props) => {
   }, [isReady]);
 
   const handleBack = () => {
-    if (globalState.hasVisitedLanding) {
-      router.back();
-    } else {
-      void router.push({ pathname: '/' });
-    }
+    void router.push({ pathname: '/' });
   };
 
   return (

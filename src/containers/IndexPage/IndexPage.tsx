@@ -1,17 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import Link from 'next/link';
 
-import { globalState } from 'utils/globalState';
 import { Head } from 'seo/Head/Head';
 
 import * as S from './IndexPage.styles';
 
 export default function IndexPage() {
-  useEffect(() => {
-    if (globalState.hasVisitedLanding) return;
-    globalState.hasVisitedLanding = true;
-  }, []);
-
   return (
     <>
       <Head />
