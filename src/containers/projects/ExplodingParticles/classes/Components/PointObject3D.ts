@@ -79,61 +79,64 @@ export class PointObject3D extends InteractiveObject3D {
     this.add(this._points);
   }
 
-  async animateDistortion(destination: number, duration: number) {
+  async animateDistortion(destination: number, duration: number, delay = 0) {
     return gsap.to(this._points.material.uniforms.uDistortion, {
       value: destination,
       duration,
       ease: 'power2.inOut',
+      delay,
     });
   }
 
-  async _animateProgress1(destination: number, duration: number) {
+  async _animateProgress1(destination: number, duration: number, delay = 0) {
     return gsap.to(this._points.material.uniforms.uProgress1, {
       value: destination,
       duration,
       ease: 'power2.inOut',
+      delay,
     });
   }
 
-  async _animateProgress2(destination: number, duration: number) {
+  async _animateProgress2(destination: number, duration: number, delay = 0) {
     return gsap.to(this._points.material.uniforms.uProgress2, {
       value: destination,
       duration,
       ease: 'power2.inOut',
+      delay,
     });
   }
 
-  async showT(position: number, duration: number) {
+  async showT(position: number, duration: number, delay = 0) {
     switch (position) {
       case 1:
-        return this._showT1(duration);
+        return this._showT1(duration, delay);
       case 2:
-        return this._showT2(duration);
+        return this._showT2(duration, delay);
       case 3:
-        return this._showT3(duration);
+        return this._showT3(duration, delay);
       default:
         return Promise.reject();
     }
   }
 
-  async _showT1(duration: number) {
+  async _showT1(duration: number, delay = 0) {
     return Promise.allSettled([
-      this._animateProgress1(0, duration),
-      this._animateProgress2(0, duration),
+      this._animateProgress1(0, duration, delay),
+      this._animateProgress2(0, duration, delay),
     ]);
   }
 
-  async _showT2(duration: number) {
+  async _showT2(duration: number, delay = 0) {
     return Promise.allSettled([
-      this._animateProgress1(1, duration),
-      this._animateProgress2(0, duration),
+      this._animateProgress1(1, duration, delay),
+      this._animateProgress2(0, duration, delay),
     ]);
   }
 
-  async _showT3(duration: number) {
+  async _showT3(duration: number, delay = 0) {
     return Promise.allSettled([
-      this._animateProgress1(0, duration),
-      this._animateProgress2(1, duration),
+      this._animateProgress1(0, duration, delay),
+      this._animateProgress2(1, duration, delay),
     ]);
   }
 

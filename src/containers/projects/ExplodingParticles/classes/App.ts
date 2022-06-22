@@ -1,8 +1,10 @@
 import TWEEN from '@tweenjs/tween.js';
 import * as THREE from 'three';
 import debounce from 'lodash.debounce';
-import { OrbitControls } from 'three-stdlib';
 import GUI from 'lil-gui';
+import { OrbitControls, UnrealBloomPass } from 'three-stdlib';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 
 import { MouseMove } from 'utils/helperClasses/MouseMove';
 import { Scroll } from 'utils/helperClasses/Scroll';
@@ -22,6 +24,12 @@ export enum VideoNames {
   VID3 = 'vid3',
 }
 
+export interface PostProcess {
+  renderPass: RenderPass | null;
+  unrealBloomPass: UnrealBloomPass | null;
+  composer: EffectComposer | null;
+}
+
 export class App extends THREE.EventDispatcher {
   _rendererEl: HTMLDivElement;
   _rafId: number | null = null;
@@ -37,6 +45,12 @@ export class App extends THREE.EventDispatcher {
   _setShouldRevealReact: React.Dispatch<React.SetStateAction<boolean>>;
   _gui = new GUI();
   _pixelRatio = 1;
+  //Post process
+  _postProcess: PostProcess = {
+    renderPass: null,
+    unrealBloomPass: null,
+    composer: null,
+  };
 
   constructor({ setShouldReveal, rendererEl }: Constructor) {
     super();
@@ -65,11 +79,13 @@ export class App extends THREE.EventDispatcher {
     this._experienceScene = new ExperienceScene({
       camera: this._camera,
       gui: this._gui,
+      postProcess: this._postProcess,
     });
 
     this._onResize();
     this._addListeners();
     this._resumeAppFrame();
+    this._setPostProcess();
   }
 
   _onResizeDebounced = debounce(() => this._onResize(), 300);
@@ -90,6 +106,24 @@ export class App extends THREE.EventDispatcher {
     this._camera.updateProjectionMatrix();
     this._experienceScene.setPixelRatio(this._pixelRatio);
     this._experienceScene.setRendererBounds(rendererBounds);
+    if (this._postProcess.composer) {
+      this._postProcess.composer.setSize(rendererBounds.width, rendererBounds.height);
+    }
+  }
+
+  _setPostProcess() {
+    this._postProcess.renderPass = new RenderPass(this._experienceScene, this._camera);
+    this._postProcess.unrealBloomPass = new UnrealBloomPass(
+      new THREE.Vector2(1024, 1024),
+      0,
+      0.4,
+      0
+    );
+
+    this._postProcess.composer = new EffectComposer(this._renderer);
+
+    this._postProcess.composer.addPass(this._postProcess.renderPass);
+    this._postProcess.composer.addPass(this._postProcess.unrealBloomPass);
   }
 
   _onVisibilityChange = () => {
@@ -100,10 +134,8 @@ export class App extends THREE.EventDispatcher {
     }
   };
 
-  //use for experience scene
   _onAssetsLoaded = () => {
     this._setShouldRevealReact(true);
-    this._experienceScene.animateIn();
   };
 
   _addListeners() {
@@ -151,7 +183,10 @@ export class App extends THREE.EventDispatcher {
     this._scroll.update({ delta, slowDownFactor, time });
     this._experienceScene.update({ delta, slowDownFactor, time });
 
-    this._renderer.render(this._experienceScene, this._camera);
+    //Instead of this.renderer.render()...
+    if (this._postProcess.composer) {
+      this._postProcess.composer.render();
+    }
   };
 
   _stopAppFrame() {

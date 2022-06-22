@@ -8,7 +8,7 @@ import { Scroll } from 'utils/helperClasses/Scroll';
 
 import { InteractiveScene } from './InteractiveScene';
 import { PointObject3D } from '../Components/PointObject3D';
-import { VideoNames } from '../App';
+import { VideoNames, PostProcess } from '../App';
 //Assets imports
 import vid1 from '../assets/videos/faster/1.mp4';
 import vid2 from '../assets/videos/faster/2.mp4';
@@ -17,6 +17,7 @@ import vid3 from '../assets/videos/faster/3.mp4';
 interface Constructor {
   camera: THREE.PerspectiveCamera;
   gui: GUI;
+  postProcess: PostProcess;
 }
 
 export class ExperienceScene extends InteractiveScene {
@@ -44,17 +45,17 @@ export class ExperienceScene extends InteractiveScene {
     { name: VideoNames.VID3, source: vid3 },
   ];
   _currentlyPlayedId = 1; //1, 2 or 3
+  _postProcess: PostProcess;
 
-  constructor({ gui, camera }: Constructor) {
+  constructor({ postProcess, gui, camera }: Constructor) {
     super({ camera, gui });
+
+    this._postProcess = postProcess;
 
     this._videosWrapper = document.querySelector(`[data-particle="wrapper"]`) as HTMLElement;
     this._preloadVideosFully();
     this._addListeners();
   }
-
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  animateIn() {}
 
   _preloadVideosFully() {
     let loaded = 0;
@@ -102,11 +103,7 @@ export class ExperienceScene extends InteractiveScene {
     }
     this._generateNewGeometry();
     if (!this._planeGeometry) return;
-    console.log(
-      'segments',
-      this._planeGeometry.parameters.widthSegments,
-      this._planeGeometry.parameters.heightSegments
-    );
+
     const particleSize =
       (this._planeGeometry.parameters.widthSegments /
         ExperienceScene.particlesAmount /
@@ -141,6 +138,16 @@ export class ExperienceScene extends InteractiveScene {
     return gsap.to(video, {
       duration,
       opacity: destination,
+    });
+  }
+
+  async _animateBloom(destination: number, duration: number, delay = 0) {
+    if (!this._postProcess.unrealBloomPass) return Promise.reject();
+    return gsap.to(this._postProcess.unrealBloomPass, {
+      duration,
+      strength: destination,
+      ease: 'power2.inOut',
+      delay,
     });
   }
 
@@ -183,8 +190,15 @@ export class ExperienceScene extends InteractiveScene {
 
     if (this._pointPlane3D) {
       await this._pointPlane3D.animateDistortion(1, 1);
-      await this._pointPlane3D.showT(nextVideoId, 1);
-      await this._pointPlane3D.animateDistortion(0, 1);
+
+      const time1 = 0.75;
+
+      await Promise.allSettled([
+        this._animateBloom(5, time1),
+        this._animateBloom(0, time1, time1 * 1.25),
+        this._pointPlane3D.showT(nextVideoId, time1, 0.8 * time1),
+        this._pointPlane3D.animateDistortion(0, 1, time1),
+      ]);
     }
 
     await this._animateVidOpacity(nextVideo, 1, 0.2);
