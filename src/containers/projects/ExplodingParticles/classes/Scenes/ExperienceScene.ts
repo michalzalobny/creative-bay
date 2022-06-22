@@ -22,7 +22,7 @@ interface Constructor {
 
 export class ExperienceScene extends InteractiveScene {
   static particlesAmount = 400;
-  static particlesSize = 10.2 * 1; //10.2 ensures that all the pixels used will take the whole space
+  static particlesSize = 10.2; //10.2 ensures that all the pixels used will take the whole space
   static wheelMultiplier = 1;
   static mouseMultiplier = 2;
   static touchMultiplier = 2;
@@ -188,8 +188,13 @@ export class ExperienceScene extends InteractiveScene {
     nextVideo.currentTime = 0;
     this.computeFrame(nextTargetName);
 
+    const pointSizeDuration = 0.6;
+
     if (this._pointPlane3D) {
-      await this._pointPlane3D.animateDistortion(1, 1);
+      await Promise.allSettled([
+        this._pointPlane3D.animateDistortion(1, 1),
+        this._pointPlane3D.animatePointSize(0.6, pointSizeDuration),
+      ]);
 
       const time1 = 0.75;
 
@@ -198,6 +203,7 @@ export class ExperienceScene extends InteractiveScene {
         this._animateBloom(0, time1, time1 * 1.25),
         this._pointPlane3D.showT(nextVideoId, time1, 0.8 * time1),
         this._pointPlane3D.animateDistortion(0, 1, time1),
+        this._pointPlane3D.animatePointSize(1, pointSizeDuration, time1),
       ]);
     }
 

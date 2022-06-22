@@ -69,6 +69,7 @@ export class PointObject3D extends InteractiveObject3D {
         },
         uPixelRatio: { value: 1 },
         uSize: { value: particleSize },
+        uSizeFactor: { value: 1 },
         uDistortion: { value: 0 },
         uProgress1: { value: 0 },
         uProgress2: { value: 0 },
@@ -77,6 +78,15 @@ export class PointObject3D extends InteractiveObject3D {
 
     this._points = new THREE.Points(this._geometry, this._material);
     this.add(this._points);
+  }
+
+  async animatePointSize(destination: number, duration: number, delay = 0) {
+    return gsap.to(this._points.material.uniforms.uSizeFactor, {
+      value: destination,
+      duration,
+      ease: 'power2.inOut',
+      delay,
+    });
   }
 
   async animateDistortion(destination: number, duration: number, delay = 0) {

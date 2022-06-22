@@ -4,6 +4,7 @@ uniform float uSize;
 uniform float uTime;
 uniform float uPixelRatio;
 uniform float uDistortion;
+uniform float uSizeFactor;
 
 varying vec2 vUv;
 
@@ -58,7 +59,7 @@ void main(){
     vec4 projectedPosition = projectionMatrix * viewPosition;
 
     gl_Position = projectedPosition;
-    gl_PointSize = uSize * uPixelRatio;
+    gl_PointSize = uSize * uPixelRatio * uSizeFactor;
     gl_PointSize *= (1.0 / - viewPosition.z);
 
     vUv = uv;
