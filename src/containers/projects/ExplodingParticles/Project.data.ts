@@ -17,6 +17,10 @@ export const getStaticProps: GetStaticProps = () => {
   return {
     props: {
       head,
+      inspirationName: 'M-Trust website',
+      inspirationHref: 'https://www.m-trust.co.jp/',
+      repoHref:
+        'https://github.com/javusScriptus/creative-bay/tree/main/src/containers/projects/ExplodingParticles',
     },
     revalidate: sharedValues.ISR_TIMEOUT,
   };
