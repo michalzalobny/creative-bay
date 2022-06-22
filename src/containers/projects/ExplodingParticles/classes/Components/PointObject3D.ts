@@ -13,6 +13,7 @@ interface Constructor {
   fragmentShader?: string;
   vertexShader?: string;
   geometry: THREE.BufferGeometry;
+  particleSize: number;
   gui: GUI;
 }
 
@@ -32,7 +33,7 @@ export class PointObject3D extends InteractiveObject3D {
   _vertexShader: string;
   _geometry: THREE.BufferGeometry; //Remember to dispose passed geometry
 
-  constructor({ fragmentShader, geometry, vertexShader }: Constructor) {
+  constructor({ particleSize, fragmentShader, geometry, vertexShader }: Constructor) {
     super();
     this._fragmentShader = fragmentShader || fragmentShaderDefault;
     this._vertexShader = vertexShader || vertexShaderDefault;
@@ -67,7 +68,7 @@ export class PointObject3D extends InteractiveObject3D {
           value: [1, 1], //Mouse coords from [0,0] (top left corner) to [screenWidth , screenHeight]
         },
         uPixelRatio: { value: 1 },
-        uSize: { value: 1000 },
+        uSize: { value: particleSize },
         uDistortion: { value: 0 },
         uProgress1: { value: 0 },
         uProgress2: { value: 0 },

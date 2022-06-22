@@ -20,19 +20,14 @@ interface Constructor {
 }
 
 export class ExperienceScene extends InteractiveScene {
-  static planeRatio = 1.71;
-  static particlesAmount = 300;
+  static particlesAmount = 400;
+  static particlesSize = 10.2 * 1; //10.2 ensures that all the pixels used will take the whole space
   static wheelMultiplier = 1;
   static mouseMultiplier = 2;
   static touchMultiplier = 2;
 
-  _pointPlane3D: PointObject3D;
-  _planeGeometry = new THREE.PlaneGeometry(
-    1,
-    1,
-    ExperienceScene.particlesAmount,
-    ExperienceScene.particlesAmount * ExperienceScene.planeRatio
-  );
+  _pointPlane3D: PointObject3D | null = null;
+  _planeGeometry: THREE.PlaneBufferGeometry | null = null;
   _videosArray: HTMLVideoElement[] = [];
   _videosWrapper: HTMLElement;
   _scroll = Scroll.getInstance();
@@ -56,9 +51,6 @@ export class ExperienceScene extends InteractiveScene {
     this._videosWrapper = document.querySelector(`[data-particle="wrapper"]`) as HTMLElement;
     this._preloadVideosFully();
     this._addListeners();
-
-    this._pointPlane3D = new PointObject3D({ gui, geometry: this._planeGeometry });
-    this.add(this._pointPlane3D);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -88,10 +80,50 @@ export class ExperienceScene extends InteractiveScene {
     });
   }
 
+  _generateNewGeometry() {
+    this._planeGeometry?.dispose();
+    const wrapperSizes = this._videosWrapper.getBoundingClientRect();
+    const planeRatio = wrapperSizes.height / wrapperSizes.width;
+    const particlesXAmount = (ExperienceScene.particlesAmount * wrapperSizes.width) / 1000;
+
+    this._planeGeometry = new THREE.PlaneGeometry(
+      1,
+      1,
+      Math.round(particlesXAmount),
+      Math.round(particlesXAmount * planeRatio)
+    );
+  }
+
   setRendererBounds(bounds: Bounds) {
+    super.setRendererBounds(bounds);
+    if (this._pointPlane3D) {
+      this._pointPlane3D.destroy();
+      this.remove(this._pointPlane3D);
+    }
+    this._generateNewGeometry();
+    if (!this._planeGeometry) return;
+    console.log(
+      'segments',
+      this._planeGeometry.parameters.widthSegments,
+      this._planeGeometry.parameters.heightSegments
+    );
+    const particleSize =
+      (this._planeGeometry.parameters.widthSegments /
+        ExperienceScene.particlesAmount /
+        this._planeGeometry.parameters.widthSegments) *
+      100000 *
+      ExperienceScene.particlesSize;
+
+    this._pointPlane3D = new PointObject3D({
+      geometry: this._planeGeometry,
+      gui: this._gui,
+      particleSize,
+    });
+    this._pointPlane3D.setPixelRatio(this._pixelRatio); //Need to call it here and too because, we destroy previous instance
+    this.add(this._pointPlane3D);
+
     this._pointPlane3D.setRendererBounds(bounds);
 
-    //Each video has the same parent and has the same dimensions as parent so we can use actual video as a "wrapper"
     const wrapperSizes = this._videosWrapper.getBoundingClientRect();
 
     this._pointPlane3D.setSize({
@@ -102,7 +134,7 @@ export class ExperienceScene extends InteractiveScene {
 
   setPixelRatio(ratio: number) {
     super.setPixelRatio(ratio);
-    this._pointPlane3D.setPixelRatio(this._pixelRatio);
+    this._pointPlane3D && this._pointPlane3D.setPixelRatio(this._pixelRatio);
   }
 
   async _animateVidOpacity(video: HTMLVideoElement, destination: number, duration: number) {
@@ -128,12 +160,13 @@ export class ExperienceScene extends InteractiveScene {
       appendCanvas: false,
     });
 
-    this._pointPlane3D.setAsset({
-      width: video.videoWidth,
-      height: video.videoHeight,
-      targetName: targetName,
-      texture,
-    });
+    this._pointPlane3D &&
+      this._pointPlane3D.setAsset({
+        width: video.videoWidth,
+        height: video.videoHeight,
+        targetName: targetName,
+        texture,
+      });
   }
 
   async animateTransition(finishedVideo: HTMLVideoElement, nextVideo: HTMLVideoElement) {
@@ -148,9 +181,12 @@ export class ExperienceScene extends InteractiveScene {
     nextVideo.currentTime = 0;
     this.computeFrame(nextTargetName);
 
-    await this._pointPlane3D.animateDistortion(1, 1);
-    await this._pointPlane3D.showT(nextVideoId, 1);
-    await this._pointPlane3D.animateDistortion(0, 1);
+    if (this._pointPlane3D) {
+      await this._pointPlane3D.animateDistortion(1, 1);
+      await this._pointPlane3D.showT(nextVideoId, 1);
+      await this._pointPlane3D.animateDistortion(0, 1);
+    }
+
     await this._animateVidOpacity(nextVideo, 1, 0.2);
 
     finishedVideo.currentTime = 0;
@@ -229,16 +265,18 @@ export class ExperienceScene extends InteractiveScene {
   update(updateInfo: UpdateInfo) {
     super.update(updateInfo);
 
-    this._pointPlane3D.update(updateInfo);
+    this._pointPlane3D && this._pointPlane3D.update(updateInfo);
   }
 
   destroy() {
-    this._pointPlane3D.destroy();
-    this.remove(this._pointPlane3D);
+    if (this._pointPlane3D) {
+      this._pointPlane3D.destroy();
+      this.remove(this._pointPlane3D);
+    }
     this._removeListeners();
     this._videosArray.forEach(video => {
       this._videosWrapper.removeChild(video);
     });
-    this._planeGeometry.dispose();
+    this._planeGeometry?.dispose();
   }
 }

@@ -27,6 +27,7 @@ export class ExperienceScene extends InteractiveScene {
   animateIn() {}
 
   setRendererBounds(bounds: Bounds) {
+    super.setRendererBounds(bounds);
     this._starterImage3D.setRendererBounds(bounds);
   }
 

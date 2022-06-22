@@ -64,7 +64,7 @@ export const VideoWrapper = styled.div`
     width: 100%;
     height: 100%;
     object-fit: contain;
-    border: 3px solid red;
+    /* border: 3px solid red; */
     opacity: 0;
   }
 `;
