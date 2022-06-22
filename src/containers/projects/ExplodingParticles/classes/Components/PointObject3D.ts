@@ -150,7 +150,7 @@ export class PointObject3D extends InteractiveObject3D {
     ]);
   }
 
-  setMouse2D(mouse: Mouse) {
+  setMouse(mouse: Mouse) {
     this._points.material.uniforms.uMouse2D.value = [mouse.current.x, mouse.current.y];
   }
 

@@ -5,8 +5,11 @@ uniform float uTime;
 uniform float uPixelRatio;
 uniform float uDistortion;
 uniform float uSizeFactor;
+uniform vec2 uMouse2D;
 
 varying vec2 vUv;
+
+#define PI 3.14159265359
 
 vec3 snoiseVec3(vec3 x){
     float s=cnoise(vec3(x));
@@ -37,7 +40,13 @@ vec3 curlNoise(vec3 p){
     return normalize(vec3(x,y,z)*divisor);
 }
 
+mat2 rotate2d(float _angle){
+    return mat2(cos(_angle),-sin(_angle),
+                sin(_angle),cos(_angle));
+}
+
 void main(){
+    vec2 mouse2D = (uMouse2D+ 1.0) * 0.5;
 
     vec3 stablePosition = position;
     
@@ -50,6 +59,8 @@ void main(){
     vec3 distortion = myNoise;
 
     stablePosition += distortion * uDistortion;
+
+    stablePosition.xz *= rotate2d(PI * mouse2D.x * uDistortion);
 
     vec4 modelPosition = modelMatrix * vec4(stablePosition, 1.0);
     vec4 viewPosition = viewMatrix * modelPosition;

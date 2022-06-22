@@ -285,7 +285,10 @@ export class ExperienceScene extends InteractiveScene {
   update(updateInfo: UpdateInfo) {
     super.update(updateInfo);
 
-    this._pointPlane3D && this._pointPlane3D.update(updateInfo);
+    if (this._pointPlane3D) {
+      this._pointPlane3D.setMouse(this.mouse);
+      this._pointPlane3D.update(updateInfo);
+    }
   }
 
   destroy() {
