@@ -4,7 +4,6 @@ import { gsap } from 'gsap';
 
 import { UpdateInfo, Bounds } from 'utils/sharedTypes';
 import { getVideoFrameTexture } from 'utils/functions/getVideoFrameTexture';
-import { Scroll } from 'utils/helperClasses/Scroll';
 
 import { InteractiveScene } from './InteractiveScene';
 import { PointObject3D } from '../Components/PointObject3D';
@@ -31,14 +30,6 @@ export class ExperienceScene extends InteractiveScene {
   _planeGeometry: THREE.PlaneBufferGeometry | null = null;
   _videosArray: HTMLVideoElement[] = [];
   _videosWrapper: HTMLElement;
-  _scroll = Scroll.getInstance();
-  _offsetX = {
-    last: 0,
-    current: 0,
-    target: 0,
-    strengthTarget: 0,
-    strengthCurrent: 0,
-  };
   _videosToPreload = [
     { name: VideoNames.VID1, source: vid1 },
     { name: VideoNames.VID2, source: vid2 },
@@ -46,6 +37,7 @@ export class ExperienceScene extends InteractiveScene {
   ];
   _currentlyPlayedId = 1; //1, 2 or 3
   _postProcess: PostProcess;
+  _isTransitioning = false;
 
   constructor({ postProcess, gui, camera }: Constructor) {
     super({ camera, gui });
@@ -213,9 +205,12 @@ export class ExperienceScene extends InteractiveScene {
     this.computeFrame(finishedTargetName);
 
     void nextVideo.play();
+    this._isTransitioning = false;
   }
 
   handleVideoChange = (e: Event | HTMLVideoElement) => {
+    if (this._isTransitioning) return;
+    this._isTransitioning = true;
     let finishedVideo;
 
     if ('target' in e) {
@@ -249,37 +244,28 @@ export class ExperienceScene extends InteractiveScene {
     void video.play();
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  _applyScrollX(x: number) {}
+  _handleClick = () => {
+    const currentVideo = this._videosArray.find(
+      vid => vid.dataset.particle === VideoNames.VID_PART + this._currentlyPlayedId.toString()
+    ) as HTMLVideoElement;
 
-  _onScrollMouse = (e: THREE.Event) => {
-    this._applyScrollX(e.x * ExperienceScene.mouseMultiplier);
-  };
-  _onScrollTouch = (e: THREE.Event) => {
-    this._applyScrollX(e.x * ExperienceScene.touchMultiplier);
-  };
-  _onScrollWheel = (e: THREE.Event) => {
-    this._applyScrollX(e.y * ExperienceScene.wheelMultiplier);
+    this.handleVideoChange(currentVideo);
   };
 
   _addListeners() {
     super._addListeners();
-    this._scroll.addEventListener('mouse', this._onScrollMouse);
-    this._scroll.addEventListener('touch', this._onScrollTouch);
-    this._scroll.addEventListener('wheel', this._onScrollWheel);
     this._videosArray[0].addEventListener('ended', this.handleVideoChange);
     this._videosArray[1].addEventListener('ended', this.handleVideoChange);
     this._videosArray[2].addEventListener('ended', this.handleVideoChange);
+    window.addEventListener('click', this._handleClick);
   }
 
   _removeListeners() {
     super._removeListeners();
-    this._scroll.removeEventListener('mouse', this._onScrollMouse);
-    this._scroll.removeEventListener('touch', this._onScrollTouch);
-    this._scroll.removeEventListener('wheel', this._onScrollWheel);
     this._videosArray[0].removeEventListener('ended', this.handleVideoChange);
     this._videosArray[1].removeEventListener('ended', this.handleVideoChange);
     this._videosArray[2].removeEventListener('ended', this.handleVideoChange);
+    window.removeEventListener('click', this._handleClick);
   }
 
   update(updateInfo: UpdateInfo) {
