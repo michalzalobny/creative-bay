@@ -46,8 +46,6 @@ mat2 rotate2d(float _angle){
 }
 
 void main(){
-    vec2 mouse2D = (uMouse2D+ 1.0) * 0.5;
-
     vec3 stablePosition = position;
     
     vec3 myNoise = vec3(position.x * 3.2 , position.y, 1.0) * curlNoise(vec3(
@@ -60,11 +58,11 @@ void main(){
 
     stablePosition += distortion * uDistortion;
 
-    stablePosition.xz *= rotate2d(PI * mouse2D.x * uDistortion);
+    stablePosition.xz *= rotate2d(-PI * 0.5 *  uMouse2D.x * uDistortion);
+    stablePosition.zy *= rotate2d(PI  * 0.5 * uMouse2D.y * uDistortion);
 
     vec4 modelPosition = modelMatrix * vec4(stablePosition, 1.0);
     vec4 viewPosition = viewMatrix * modelPosition;
-
     vec4 projectedPosition = projectionMatrix * viewPosition;
 
     gl_Position = projectedPosition;
