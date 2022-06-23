@@ -9,14 +9,9 @@ uniform vec2 uCanvasRes;
 uniform float uProgress1;
 uniform float uProgress2;
 
-
 varying vec2 vUv;
 
 void main(){
-    // float distanceToCenter = distance(gl_PointCoord, vec2(0.5));
-    // float strength = 0.05 / distanceToCenter - 0.1;
-    // strength = step(0.01, strength);
-
     vec2 ratio1 = vec2(
       min((uPlaneRes.x / uPlaneRes.y) / (uMediaRes1.x / uMediaRes1.y), 1.0),
       min((uPlaneRes.y / uPlaneRes.x) / (uMediaRes1.y / uMediaRes1.x), 1.0)
@@ -52,6 +47,11 @@ void main(){
     vec4 t3 = texture2D(tMap3, uv3);
 
     vec4 finalTexture = mix(mix(t1,t2, uProgress1), t3, uProgress2);
+
+    //Relative to where it is in the viewport at any given time
+    // vec2 st = gl_FragCoord.xy;
+    // float posX = st.x / uCanvasRes.x;
+    // float posY = st.y / uCanvasRes.y;
   
     gl_FragColor = finalTexture;
   }

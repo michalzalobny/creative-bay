@@ -180,22 +180,23 @@ export class ExperienceScene extends InteractiveScene {
     nextVideo.currentTime = 0;
     this.computeFrame(nextTargetName);
 
-    const pointSizeDuration = 0.6;
-
     if (this._pointPlane3D) {
+      const time1 = 0.85;
+
       await Promise.allSettled([
-        this._pointPlane3D.animateDistortion(1, 1),
-        this._pointPlane3D.animatePointSize(0.6, pointSizeDuration),
+        this._pointPlane3D.animateDistortion(1, 1.2),
+        this._pointPlane3D.animatePointSize(0.85, 0.6),
       ]);
 
-      const time1 = 0.75;
+      await Promise.allSettled([
+        this._animateBloom(14, time1),
+        this._animateBloom(0, time1 * 0.7, time1),
+        this._pointPlane3D.showT(nextVideoId, time1, time1 * 0.8),
+      ]);
 
       await Promise.allSettled([
-        this._animateBloom(5, time1),
-        this._animateBloom(0, time1, time1 * 1.25),
-        this._pointPlane3D.showT(nextVideoId, time1, 0.8 * time1),
-        this._pointPlane3D.animateDistortion(0, 1, time1, 'power1.easeOut'),
-        this._pointPlane3D.animatePointSize(1, pointSizeDuration, time1),
+        this._pointPlane3D.animateDistortion(0, 1.2, 0),
+        this._pointPlane3D.animatePointSize(1, 0.6),
       ]);
     }
 
@@ -232,6 +233,7 @@ export class ExperienceScene extends InteractiveScene {
       vid => vid.dataset.particle === VideoNames.VID_PART + this._currentlyPlayedId.toString()
     ) as HTMLVideoElement;
 
+    finishedVideo.pause();
     void this.animateTransition(finishedVideo, nextVideo);
   };
 

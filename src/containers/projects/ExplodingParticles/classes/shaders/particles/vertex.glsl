@@ -47,19 +47,25 @@ mat2 rotate2d(float _angle){
 
 void main(){
     vec3 stablePosition = position;
-    
-    vec3 myNoise = vec3(position.x * 3.2 , position.y, 1.0) * curlNoise(vec3(
-        position.x * 10.0 + (uTime + 1000.0) * 0.25,
-        position.y * 3.0 + (uTime + 1000.0) * 0.15,
-        position.y * position.x * 3.0 + (uTime + 1000.0) * 0.15
-    )) ;
 
-    vec3 distortion = myNoise;
+    float shrinkValue = 5.0;
+    //goes from left to right from 0 - 1 - 0 within the plane range if uDistortion = 1.0
+    float posXFactor = clamp((1.0 - (abs(stablePosition.x * shrinkValue) * 2.0)) + (1.0 - uDistortion) * shrinkValue, 0.0, 1.0);
+
+    vec3 myNoise = vec3(position.x * 3.5, position.y * 0.6, 1.0) * curlNoise(vec3(
+        position.x * 6.0 + (uTime + 1000.0) * 0.15,
+        position.y * 3.0 + (uTime + 1000.0) * 0.05,
+        uTime * 0.3
+    ));
+
+    vec3 distortion = myNoise * 1.3;
 
     stablePosition += distortion * uDistortion;
+    stablePosition.z *= 0.35;
 
-    stablePosition.xz *= rotate2d(-PI * 0.5 * 0.35 *  uMouse2D.x * uDistortion);
-    stablePosition.zy *= rotate2d(PI  * 0.5 * 0.35 * uMouse2D.y * uDistortion);
+    float rotationStrength = 0.6;
+    stablePosition.xz *= rotate2d(-PI * 0.5 * rotationStrength *  uMouse2D.x * uDistortion);
+    stablePosition.zy *= rotate2d(PI  * 0.5 * rotationStrength * uMouse2D.y * uDistortion);
 
     vec4 modelPosition = modelMatrix * vec4(stablePosition, 1.0);
     vec4 viewPosition = viewMatrix * modelPosition;
@@ -68,6 +74,7 @@ void main(){
     gl_Position = projectedPosition;
     gl_PointSize = uSize * uPixelRatio * uSizeFactor;
     gl_PointSize *= (1.0 / - viewPosition.z);
+    gl_PointSize *= posXFactor;
 
     vUv = uv;
 }
