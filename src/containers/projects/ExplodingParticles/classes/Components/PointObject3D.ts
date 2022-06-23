@@ -84,12 +84,12 @@ export class PointObject3D extends InteractiveObject3D {
     return gsap.to(this._points.material.uniforms.uSizeFactor, {
       value: destination,
       duration,
-      ease: 'power3.inOut',
+      ease: 'power2.inOut',
       delay,
     });
   }
 
-  async animateDistortion(destination: number, duration: number, delay = 0, ease = 'power3.inOut') {
+  async animateDistortion(destination: number, duration: number, delay = 0, ease = 'power2.inOut') {
     return gsap.to(this._points.material.uniforms.uDistortion, {
       value: destination,
       duration,
@@ -102,7 +102,7 @@ export class PointObject3D extends InteractiveObject3D {
     return gsap.to(this._points.material.uniforms.uProgress1, {
       value: destination,
       duration,
-      ease: 'power3.inOut',
+      ease: 'power2.inOut',
       delay,
     });
   }
@@ -111,7 +111,7 @@ export class PointObject3D extends InteractiveObject3D {
     return gsap.to(this._points.material.uniforms.uProgress2, {
       value: destination,
       duration,
-      ease: 'power3.inOut',
+      ease: 'power2.inOut',
       delay,
     });
   }
