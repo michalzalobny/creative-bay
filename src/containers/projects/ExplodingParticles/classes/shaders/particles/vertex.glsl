@@ -48,8 +48,27 @@ mat2 rotate2d(float _angle){
 void main(){
     vec3 stablePosition = position;
 
+    //Rotation values
+    float onOffX = step(0.0, uMouse2D.x); // uMouse2D.x goes from [-1 to 1] from [left screen edge, right screen edge]
+    float onOffY = step(0.0, uMouse2D.y);
+    
+
+    float perspective = 300.0; //No matter the size canvasRes or planeRes, the perspective looks the same for same settings on all devices
+
+    float stX = (uv.x - 0.5);
+    float mX = abs(uMouse2D.x);
+    float perX1 = stX * perspective * mX;
+    float perX2 = -stX * perspective * mX;
+    float finalPerX = mix(perX1, perX2, onOffX);
+
+    float stY = (uv.y - 0.5);
+    float mY = abs(uMouse2D.y);
+    float perY1 = stY * perspective * mY;
+    float perY2 = -stY * perspective * mY;
+    float finalPerY = mix(perY1, perY2, onOffY);
+
+    //Distortions
     float shrinkValue = 5.0;
-    //goes from left to right from 0 - 1 - 0 within the plane range if uDistortion = 1.0
     float posXFactor = clamp((1.0 - (abs(stablePosition.x * shrinkValue) * 2.0)) + (1.0 - uDistortion) * shrinkValue, 0.0, 1.0);
 
     vec3 myNoise = vec3(position.x * 3.5, position.y * 0.6, 1.0) * curlNoise(vec3(
@@ -63,12 +82,16 @@ void main(){
     stablePosition += distortion * uDistortion;
     stablePosition.z *= 0.35;
 
-    float rotationStrength = 0.6;
-    stablePosition.xz *= rotate2d(-PI * 0.5 * rotationStrength *  uMouse2D.x * uDistortion);
-    stablePosition.zy *= rotate2d(PI  * 0.5 * rotationStrength * uMouse2D.y * uDistortion);
+    stablePosition.xz *= rotate2d( PI * 0.50 * -uMouse2D.x * uDistortion);
+    stablePosition.yz *= rotate2d( PI * 0.50 * -uMouse2D.y * uDistortion);
 
     vec4 modelPosition = modelMatrix * vec4(stablePosition, 1.0);
     vec4 viewPosition = viewMatrix * modelPosition;
+
+    //Applying perspective for the rotation
+    viewPosition.z += finalPerX * uDistortion;
+    viewPosition.z += finalPerY * uDistortion;
+
     vec4 projectedPosition = projectionMatrix * viewPosition;
 
     gl_Position = projectedPosition;
