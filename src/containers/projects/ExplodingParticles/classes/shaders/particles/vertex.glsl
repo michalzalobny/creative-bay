@@ -68,7 +68,7 @@ void main(){
     float finalPerY = mix(perY1, perY2, onOffY);
 
     //Distortions
-    float shrinkValue = 5.0;
+    float shrinkValue = 4.0 / uPixelRatio;
     float posXFactor = clamp((1.0 - (abs(stablePosition.x * shrinkValue) * 2.0)) + (1.0 - uDistortion) * shrinkValue, 0.0, 1.0);
 
     vec3 myNoise = vec3(position.x * 3.5, position.y * 0.6, 1.0) * curlNoise(vec3(
