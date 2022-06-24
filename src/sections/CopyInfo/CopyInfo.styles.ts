@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import { media } from 'utils/media';
-import { underline, s1 } from 'utils/sharedStyled';
+import { underline, s2, s1 } from 'utils/sharedStyled';
 
 export const GithubWrapper = styled.div`
   display: initial;
@@ -64,7 +64,7 @@ export const InspirationWrapper = styled.h1`
     align-items: center;
     mix-blend-mode: difference;
     color: white;
-    ${s1};
+    ${s2};
     bottom: 20px;
     left: 50%;
     transform: translateX(-50%);

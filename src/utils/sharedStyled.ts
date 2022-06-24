@@ -12,6 +12,11 @@ export const s1 = css`
   }
 `;
 
+export const s2 = css`
+  font-size: 12px;
+  line-height: 1.6;
+`;
+
 export const m1 = css`
   font-size: 2.5rem;
   line-height: 1.4;
