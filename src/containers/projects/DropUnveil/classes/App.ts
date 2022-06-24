@@ -1,11 +1,9 @@
-import TWEEN from '@tweenjs/tween.js';
 import * as THREE from 'three';
 import debounce from 'lodash.debounce';
 import { OrbitControls } from 'three-stdlib';
 import GUI from 'lil-gui';
 
 import { MouseMove } from 'utils/helperClasses/MouseMove';
-import { Scroll } from 'utils/helperClasses/Scroll';
 import { sharedValues } from 'utils/sharedValues';
 import { Preloader } from 'utils/helperClasses/Preloader';
 
@@ -28,7 +26,6 @@ export class App extends THREE.EventDispatcher {
   _camera: THREE.PerspectiveCamera;
   _renderer: THREE.WebGLRenderer;
   _mouseMove = MouseMove.getInstance();
-  _scroll = Scroll.getInstance();
   _preloader = new Preloader();
   _orbitControls: OrbitControls;
   _experienceScene: ExperienceScene;
@@ -143,8 +140,6 @@ export class App extends THREE.EventDispatcher {
       return;
     }
 
-    TWEEN.update(time);
-
     const delta = time - this._lastFrameTime;
     let slowDownFactor = delta / sharedValues.motion.DT_FPS;
 
@@ -156,8 +151,6 @@ export class App extends THREE.EventDispatcher {
     }
     this._lastFrameTime = time;
 
-    this._mouseMove.update();
-    this._scroll.update({ delta, slowDownFactor, time });
     this._experienceScene.update({ delta, slowDownFactor, time });
 
     this._renderer.render(this._experienceScene, this._camera);

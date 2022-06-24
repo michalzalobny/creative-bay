@@ -15,7 +15,7 @@ interface Constructor {
 export class MediaPlane3D extends InteractiveObject3D {
   _mesh: THREE.Mesh<THREE.PlaneBufferGeometry, THREE.ShaderMaterial>;
   _material: THREE.ShaderMaterial;
-  _mouse2D = [0, 0];
+  _mouse = [0, 0];
   _rendererBounds: Bounds = { width: 1, height: 1 };
   _fragmentShader: string;
   _vertexShader: string;
@@ -45,7 +45,7 @@ export class MediaPlane3D extends InteractiveObject3D {
         uMediaRes: {
           value: [1, 1], //Image size in pixels
         },
-        uMouse2D: {
+        uMouse: {
           value: [1, 1], //Mouse coords from [0,0] (top left corner) to [screenWidth , screenHeight]
         },
       },
@@ -55,8 +55,8 @@ export class MediaPlane3D extends InteractiveObject3D {
     this.add(this._mesh);
   }
 
-  setMouse2D(mouse: Mouse) {
-    this._mesh.material.uniforms.uMouse2D.value = [mouse.current.x, mouse.current.y];
+  setMouse(mouse: Mouse) {
+    this._mesh.material.uniforms.uMouse.value = [mouse.current.x, mouse.current.y];
   }
 
   setSize(bounds: Bounds) {

@@ -1,3 +1,9 @@
-interface GlobalState {}
+import { CanvasApp } from 'classes/CanvasApp';
 
-export const globalState: GlobalState = {};
+interface GlobalState {
+  canvasApp: CanvasApp | null;
+}
+
+export const globalState: GlobalState = {
+  canvasApp: null,
+};
