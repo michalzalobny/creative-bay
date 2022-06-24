@@ -185,7 +185,7 @@ export class ExperienceScene extends InteractiveScene {
 
       await Promise.allSettled([
         this._pointPlane3D.animateDistortion(1, 1.2),
-        this._pointPlane3D.animatePointSize(0.85, 0.6),
+        this._pointPlane3D.animatePointSize(0.95, 0.6),
       ]);
 
       await Promise.allSettled([
