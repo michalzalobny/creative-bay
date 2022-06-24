@@ -1,13 +1,12 @@
 import TWEEN, { Tween } from '@tweenjs/tween.js';
 
 import { Bounds, UpdateInfo } from 'utils/sharedTypes';
-import { isTouchDevice } from 'utils/functions/isTouchDevice';
 
 import { MouseMove } from 'utils/helperClasses/MouseMove';
 import { lerp } from 'utils/functions/lerp';
 
 export class Cursor2D {
-  static mouseLerp = 0.25;
+  static mouseLerp = 0.15;
 
   _mouseMove = MouseMove.getInstance();
   _canvas: HTMLCanvasElement;
@@ -31,7 +30,6 @@ export class Cursor2D {
   _showProgress = 0;
   _showProgressTween: Tween<{ progress: number }> | null = null;
   _isCircleInit = false;
-  _isTouchDevice = isTouchDevice();
   _pixelRatio = 1;
   _isVisible = false;
 
@@ -62,8 +60,6 @@ export class Cursor2D {
   }
 
   _animateShow(destination: number) {
-    if (this._isTouchDevice) return;
-
     if (this._showProgressTween) {
       this._showProgressTween.stop();
     }
@@ -98,8 +94,11 @@ export class Cursor2D {
   }
 
   _onMouseMove = (e: THREE.Event) => {
-    this._mouse.x.target = (e.target as MouseMove).mouse.x;
-    this._mouse.y.target = (e.target as MouseMove).mouse.y;
+    const mouseX = (e.target as MouseMove).mouse.x;
+    const mouseY = (e.target as MouseMove).mouse.y;
+
+    this._mouse.x.target = (mouseX / this._rendererBounds.width) * 2 - 1; //[-1 to 1] [left to right]
+    this._mouse.y.target = -(mouseY / this._rendererBounds.height) * 2 + 1; //[-1 to 1] [bottom to top]
   };
 
   _onMouseMoveInternal = () => {
@@ -144,10 +143,13 @@ export class Cursor2D {
   _draw() {
     if (!this._ctx) return;
 
+    const x = (this._mouse.x.current + 1) * 0.5 * this._rendererBounds.width;
+    const y = (1 - (this._mouse.y.current + 1) * 0.5) * this._rendererBounds.height;
+
     this._ctx.beginPath();
     this._ctx.arc(
-      this._mouse.x.current,
-      this._mouse.y.current,
+      x,
+      y,
       (this._radius + this._extraRadius * this._hoverProgress) * this._showProgress,
       0,
       2 * Math.PI
