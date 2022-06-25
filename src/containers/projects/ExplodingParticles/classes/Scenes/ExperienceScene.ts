@@ -5,6 +5,7 @@ import { gsap } from 'gsap';
 import { UpdateInfo, Bounds } from 'utils/sharedTypes';
 import { getVideoFrameTexture } from 'utils/functions/getVideoFrameTexture';
 import { globalState } from 'utils/globalState';
+import { delay } from 'utils/functions/delay';
 
 import { InteractiveScene } from './InteractiveScene';
 import { PointObject3D } from '../Components/PointObject3D';
@@ -41,8 +42,8 @@ export class ExperienceScene extends InteractiveScene {
   _particlesSettings = {
     uVar1: 1,
     uVar2: 1,
-    uVar3: 1,
-    uVar4: 1,
+    uVar3: 0.5,
+    uVar4: 0.5,
   };
 
   constructor({ postProcess, gui, camera }: Constructor) {
@@ -250,14 +251,18 @@ export class ExperienceScene extends InteractiveScene {
 
       await Promise.allSettled([
         this._pointPlane3D.animateDistortion(1, 1.2),
-        this._pointPlane3D.animatePointSize(0.95, 0.6),
+        this._pointPlane3D.animatePointSize(0.96, 0.6),
       ]);
+
+      await delay(500);
 
       await Promise.allSettled([
         this._animateBloom(16, time1),
         this._animateBloom(0, time1 * 0.7, time1),
         this._pointPlane3D.showT(nextVideoId, time1, time1 * 0.8),
       ]);
+
+      await delay(200);
 
       await Promise.allSettled([
         this._pointPlane3D.animateDistortion(0, 1.2, 0),
