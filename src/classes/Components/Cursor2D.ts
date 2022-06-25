@@ -159,14 +159,14 @@ export class Cursor2D {
 
   _addListeners() {
     this._mouseMove.addEventListener('mousemove', this._onMouseMove);
-    document.addEventListener('mouseenter', this._onMouseEnter);
-    document.addEventListener('mouseleave', this._onMouseOut);
+    // document.addEventListener('mouseenter', this._onMouseEnter);
+    // document.addEventListener('mouseleave', this._onMouseOut);
   }
 
   _removeListeners() {
     this._mouseMove.removeEventListener('mousemove', this._onMouseMove);
-    document.removeEventListener('mouseenter', this._onMouseEnter);
-    document.removeEventListener('mouseleave', this._onMouseOut);
+    // document.removeEventListener('mouseenter', this._onMouseEnter);
+    // document.removeEventListener('mouseleave', this._onMouseOut);
   }
 
   _draw() {

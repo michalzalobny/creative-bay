@@ -56,6 +56,8 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     ];
 
     const match = hideCursorArr.find(el => el === router.route);
+    console.log('match', match);
+    console.log('route', router.route);
 
     if (match) {
       globalState.canvasApp.cursor2D.hide();
