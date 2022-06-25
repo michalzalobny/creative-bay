@@ -154,8 +154,9 @@ export class Cursor2D {
       0,
       2 * Math.PI
     );
-    this._ctx.fillStyle = 'rgba(255,255,255, 1)';
-    this._ctx.fill();
+    this._ctx.strokeStyle = 'rgba(255,255,255, 1)';
+    this._ctx.lineWidth = 2;
+    this._ctx.stroke();
   }
 
   _clear() {
