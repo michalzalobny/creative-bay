@@ -4,6 +4,7 @@ import { gsap } from 'gsap';
 
 import { UpdateInfo, Bounds } from 'utils/sharedTypes';
 import { getVideoFrameTexture } from 'utils/functions/getVideoFrameTexture';
+import { globalState } from 'utils/globalState';
 
 import { InteractiveScene } from './InteractiveScene';
 import { PointObject3D } from '../Components/PointObject3D';
@@ -56,6 +57,9 @@ export class ExperienceScene extends InteractiveScene {
       if (loaded === this._videosArray.length) {
         this.dispatchEvent({ type: 'loaded' });
         this.startVideoLooping();
+        if (globalState.canvasApp) {
+          globalState.canvasApp.cursor2D.setCurrentText('click for particles');
+        }
       }
     };
 
@@ -207,10 +211,15 @@ export class ExperienceScene extends InteractiveScene {
 
     void nextVideo.play();
     this._isTransitioning = false;
+
+    if (globalState.canvasApp) globalState.canvasApp.cursor2D.show();
   }
 
   handleVideoChange = (e: Event | HTMLVideoElement) => {
     if (this._isTransitioning) return;
+
+    if (globalState.canvasApp) globalState.canvasApp.cursor2D.hide();
+
     this._isTransitioning = true;
     let finishedVideo;
 
@@ -289,5 +298,6 @@ export class ExperienceScene extends InteractiveScene {
       this._videosWrapper.removeChild(video);
     });
     this._planeGeometry?.dispose();
+    if (globalState.canvasApp) globalState.canvasApp.cursor2D.setCurrentText('');
   }
 }

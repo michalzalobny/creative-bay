@@ -7,13 +7,12 @@ import { lerp } from 'utils/functions/lerp';
 
 export class Cursor2D {
   static mouseLerp = 0.15;
+  static radiusDefault = 10;
+  static fontSize = 12;
 
   _mouseMove = MouseMove.getInstance();
   _canvas: HTMLCanvasElement;
   _ctx: CanvasRenderingContext2D | null;
-  _hoverProgress = 0;
-  _hoverProgressTween: Tween<{ progress: number }> | null = null;
-  _color = '#ffffff';
   _rendererBounds: Bounds = { height: 10, width: 100 };
   _mouse = {
     x: {
@@ -25,13 +24,21 @@ export class Cursor2D {
       current: 0,
     },
   };
-  _radius = 35;
-  _extraRadius = 15;
+  _circle = {
+    radius: 0,
+  };
+  _textValue = '';
+  _destinationTextValue = '';
+  _pixelRatio = 1;
+
   _showProgress = 0;
   _showProgressTween: Tween<{ progress: number }> | null = null;
-  _isCircleInit = false;
-  _pixelRatio = 1;
-  _isVisible = false;
+
+  _textShowProgress = 0;
+  _textShowProgressTween: Tween<{ progress: number }> | null = null;
+
+  _zoomProgress = 0;
+  _zoomProgressTween: Tween<{ progress: number }> | null = null;
 
   constructor() {
     this._canvas = document.createElement('canvas');
@@ -59,40 +66,6 @@ export class Cursor2D {
     }
   }
 
-  _animateShow(destination: number) {
-    if (this._showProgressTween) {
-      this._showProgressTween.stop();
-    }
-
-    this._showProgressTween = new TWEEN.Tween({
-      progress: this._showProgress,
-    })
-      .to({ progress: destination }, 1000)
-      .easing(TWEEN.Easing.Exponential.InOut)
-      .onUpdate(obj => {
-        this._showProgress = obj.progress;
-      });
-
-    this._showProgressTween.start();
-  }
-
-  _animateHover(destination: number) {
-    if (this._hoverProgressTween) {
-      this._hoverProgressTween.stop();
-    }
-
-    this._hoverProgressTween = new TWEEN.Tween({
-      progress: this._hoverProgress,
-    })
-      .to({ progress: destination }, 1000)
-      .easing(TWEEN.Easing.Exponential.InOut)
-      .onUpdate(obj => {
-        this._hoverProgress = obj.progress;
-      });
-
-    this._hoverProgressTween.start();
-  }
-
   _onMouseMove = (e: THREE.Event) => {
     const mouseX = (e.target as MouseMove).mouse.x;
     const mouseY = (e.target as MouseMove).mouse.y;
@@ -101,43 +74,99 @@ export class Cursor2D {
     this._mouse.y.target = -(mouseY / this._rendererBounds.height) * 2 + 1; //[-1 to 1] [bottom to top]
   };
 
-  _onMouseMoveInternal = () => {
-    if (!this._isVisible) return;
-    if (!this._isCircleInit) {
-      this._isCircleInit = true;
-      this._animateShow(1);
-    }
-  };
+  _animateShow(destination: number) {
+    if (this._showProgressTween) this._showProgressTween.stop();
+    this._showProgressTween = new TWEEN.Tween({
+      progress: this._showProgress,
+    })
+      .to({ progress: destination }, 1250)
+      .easing(TWEEN.Easing.Exponential.InOut)
+      .onUpdate(obj => {
+        this._showProgress = obj.progress;
+      });
+    this._showProgressTween.start();
+  }
+
+  _animateTextShow(destination: number, fireOnComplete?: boolean) {
+    if (this._textShowProgressTween) this._textShowProgressTween.stop();
+    this._textShowProgressTween = new TWEEN.Tween({
+      progress: this._textShowProgress,
+    })
+      .to({ progress: destination }, 1250)
+      .easing(TWEEN.Easing.Exponential.InOut)
+      .onUpdate(obj => {
+        this._textShowProgress = obj.progress;
+      })
+      .onComplete(() => {
+        if (fireOnComplete) {
+          this._textValue = this._destinationTextValue;
+          this._animateTextShow(1);
+        }
+      });
+    this._textShowProgressTween.start();
+  }
+
+  _animateZoom(destination: number) {
+    if (this._zoomProgressTween) this._zoomProgressTween.stop();
+    this._zoomProgressTween = new TWEEN.Tween({
+      progress: this._zoomProgress,
+    })
+      .to({ progress: destination }, 1250)
+      .easing(TWEEN.Easing.Exponential.InOut)
+      .onUpdate(obj => {
+        this._zoomProgress = obj.progress;
+      });
+    this._zoomProgressTween.start();
+  }
+
+  setCurrentText(text: string) {
+    this._destinationTextValue = text;
+    this._animateTextShow(0, true);
+  }
+
+  _zoomIn() {
+    this._animateZoom(1);
+    this._animateTextShow(0);
+  }
+
+  _zoomOut() {
+    this._animateZoom(0);
+    this._animateTextShow(1);
+  }
+
+  _animateIn() {
+    this._animateShow(1);
+  }
+
+  _animateOut() {
+    this._animateShow(0);
+  }
 
   _onMouseOut = (event: MouseEvent) => {
-    if (!this._isVisible) return;
     if (
       event.clientY <= 0 ||
       event.clientX <= 0 ||
       event.clientX >= this._rendererBounds.width ||
       event.clientY >= this._rendererBounds.height
     ) {
-      this._animateShow(0);
+      void this._animateOut();
     }
   };
 
   _onMouseEnter = () => {
-    if (!this._isVisible) return;
-    this._animateShow(1);
+    void this._animateIn();
   };
 
   _addListeners() {
     this._mouseMove.addEventListener('mousemove', this._onMouseMove);
     document.addEventListener('mouseenter', this._onMouseEnter);
     document.addEventListener('mouseleave', this._onMouseOut);
-    document.addEventListener('mousemove', this._onMouseMoveInternal);
   }
 
   _removeListeners() {
     this._mouseMove.removeEventListener('mousemove', this._onMouseMove);
     document.removeEventListener('mouseenter', this._onMouseEnter);
     document.removeEventListener('mouseleave', this._onMouseOut);
-    document.removeEventListener('mousemove', this._onMouseMoveInternal);
   }
 
   _draw() {
@@ -150,13 +179,24 @@ export class Cursor2D {
     this._ctx.arc(
       x,
       y,
-      (this._radius + this._extraRadius * this._hoverProgress) * this._showProgress,
+      Cursor2D.radiusDefault * this._showProgress +
+        Cursor2D.radiusDefault * 1.2 * this._zoomProgress * this._showProgress,
       0,
       2 * Math.PI
     );
-    this._ctx.strokeStyle = 'rgba(255,255,255, 1)';
-    this._ctx.lineWidth = 2;
-    this._ctx.stroke();
+
+    //Full circle
+    this._ctx.fillStyle = 'rgba(255,255,255, 1)';
+    this._ctx.fill();
+
+    this._ctx.font = `${Cursor2D.fontSize}px opensans`;
+    this._ctx.fillStyle = `rgba(255,255,255,${this._textShowProgress * this._showProgress})`;
+    this._ctx.textAlign = 'center';
+    this._ctx.fillText(
+      this._textValue,
+      x + 20 * (1 - this._textShowProgress * this._showProgress),
+      y - Cursor2D.fontSize - Cursor2D.radiusDefault
+    );
   }
 
   _clear() {
@@ -189,25 +229,23 @@ export class Cursor2D {
     this._setSizes();
   }
 
-  destroy() {
-    this._removeListeners();
-  }
-
   zoomIn() {
-    this._animateHover(1);
+    void this._zoomIn();
   }
 
   zoomOut() {
-    this._animateHover(0);
+    void this._zoomOut();
   }
 
   hide() {
-    this._isVisible = false;
-    this._animateShow(0);
+    void this._animateOut();
   }
 
   show() {
-    this._isVisible = true;
-    this._animateShow(1);
+    void this._animateIn();
+  }
+
+  destroy() {
+    this._removeListeners();
   }
 }
