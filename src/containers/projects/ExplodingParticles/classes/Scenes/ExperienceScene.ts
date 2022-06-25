@@ -38,6 +38,12 @@ export class ExperienceScene extends InteractiveScene {
     particlesAmount: 400,
     particlesSize: 10.2, //10.2 ensures that all the pixels used will take the whole space
   };
+  _particlesSettings = {
+    uVar1: 1,
+    uVar2: 1,
+    uVar3: 1,
+    uVar4: 1,
+  };
 
   constructor({ postProcess, gui, camera }: Constructor) {
     super({ camera, gui });
@@ -68,6 +74,34 @@ export class ExperienceScene extends InteractiveScene {
       .onFinishChange(() => {
         this._createNewPointObject();
         this._computeAllFrames();
+      });
+
+    const particles = this._gui.addFolder('Particles');
+    particles.close();
+
+    particles
+      .add(this._particlesSettings, 'uVar1', 0, 40, 0.01)
+      .name('vertical distortion')
+      .onChange((val: number) => {
+        this._pointPlane3D?.setVar('uVar1', val);
+      });
+    particles
+      .add(this._particlesSettings, 'uVar2', 0, 40, 0.01)
+      .name('horizontal distortion')
+      .onChange((val: number) => {
+        this._pointPlane3D?.setVar('uVar2', val);
+      });
+    particles
+      .add(this._particlesSettings, 'uVar3', 0, 3, 0.01)
+      .name('travelling speed')
+      .onChange((val: number) => {
+        this._pointPlane3D?.setVar('uVar3', val);
+      });
+    particles
+      .add(this._particlesSettings, 'uVar4', 0, 10, 0.01)
+      .name('distortion speed')
+      .onChange((val: number) => {
+        this._pointPlane3D?.setVar('uVar4', val);
       });
   }
 
@@ -130,8 +164,8 @@ export class ExperienceScene extends InteractiveScene {
 
     this._pointPlane3D = new PointObject3D({
       geometry: this._planeGeometry,
-      gui: this._gui,
       particleSize,
+      particlesSettings: this._particlesSettings,
     });
 
     this._pointPlane3D.setPixelRatio(this._pixelRatio); //Need to call it here and too because, we destroy previous instance

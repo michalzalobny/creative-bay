@@ -10,7 +10,6 @@ uniform float uVar1;
 uniform float uVar2;
 uniform float uVar3;
 uniform float uVar4;
-uniform float uVar5;
 
 varying vec2 vUv;
 
@@ -87,7 +86,7 @@ void main(){
     stablePosition += distortion * uDistortion;
     stablePosition.z *= 0.35;
 
-    float rotationRatio = 0.75 * uVar5;
+    float rotationRatio = 0.5;
     stablePosition.xz *= rotate2d( PI * 0.50 * -uMouse2D.x * uDistortion * rotationRatio);
     stablePosition.yz *= rotate2d( PI * 0.50 * -uMouse2D.y * uDistortion * rotationRatio);
 

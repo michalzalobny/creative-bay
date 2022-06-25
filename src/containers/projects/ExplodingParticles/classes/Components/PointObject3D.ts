@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import GUI from 'lil-gui';
 import { gsap } from 'gsap';
 
 import { UpdateInfo, Bounds, Mouse } from 'utils/sharedTypes';
@@ -9,12 +8,19 @@ import fragmentShaderDefault from '../shaders/particles/fragment.glsl';
 import vertexShaderDefault from '../shaders/particles/vertex.glsl';
 import { VideoNames } from '../App';
 
+interface ParticlesSettings {
+  uVar1: number;
+  uVar2: number;
+  uVar3: number;
+  uVar4: number;
+}
+
 interface Constructor {
   fragmentShader?: string;
   vertexShader?: string;
   geometry: THREE.BufferGeometry;
   particleSize: number;
-  gui: GUI;
+  particlesSettings: ParticlesSettings;
 }
 
 interface PointAsset {
@@ -32,11 +38,15 @@ export class PointObject3D extends InteractiveObject3D {
   _fragmentShader: string;
   _vertexShader: string;
   _geometry: THREE.BufferGeometry; //Remember to dispose passed geometry
-  _gui: GUI;
 
-  constructor({ gui, particleSize, fragmentShader, geometry, vertexShader }: Constructor) {
+  constructor({
+    particlesSettings,
+    particleSize,
+    fragmentShader,
+    geometry,
+    vertexShader,
+  }: Constructor) {
     super();
-    this._gui = gui;
     this._fragmentShader = fragmentShader || fragmentShaderDefault;
     this._vertexShader = vertexShader || vertexShaderDefault;
     this._geometry = geometry;
@@ -75,38 +85,19 @@ export class PointObject3D extends InteractiveObject3D {
         uDistortion: { value: 0 },
         uProgress1: { value: 0 },
         uProgress2: { value: 0 },
-        uVar1: { value: 1 },
-        uVar2: { value: 1 },
-        uVar3: { value: 1 },
-        uVar4: { value: 1 },
-        uVar5: { value: 1 },
+        uVar1: { value: particlesSettings.uVar1 },
+        uVar2: { value: particlesSettings.uVar2 },
+        uVar3: { value: particlesSettings.uVar3 },
+        uVar4: { value: particlesSettings.uVar4 },
       },
     });
 
     this._points = new THREE.Points(this._geometry, this._material);
     this.add(this._points);
-    this._setGui();
   }
 
-  _setGui() {
-    const particles = this._gui.addFolder('Particles');
-    particles.close();
-
-    particles
-      .add(this._points.material.uniforms.uVar1, 'value', 0, 40, 0.01)
-      .name('vertical distortion');
-    particles
-      .add(this._points.material.uniforms.uVar2, 'value', 0, 40, 0.01)
-      .name('horizontal distortion');
-    particles
-      .add(this._points.material.uniforms.uVar3, 'value', 0, 3, 0.01)
-      .name('distortion speed');
-    particles
-      .add(this._points.material.uniforms.uVar4, 'value', 0, 10, 0.01)
-      .name('travelling speed');
-    particles
-      .add(this._points.material.uniforms.uVar5, 'value', 0, 1, 0.01)
-      .name('mouse rotation speed');
+  setVar(name: string, value: number) {
+    this._points.material.uniforms[name].value = value;
   }
 
   async animatePointSize(destination: number, duration: number, delay = 0) {
