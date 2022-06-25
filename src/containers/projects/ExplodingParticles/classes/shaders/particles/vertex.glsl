@@ -6,6 +6,11 @@ uniform float uPixelRatio;
 uniform float uDistortion;
 uniform float uSizeFactor;
 uniform vec2 uMouse2D;
+uniform float uVar1;
+uniform float uVar2;
+uniform float uVar3;
+uniform float uVar4;
+uniform float uVar5;
 
 varying vec2 vUv;
 
@@ -72,9 +77,9 @@ void main(){
     float posXFactor = clamp((1.0 - (abs(stablePosition.x * shrinkValue) * 2.0)) + (1.0 - uDistortion) * shrinkValue, 0.0, 1.0);
 
     vec3 myNoise = vec3(position.x * 3.5, position.y * 0.6, 1.0) * curlNoise(vec3(
-        position.x * 6.0 + (uTime + 1000.0) * 0.15,
-        position.y * 3.0 + (uTime + 1000.0) * 0.05,
-        uTime * 0.3
+       uVar1 * position.x * 6.0 + (uTime + 1000.0) * 0.15 * uVar4,
+       uVar2 * position.y * 3.0 + (uTime + 1000.0) * 0.05 * uVar4,
+       uVar3 * uTime * 0.3
     ));
 
     vec3 distortion = myNoise * 1.3;
@@ -82,7 +87,7 @@ void main(){
     stablePosition += distortion * uDistortion;
     stablePosition.z *= 0.35;
 
-    float rotationRatio = 0.75;
+    float rotationRatio = 0.75 * uVar5;
     stablePosition.xz *= rotate2d( PI * 0.50 * -uMouse2D.x * uDistortion * rotationRatio);
     stablePosition.yz *= rotate2d( PI * 0.50 * -uMouse2D.y * uDistortion * rotationRatio);
 

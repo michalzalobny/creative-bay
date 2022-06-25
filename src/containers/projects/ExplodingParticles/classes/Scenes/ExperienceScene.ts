@@ -56,7 +56,7 @@ export class ExperienceScene extends InteractiveScene {
     videoFrame.close();
     videoFrame
       .add(this._videoFrameSettings, 'particlesAmount', 40, 400, 1)
-      .name('particlesAmount')
+      .name('frameParticlesAmount')
       .onFinishChange(() => {
         this._createNewPointObject();
         this._computeAllFrames();
@@ -64,7 +64,7 @@ export class ExperienceScene extends InteractiveScene {
 
     videoFrame
       .add(this._videoFrameSettings, 'particlesSize', 3, 40, 0.1)
-      .name('particlesSize')
+      .name('frameParticlesSize')
       .onFinishChange(() => {
         this._createNewPointObject();
         this._computeAllFrames();
