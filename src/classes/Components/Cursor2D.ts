@@ -79,8 +79,8 @@ export class Cursor2D {
     this._showProgressTween = new TWEEN.Tween({
       progress: this._showProgress,
     })
-      .to({ progress: destination }, 1250)
-      .easing(TWEEN.Easing.Exponential.InOut)
+      .to({ progress: destination }, 600)
+      .easing(TWEEN.Easing.Sinusoidal.InOut)
       .onUpdate(obj => {
         this._showProgress = obj.progress;
       });
@@ -92,8 +92,8 @@ export class Cursor2D {
     this._textShowProgressTween = new TWEEN.Tween({
       progress: this._textShowProgress,
     })
-      .to({ progress: destination }, 1250)
-      .easing(TWEEN.Easing.Exponential.InOut)
+      .to({ progress: destination }, 600)
+      .easing(TWEEN.Easing.Sinusoidal.InOut)
       .onUpdate(obj => {
         this._textShowProgress = obj.progress;
       })
@@ -111,8 +111,8 @@ export class Cursor2D {
     this._zoomProgressTween = new TWEEN.Tween({
       progress: this._zoomProgress,
     })
-      .to({ progress: destination }, 1250)
-      .easing(TWEEN.Easing.Exponential.InOut)
+      .to({ progress: destination }, 600)
+      .easing(TWEEN.Easing.Sinusoidal.InOut)
       .onUpdate(obj => {
         this._zoomProgress = obj.progress;
       });
