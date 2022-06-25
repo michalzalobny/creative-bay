@@ -21,12 +21,6 @@ interface Constructor {
 }
 
 export class ExperienceScene extends InteractiveScene {
-  static particlesAmount = 400;
-  static particlesSize = 10.2; //10.2 ensures that all the pixels used will take the whole space
-  static wheelMultiplier = 1;
-  static mouseMultiplier = 2;
-  static touchMultiplier = 2;
-
   _pointPlane3D: PointObject3D | null = null;
   _planeGeometry: THREE.PlaneBufferGeometry | null = null;
   _videosArray: HTMLVideoElement[] = [];
@@ -40,9 +34,15 @@ export class ExperienceScene extends InteractiveScene {
   _postProcess: PostProcess;
   _isTransitioning = false;
   _isLoaded = false;
+  _videoFrameSettings = {
+    particlesAmount: 400,
+    particlesSize: 10.2, //10.2 ensures that all the pixels used will take the whole space
+  };
 
   constructor({ postProcess, gui, camera }: Constructor) {
     super({ camera, gui });
+
+    this._setGui();
 
     this._postProcess = postProcess;
 
@@ -51,13 +51,33 @@ export class ExperienceScene extends InteractiveScene {
     this._addListeners();
   }
 
+  _setGui() {
+    const videoFrame = this._gui.addFolder('Video frame texture');
+    videoFrame.close();
+    videoFrame
+      .add(this._videoFrameSettings, 'particlesAmount', 40, 400, 1)
+      .name('particlesAmount')
+      .onFinishChange(() => {
+        this._createNewPointObject();
+        this._computeAllFrames();
+      });
+
+    videoFrame
+      .add(this._videoFrameSettings, 'particlesSize', 3, 40, 0.1)
+      .name('particlesSize')
+      .onFinishChange(() => {
+        this._createNewPointObject();
+        this._computeAllFrames();
+      });
+  }
+
   _preloadVideosFully() {
     let loaded = 0;
     const onVideoLoaded = () => {
       loaded += 1;
       if (loaded === this._videosArray.length) {
         this.dispatchEvent({ type: 'loaded' });
-        this.startVideoLooping();
+        this._startVideoLooping();
         if (globalState.canvasApp) {
           globalState.canvasApp.cursor2D.setCurrentText('click for explosion');
         }
@@ -83,7 +103,7 @@ export class ExperienceScene extends InteractiveScene {
     this._planeGeometry?.dispose();
     const wrapperSizes = this._videosWrapper.getBoundingClientRect();
     const planeRatio = wrapperSizes.height / wrapperSizes.width;
-    const particlesXAmount = (ExperienceScene.particlesAmount * wrapperSizes.width) / 1000;
+    const particlesXAmount = (this._videoFrameSettings.particlesAmount * wrapperSizes.width) / 1000;
 
     this._planeGeometry = new THREE.PlaneGeometry(
       1,
@@ -93,8 +113,7 @@ export class ExperienceScene extends InteractiveScene {
     );
   }
 
-  setRendererBounds(bounds: Bounds) {
-    super.setRendererBounds(bounds);
+  _createNewPointObject() {
     if (this._pointPlane3D) {
       this._pointPlane3D.destroy();
       this.remove(this._pointPlane3D);
@@ -104,20 +123,21 @@ export class ExperienceScene extends InteractiveScene {
 
     const particleSize =
       (this._planeGeometry.parameters.widthSegments /
-        ExperienceScene.particlesAmount /
+        this._videoFrameSettings.particlesAmount /
         this._planeGeometry.parameters.widthSegments) *
       100000 *
-      ExperienceScene.particlesSize;
+      this._videoFrameSettings.particlesSize;
 
     this._pointPlane3D = new PointObject3D({
       geometry: this._planeGeometry,
       gui: this._gui,
       particleSize,
     });
+
     this._pointPlane3D.setPixelRatio(this._pixelRatio); //Need to call it here and too because, we destroy previous instance
     this.add(this._pointPlane3D);
 
-    this._pointPlane3D.setRendererBounds(bounds);
+    this._pointPlane3D.setRendererBounds(this._rendererBounds);
 
     const wrapperSizes = this._videosWrapper.getBoundingClientRect();
 
@@ -125,6 +145,11 @@ export class ExperienceScene extends InteractiveScene {
       height: wrapperSizes.height,
       width: wrapperSizes.width,
     });
+  }
+
+  setRendererBounds(bounds: Bounds) {
+    super.setRendererBounds(bounds);
+    this._createNewPointObject();
   }
 
   setPixelRatio(ratio: number) {
@@ -149,7 +174,7 @@ export class ExperienceScene extends InteractiveScene {
     });
   }
 
-  computeFrame(targetName: string, seconds?: number) {
+  _computeFrame(targetName: string, seconds?: number) {
     const video = this._videosArray.find(
       vid => vid.dataset.particle === targetName
     ) as HTMLVideoElement;
@@ -179,12 +204,12 @@ export class ExperienceScene extends InteractiveScene {
     const nextTargetName = nextVideo.dataset.particle || '';
     const nextVideoId = parseInt(nextTargetName.replace(VideoNames.VID_PART, ''));
 
-    this.computeFrame(finishedTargetName);
+    this._computeFrame(finishedTargetName);
 
     await this._animateVidOpacity(finishedVideo, 0, 0.2);
 
     nextVideo.currentTime = 0;
-    this.computeFrame(nextTargetName);
+    this._computeFrame(nextTargetName);
 
     if (this._pointPlane3D) {
       const time1 = 0.85;
@@ -209,7 +234,7 @@ export class ExperienceScene extends InteractiveScene {
     await this._animateVidOpacity(nextVideo, 1, 0.2);
 
     finishedVideo.currentTime = 0;
-    this.computeFrame(finishedTargetName);
+    this._computeFrame(finishedTargetName);
 
     void nextVideo.play();
     this._isTransitioning = false;
@@ -248,7 +273,14 @@ export class ExperienceScene extends InteractiveScene {
     void this.animateTransition(finishedVideo, nextVideo);
   };
 
-  startVideoLooping() {
+  _computeAllFrames() {
+    this._videosArray.forEach(vid => {
+      const targetName = vid.dataset.particle || '';
+      this._computeFrame(targetName, 0);
+    });
+  }
+
+  _startVideoLooping() {
     const video = this._videosArray.find(
       vid => vid.dataset.particle === VideoNames.VID_PART + this._currentlyPlayedId.toString()
     ) as HTMLVideoElement;
