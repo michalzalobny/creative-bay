@@ -39,6 +39,7 @@ export class ExperienceScene extends InteractiveScene {
   _currentlyPlayedId = 1; //1, 2 or 3
   _postProcess: PostProcess;
   _isTransitioning = false;
+  _isLoaded = false;
 
   constructor({ postProcess, gui, camera }: Constructor) {
     super({ camera, gui });
@@ -58,8 +59,9 @@ export class ExperienceScene extends InteractiveScene {
         this.dispatchEvent({ type: 'loaded' });
         this.startVideoLooping();
         if (globalState.canvasApp) {
-          globalState.canvasApp.cursor2D.setCurrentText('click for particles');
+          globalState.canvasApp.cursor2D.setCurrentText('click for explosion');
         }
+        this._isLoaded = true;
       }
     };
 
@@ -193,7 +195,7 @@ export class ExperienceScene extends InteractiveScene {
       ]);
 
       await Promise.allSettled([
-        this._animateBloom(14, time1),
+        this._animateBloom(16, time1),
         this._animateBloom(0, time1 * 0.7, time1),
         this._pointPlane3D.showT(nextVideoId, time1, time1 * 0.8),
       ]);
@@ -256,6 +258,7 @@ export class ExperienceScene extends InteractiveScene {
   }
 
   _handleClick = () => {
+    if (!this._isLoaded) return;
     const currentVideo = this._videosArray.find(
       vid => vid.dataset.particle === VideoNames.VID_PART + this._currentlyPlayedId.toString()
     ) as HTMLVideoElement;

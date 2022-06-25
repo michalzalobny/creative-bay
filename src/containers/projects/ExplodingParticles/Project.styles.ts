@@ -19,7 +19,7 @@ export const ReadyWrapper = styled.div<ReadyWrapperProps>`
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 2;
+  z-index: 4;
   opacity: 1;
   transition: opacity 0.5s ease-in-out;
   background-color: white;

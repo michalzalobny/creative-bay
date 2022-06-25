@@ -82,8 +82,9 @@ void main(){
     stablePosition += distortion * uDistortion;
     stablePosition.z *= 0.35;
 
-    stablePosition.xz *= rotate2d( PI * 0.50 * -uMouse2D.x * uDistortion);
-    stablePosition.yz *= rotate2d( PI * 0.50 * -uMouse2D.y * uDistortion);
+    float rotationRatio = 0.75;
+    stablePosition.xz *= rotate2d( PI * 0.50 * -uMouse2D.x * uDistortion * rotationRatio);
+    stablePosition.yz *= rotate2d( PI * 0.50 * -uMouse2D.y * uDistortion * rotationRatio);
 
     vec4 modelPosition = modelMatrix * vec4(stablePosition, 1.0);
     vec4 viewPosition = viewMatrix * modelPosition;
