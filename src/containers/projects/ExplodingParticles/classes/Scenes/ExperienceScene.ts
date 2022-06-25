@@ -257,7 +257,7 @@ export class ExperienceScene extends InteractiveScene {
       await delay(500);
 
       await Promise.allSettled([
-        this._animateBloom(16, time1),
+        this._animateBloom(7, time1),
         this._animateBloom(0, time1 * 0.7, time1),
         this._pointPlane3D.showT(nextVideoId, time1, time1 * 0.8),
       ]);
