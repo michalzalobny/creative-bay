@@ -348,12 +348,12 @@ export class ExperienceScene extends InteractiveScene {
     void nextVideo.play();
     this._isTransitioning = false;
 
-    if (globalState.canvasApp) globalState.canvasApp.cursor2D.show();
+    if (globalState.canvasApp) globalState.canvasApp.cursor2D.setCurrentText('click for explosion');
   }
 
   handleVideoChange = (e: Event | HTMLVideoElement) => {
     if (this._isTransitioning) return;
-    if (globalState.canvasApp) globalState.canvasApp.cursor2D.hide();
+    if (globalState.canvasApp) globalState.canvasApp.cursor2D.setCurrentText('');
     this._animateParagraphOut(this._currentlyPlayedId);
 
     this._isTransitioning = true;

@@ -64,6 +64,35 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     }
   }, [router]);
 
+  useEffect(() => {
+    const links = Array.from(document.querySelectorAll('a, button'));
+
+    const handleMouseEnter = () => {
+      if (globalState.canvasApp) {
+        globalState.canvasApp.cursor2D.zoomIn();
+      }
+    };
+
+    const handleMouseLeave = () => {
+      if (globalState.canvasApp) {
+        globalState.canvasApp.cursor2D.zoomOut();
+      }
+    };
+
+    links.forEach(link => {
+      link.addEventListener('mouseenter', handleMouseEnter);
+      link.addEventListener('mouseleave', handleMouseLeave);
+    });
+
+    return () => {
+      links.forEach(link => {
+        link.removeEventListener('mouseenter', handleMouseEnter);
+        link.removeEventListener('mouseleave', handleMouseLeave);
+      });
+      if (globalState.canvasApp) globalState.canvasApp.cursor2D.zoomOut();
+    };
+  }, [router]);
+
   return (
     <>
       <GlobalStyles />
