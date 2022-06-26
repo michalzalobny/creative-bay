@@ -7,6 +7,7 @@ import { UpdateInfo, Bounds } from 'utils/sharedTypes';
 import { sharedValues } from 'utils/sharedValues';
 import { getVideoFrameTexture } from 'utils/functions/getVideoFrameTexture';
 import { globalState } from 'utils/globalState';
+import { breakpoints } from 'utils/media';
 
 import { InteractiveScene } from './InteractiveScene';
 import { PointObject3D } from '../Components/PointObject3D';
@@ -281,6 +282,9 @@ export class ExperienceScene extends InteractiveScene {
 
   setRendererBounds(bounds: Bounds) {
     super.setRendererBounds(bounds);
+    if (bounds.width <= breakpoints.tablet) {
+      this._videoFrameSettings.particlesAmount = 300;
+    }
     this._setupScene();
   }
 
