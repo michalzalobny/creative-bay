@@ -268,6 +268,7 @@ export class ExperienceScene extends InteractiveScene {
   }
 
   _setupScene() {
+    if (!this._isLoaded) return;
     this._isTransitioning = false;
     this._transitionTl1 && this._transitionTl1.kill();
     if (this._postProcess.unrealBloomPass) this._postProcess.unrealBloomPass.strength = 0;
@@ -275,7 +276,7 @@ export class ExperienceScene extends InteractiveScene {
     if (globalState.canvasApp) globalState.canvasApp.cursor2D.setCurrentText('click for explosion');
 
     this._createNewPointObject();
-    this._isLoaded && this._startVideoLooping();
+    this._startVideoLooping();
   }
 
   setRendererBounds(bounds: Bounds) {
