@@ -56,14 +56,12 @@ export const GateWrapper = styled.div<GateWrapperProps>`
   width: 100%;
   height: 100%;
   z-index: 5;
-  opacity: 0;
-  transition: opacity 0.6s;
+  display: none;
 
   ${props =>
     props.$showGate &&
     css`
-      opacity: 1;
-      pointer-events: initial;
+      display: initial;
     `}
 `;
 

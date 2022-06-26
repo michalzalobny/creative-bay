@@ -111,18 +111,35 @@ export class ExperienceScene extends InteractiveScene {
   }
 
   _generateParagraphs() {
+    this._destroyParagraphs();
     this._namesArray.forEach(name => {
       const title = document.createElement('p');
       title.innerText = name;
-
       this._paragraphsArray.push(title);
-      this._videosWrapper.appendChild(title);
     });
 
     this._paragraphsArray.forEach(el => {
       const x = new SplitType(el, { types: 'lines,chars', tagName: 'span' });
       this._splitParagraphsArray.push(x);
+      this._videosWrapper.appendChild(el);
     });
+  }
+
+  _destroyParagraphs() {
+    this._paragraphTimeoutsIds.forEach(timeout => {
+      clearTimeout(timeout);
+    });
+    this._paragraphTimeoutsIds = [];
+
+    this._splitParagraphsArray.forEach(el => {
+      el.revert();
+    });
+    this._splitParagraphsArray = [];
+
+    this._paragraphsArray.forEach(el => {
+      this._videosWrapper.removeChild(el);
+    });
+    this._paragraphsArray = [];
   }
 
   _animateParagraphIn(index: number) {
@@ -182,13 +199,9 @@ export class ExperienceScene extends InteractiveScene {
     const onVideoLoaded = () => {
       loaded += 1;
       if (loaded === this._videosArray.length) {
-        this._generateParagraphs();
         this.dispatchEvent({ type: 'loaded' });
-        this._startVideoLooping();
-        if (globalState.canvasApp) {
-          globalState.canvasApp.cursor2D.setCurrentText('click for explosion');
-        }
         this._isLoaded = true;
+        this._setupScene();
       }
     };
 
@@ -255,14 +268,13 @@ export class ExperienceScene extends InteractiveScene {
   }
 
   _setupScene() {
+    this._isTransitioning = false;
     this._transitionTl1 && this._transitionTl1.kill();
-    this._paragraphTimeoutsIds.forEach(timeout => {
-      clearTimeout(timeout);
-    });
+    if (this._postProcess.unrealBloomPass) this._postProcess.unrealBloomPass.strength = 0;
+    this._generateParagraphs();
+    if (globalState.canvasApp) globalState.canvasApp.cursor2D.setCurrentText('click for explosion');
+
     this._createNewPointObject();
-    this._splitParagraphsArray.forEach(el => {
-      el.split({ types: 'lines,chars', tagName: 'span' });
-    });
     this._isLoaded && this._startVideoLooping();
   }
 
@@ -355,10 +367,9 @@ export class ExperienceScene extends InteractiveScene {
     finishedVideo.currentTime = 0;
     this._computeFrame(finishedTargetName);
 
-    void nextVideo.play();
-    this._isTransitioning = false;
-
     if (globalState.canvasApp) globalState.canvasApp.cursor2D.setCurrentText('click for explosion');
+    await nextVideo.play();
+    this._isTransitioning = false;
   }
 
   handleVideoChange = (e: Event | HTMLVideoElement) => {
@@ -401,7 +412,6 @@ export class ExperienceScene extends InteractiveScene {
 
   _startVideoLooping() {
     this._currentlyPlayedId = 1;
-    this._isTransitioning = false;
     this._videosArray.forEach(vid => {
       vid.currentTime = 0;
       vid.style.opacity = '0';
@@ -410,7 +420,7 @@ export class ExperienceScene extends InteractiveScene {
       vid => vid.dataset.particle === VideoNames.VID_PART + this._currentlyPlayedId.toString()
     ) as HTMLVideoElement;
 
-    void this._animateParagraphIn(this._currentlyPlayedId);
+    this._animateParagraphIn(this._currentlyPlayedId);
 
     video.style.opacity = '1';
     void video.play();
@@ -421,7 +431,6 @@ export class ExperienceScene extends InteractiveScene {
     const currentVideo = this._videosArray.find(
       vid => vid.dataset.particle === VideoNames.VID_PART + this._currentlyPlayedId.toString()
     ) as HTMLVideoElement;
-
     this.handleVideoChange(currentVideo);
   };
 
@@ -430,7 +439,8 @@ export class ExperienceScene extends InteractiveScene {
     this._videosArray[0].addEventListener('ended', this.handleVideoChange);
     this._videosArray[1].addEventListener('ended', this.handleVideoChange);
     this._videosArray[2].addEventListener('ended', this.handleVideoChange);
-    window.addEventListener('click', this._handleClick);
+    if (this._videosWrapper.parentElement)
+      this._videosWrapper.parentElement.addEventListener('click', this._handleClick);
   }
 
   _removeListeners() {
@@ -438,7 +448,8 @@ export class ExperienceScene extends InteractiveScene {
     this._videosArray[0].removeEventListener('ended', this.handleVideoChange);
     this._videosArray[1].removeEventListener('ended', this.handleVideoChange);
     this._videosArray[2].removeEventListener('ended', this.handleVideoChange);
-    window.removeEventListener('click', this._handleClick);
+    if (this._videosWrapper.parentElement)
+      this._videosWrapper.parentElement.removeEventListener('click', this._handleClick);
   }
 
   update(updateInfo: UpdateInfo) {
@@ -459,21 +470,13 @@ export class ExperienceScene extends InteractiveScene {
     this._videosArray.forEach(video => {
       this._videosWrapper.removeChild(video);
     });
+    this._videosArray = [];
+
     this._planeGeometry?.dispose();
-
-    this._paragraphTimeoutsIds.forEach(timeout => {
-      clearTimeout(timeout);
-    });
-
-    this._splitParagraphsArray.forEach(el => {
-      el.revert();
-    });
-
-    this._paragraphsArray.forEach(el => {
-      this._videosWrapper.removeChild(el);
-    });
+    this._destroyParagraphs();
 
     this._transitionTl1 && this._transitionTl1.kill();
+
     if (globalState.canvasApp) globalState.canvasApp.cursor2D.setCurrentText('');
     console.log('destroyed');
   }
