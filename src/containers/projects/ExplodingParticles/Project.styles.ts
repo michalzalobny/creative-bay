@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components';
 
+import { s1, underline } from 'utils/sharedStyled';
 import { media } from 'utils/media';
 
 export const Wrapper = styled.div`
@@ -42,6 +43,38 @@ export const CanvasWrapper = styled.div`
   width: 100%;
   height: 100%;
   z-index: 1;
+`;
+
+interface GateWrapperProps {
+  $showGate: boolean;
+}
+
+export const GateWrapper = styled.div<GateWrapperProps>`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+  opacity: 0;
+  transition: opacity 0.6s;
+
+  ${props =>
+    props.$showGate &&
+    css`
+      opacity: 1;
+      pointer-events: initial;
+    `}
+`;
+
+export const GateEnterButton = styled.button`
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  ${s1};
+  ${underline};
+  cursor: pointer;
 `;
 
 export const VideoWrapper = styled.div`
@@ -104,7 +137,6 @@ export const VideoWrapper = styled.div`
     width: 100%;
     height: 100%;
     object-fit: contain;
-    /* border: 3px solid red; */
     opacity: 0;
   }
 `;
