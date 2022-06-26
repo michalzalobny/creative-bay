@@ -1,8 +1,10 @@
 import * as THREE from 'three';
 import GUI from 'lil-gui';
 import { gsap } from 'gsap';
+import SplitType from 'split-type';
 
 import { UpdateInfo, Bounds } from 'utils/sharedTypes';
+import { sharedValues } from 'utils/sharedValues';
 import { getVideoFrameTexture } from 'utils/functions/getVideoFrameTexture';
 import { globalState } from 'utils/globalState';
 import { delay } from 'utils/functions/delay';
@@ -45,6 +47,9 @@ export class ExperienceScene extends InteractiveScene {
     uVar3: 0.5,
     uVar4: 0.5,
   };
+  _namesArray = ['青いバラ', '桜の花', 'カモミール'];
+  _paragraphsArray: HTMLParagraphElement[] = [];
+  _splitParagraphsArray: SplitType[] = [];
 
   constructor({ postProcess, gui, camera }: Constructor) {
     super({ camera, gui });
@@ -106,11 +111,73 @@ export class ExperienceScene extends InteractiveScene {
       });
   }
 
+  _generateParagraphs() {
+    this._namesArray.forEach(name => {
+      const title = document.createElement('p');
+      title.innerText = name;
+
+      this._paragraphsArray.push(title);
+      this._videosWrapper.appendChild(title);
+    });
+
+    this._paragraphsArray.forEach(el => {
+      const x = new SplitType(el, { types: 'lines,chars', tagName: 'span' });
+      this._splitParagraphsArray.push(x);
+    });
+  }
+
+  async _animateParagraphIn(index: number) {
+    const target = this._splitParagraphsArray[index - 1];
+    if (!target.lines) return;
+
+    /*
+    1. for loop instead of .forEach to be able to use await
+    2. two for loops in order to use await between reseting the style and applying new
+    3. delay is 50, other lower values like 5 result in css not picking the update of transform reset
+    */
+    for (let i = 0; i < target.lines.length; i++) {
+      const line = target.lines[i];
+      const lineArr = Array.from(line.children) as HTMLElement[];
+      for (let charIndex = 0; charIndex < lineArr.length; charIndex++) {
+        const char = lineArr[charIndex];
+        char.style.transition = '';
+        char.classList.remove('char--revert');
+      }
+    }
+    await delay(50);
+    for (let i = 0; i < target.lines.length; i++) {
+      const line = target.lines[i];
+      const lineArr = Array.from(line.children) as HTMLElement[];
+      for (let charIndex = 0; charIndex < lineArr.length; charIndex++) {
+        const char = lineArr[charIndex];
+        char.style.transition = `transform 1.5s ${charIndex * 0.07}s ${sharedValues.timings.t1}`;
+        char.classList.add('char--active');
+      }
+    }
+  }
+
+  _animateParagraphOut(index: number) {
+    const target = this._splitParagraphsArray[index - 1];
+    if (!target.lines) return;
+
+    for (let i = 0; i < target.lines.length; i++) {
+      const line = target.lines[i];
+      const lineArr = Array.from(line.children) as HTMLElement[];
+      for (let charIndex = 0; charIndex < lineArr.length; charIndex++) {
+        const char = lineArr[charIndex];
+        char.classList.add('char--revert');
+        char.style.transition = `transform 1s ${charIndex * 0.07}s ${sharedValues.timings.t1}`;
+        char.classList.remove('char--active');
+      }
+    }
+  }
+
   _preloadVideosFully() {
     let loaded = 0;
     const onVideoLoaded = () => {
       loaded += 1;
       if (loaded === this._videosArray.length) {
+        this._generateParagraphs();
         this.dispatchEvent({ type: 'loaded' });
         this._startVideoLooping();
         if (globalState.canvasApp) {
@@ -185,6 +252,9 @@ export class ExperienceScene extends InteractiveScene {
   setRendererBounds(bounds: Bounds) {
     super.setRendererBounds(bounds);
     this._createNewPointObject();
+    this._splitParagraphsArray.forEach(el => {
+      el.split({ types: 'lines,chars', tagName: 'span' });
+    });
   }
 
   setPixelRatio(ratio: number) {
@@ -262,8 +332,8 @@ export class ExperienceScene extends InteractiveScene {
         this._pointPlane3D.showT(nextVideoId, time1, time1 * 0.8),
       ]);
 
-      await delay(200);
-
+      await delay(150);
+      await this._animateParagraphIn(this._currentlyPlayedId);
       await Promise.allSettled([
         this._pointPlane3D.animateDistortion(0, 1.2, 0),
         this._pointPlane3D.animatePointSize(1, 0.6),
@@ -283,8 +353,8 @@ export class ExperienceScene extends InteractiveScene {
 
   handleVideoChange = (e: Event | HTMLVideoElement) => {
     if (this._isTransitioning) return;
-
     if (globalState.canvasApp) globalState.canvasApp.cursor2D.hide();
+    this._animateParagraphOut(this._currentlyPlayedId);
 
     this._isTransitioning = true;
     let finishedVideo;
@@ -323,6 +393,8 @@ export class ExperienceScene extends InteractiveScene {
     const video = this._videosArray.find(
       vid => vid.dataset.particle === VideoNames.VID_PART + this._currentlyPlayedId.toString()
     ) as HTMLVideoElement;
+
+    void this._animateParagraphIn(this._currentlyPlayedId);
 
     video.style.opacity = '1';
     void video.play();
@@ -373,5 +445,13 @@ export class ExperienceScene extends InteractiveScene {
     });
     this._planeGeometry?.dispose();
     if (globalState.canvasApp) globalState.canvasApp.cursor2D.setCurrentText('');
+
+    this._splitParagraphsArray.forEach(el => {
+      el.revert();
+    });
+
+    this._paragraphsArray.forEach(el => {
+      this._videosWrapper.removeChild(el);
+    });
   }
 }

@@ -1,5 +1,7 @@
 import styled, { css } from 'styled-components';
 
+import { media } from 'utils/media';
+
 export const Wrapper = styled.div`
   position: absolute;
   top: 0;
@@ -55,6 +57,44 @@ export const VideoWrapper = styled.div`
     display: block;
     width: 100%;
     padding-bottom: 171%;
+  }
+
+  p {
+    font-size: 4rem;
+    font-weight: 400;
+    letter-spacing: 0.5rem;
+    line-height: 1.1;
+    color: white;
+    z-index: 3;
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    text-align: center;
+    transform: translateX(-50%);
+    white-space: nowrap;
+
+    ${media.tablet} {
+      font-size: 8rem;
+      letter-spacing: 1.5rem;
+    }
+
+    .line {
+      display: inline-block;
+      overflow: hidden;
+      vertical-align: top;
+
+      .char {
+        transform: translateY(100%);
+
+        &--revert {
+          transform: translateY(-100%);
+        }
+
+        &--active {
+          transform: translateY(0%);
+        }
+      }
+    }
   }
 
   video {
