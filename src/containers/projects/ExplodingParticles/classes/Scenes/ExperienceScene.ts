@@ -7,7 +7,6 @@ import { UpdateInfo, Bounds } from 'utils/sharedTypes';
 import { sharedValues } from 'utils/sharedValues';
 import { getVideoFrameTexture } from 'utils/functions/getVideoFrameTexture';
 import { globalState } from 'utils/globalState';
-import { delay } from 'utils/functions/delay';
 
 import { InteractiveScene } from './InteractiveScene';
 import { PointObject3D } from '../Components/PointObject3D';
