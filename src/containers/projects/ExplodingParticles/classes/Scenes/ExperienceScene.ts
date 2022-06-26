@@ -50,6 +50,8 @@ export class ExperienceScene extends InteractiveScene {
   _namesArray = ['青いバラ', '桜の花', 'カモミール'];
   _paragraphsArray: HTMLParagraphElement[] = [];
   _splitParagraphsArray: SplitType[] = [];
+  _paragraphTimeoutsIds: ReturnType<typeof setTimeout>[] = [];
+  _transitionTl1: gsap.core.Timeline | null = null;
 
   constructor({ postProcess, gui, camera }: Constructor) {
     super({ camera, gui });
@@ -70,16 +72,14 @@ export class ExperienceScene extends InteractiveScene {
       .add(this._videoFrameSettings, 'particlesAmount', 40, 400, 1)
       .name('frameParticlesAmount')
       .onFinishChange(() => {
-        this._createNewPointObject();
-        this._computeAllFrames();
+        this._setupScene();
       });
 
     videoFrame
       .add(this._videoFrameSettings, 'particlesSize', 3, 40, 0.1)
       .name('frameParticlesSize')
       .onFinishChange(() => {
-        this._createNewPointObject();
-        this._computeAllFrames();
+        this._setupScene();
       });
 
     const particles = this._gui.addFolder('Particles');
@@ -126,13 +126,12 @@ export class ExperienceScene extends InteractiveScene {
     });
   }
 
-  async _animateParagraphIn(index: number) {
+  _animateParagraphIn(index: number) {
     const target = this._splitParagraphsArray[index - 1];
     if (!target.lines) return;
 
     /*
-    1. for loop instead of .forEach to be able to use await
-    2. two for loops in order to use await between reseting the style and applying new
+    1. two for loops in order to use setTimeout between reseting the style and applying new
     3. delay is 50, other lower values like 5 result in css not picking the update of transform reset
     */
     for (let i = 0; i < target.lines.length; i++) {
@@ -144,16 +143,23 @@ export class ExperienceScene extends InteractiveScene {
         char.classList.remove('char--revert');
       }
     }
-    await delay(50);
-    for (let i = 0; i < target.lines.length; i++) {
-      const line = target.lines[i];
-      const lineArr = Array.from(line.children) as HTMLElement[];
-      for (let charIndex = 0; charIndex < lineArr.length; charIndex++) {
-        const char = lineArr[charIndex];
-        char.style.transition = `transform 1.5s ${charIndex * 0.07}s ${sharedValues.timings.t1}`;
-        char.classList.add('char--active');
+
+    const handleTransform = () => {
+      if (!target.lines) return;
+      for (let i = 0; i < target.lines.length; i++) {
+        const line = target.lines[i];
+        const lineArr = Array.from(line.children) as HTMLElement[];
+        for (let charIndex = 0; charIndex < lineArr.length; charIndex++) {
+          const char = lineArr[charIndex];
+          char.style.transition = `transform 1.5s ${charIndex * 0.07}s ${sharedValues.timings.t1}`;
+          char.classList.add('char--active');
+        }
       }
-    }
+    };
+
+    const paragraphsTimeoutId = this._paragraphTimeoutsIds[index - 1];
+    if (paragraphsTimeoutId) clearTimeout(paragraphsTimeoutId);
+    this._paragraphTimeoutsIds[index - 1] = setTimeout(handleTransform, 50);
   }
 
   _animateParagraphOut(index: number) {
@@ -249,12 +255,21 @@ export class ExperienceScene extends InteractiveScene {
     });
   }
 
-  setRendererBounds(bounds: Bounds) {
-    super.setRendererBounds(bounds);
+  _setupScene() {
+    this._transitionTl1 && this._transitionTl1.kill();
+    this._paragraphTimeoutsIds.forEach(timeout => {
+      clearTimeout(timeout);
+    });
     this._createNewPointObject();
     this._splitParagraphsArray.forEach(el => {
       el.split({ types: 'lines,chars', tagName: 'span' });
     });
+    this._isLoaded && this._startVideoLooping();
+  }
+
+  setRendererBounds(bounds: Bounds) {
+    super.setRendererBounds(bounds);
+    this._setupScene();
   }
 
   setPixelRatio(ratio: number) {
@@ -262,20 +277,18 @@ export class ExperienceScene extends InteractiveScene {
     this._pointPlane3D && this._pointPlane3D.setPixelRatio(this._pixelRatio);
   }
 
-  async _animateVidOpacity(video: HTMLVideoElement, destination: number, duration: number) {
+  _animateVidOpacity(video: HTMLVideoElement, destination: number, duration: number) {
     return gsap.to(video, {
       duration,
       opacity: destination,
     });
   }
 
-  async _animateBloom(destination: number, duration: number, delay = 0) {
-    if (!this._postProcess.unrealBloomPass) return Promise.reject();
+  _animateBloom(destination: number, duration: number) {
     return gsap.to(this._postProcess.unrealBloomPass, {
       duration,
       strength: destination,
-      ease: 'power2.inOut',
-      delay,
+      ease: PointObject3D.defaultEase,
     });
   }
 
@@ -305,42 +318,40 @@ export class ExperienceScene extends InteractiveScene {
   }
 
   async animateTransition(finishedVideo: HTMLVideoElement, nextVideo: HTMLVideoElement) {
+    if (!this._pointPlane3D) return;
     const finishedTargetName = finishedVideo.dataset.particle || '';
     const nextTargetName = nextVideo.dataset.particle || '';
     const nextVideoId = parseInt(nextTargetName.replace(VideoNames.VID_PART, ''));
 
     this._computeFrame(finishedTargetName);
 
-    await this._animateVidOpacity(finishedVideo, 0, 0.2);
+    this._transitionTl1 && this._transitionTl1.kill();
+    this._transitionTl1 = gsap.timeline();
 
+    await this._transitionTl1.add(this._animateVidOpacity(finishedVideo, 0, 0.2));
     nextVideo.currentTime = 0;
     this._computeFrame(nextTargetName);
 
-    if (this._pointPlane3D) {
-      const time1 = 0.85;
+    await this._transitionTl1
+      .add(this._pointPlane3D.animateDistortion(1, 1.2))
+      .add(this._pointPlane3D.animatePointSize(0.96, 0.6), '>-1.2') //starts 1.2s before previous ends
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      .add(function () {}, '+=0.5'); //adds extra delay
 
-      await Promise.allSettled([
-        this._pointPlane3D.animateDistortion(1, 1.2),
-        this._pointPlane3D.animatePointSize(0.96, 0.6),
-      ]);
+    const time1 = 0.85;
+    await this._transitionTl1
+      .add(this._animateBloom(7, time1))
+      .add(this._pointPlane3D.showT(nextVideoId, time1), `>-${0.2 * time1}`)
+      .add(this._animateBloom(0, time1 * 0.7), `<+${0.2 * time1}`) //starts  0.2 *.. past the previous animation
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      .add(function () {}, '+=0.15');
 
-      await delay(500);
+    this._animateParagraphIn(this._currentlyPlayedId);
 
-      await Promise.allSettled([
-        this._animateBloom(7, time1),
-        this._animateBloom(0, time1 * 0.7, time1),
-        this._pointPlane3D.showT(nextVideoId, time1, time1 * 0.8),
-      ]);
-
-      await delay(150);
-      await this._animateParagraphIn(this._currentlyPlayedId);
-      await Promise.allSettled([
-        this._pointPlane3D.animateDistortion(0, 1.2, 0),
-        this._pointPlane3D.animatePointSize(1, 0.6),
-      ]);
-    }
-
-    await this._animateVidOpacity(nextVideo, 1, 0.2);
+    await this._transitionTl1
+      .add(this._pointPlane3D.animateDistortion(0, 1.2))
+      .add(this._pointPlane3D.animatePointSize(1, 0.6), '>-1.2')
+      .add(this._animateVidOpacity(nextVideo, 1, 0.2));
 
     finishedVideo.currentTime = 0;
     this._computeFrame(finishedTargetName);
@@ -353,10 +364,10 @@ export class ExperienceScene extends InteractiveScene {
 
   handleVideoChange = (e: Event | HTMLVideoElement) => {
     if (this._isTransitioning) return;
+    this._isTransitioning = true;
     if (globalState.canvasApp) globalState.canvasApp.cursor2D.setCurrentText('');
     this._animateParagraphOut(this._currentlyPlayedId);
 
-    this._isTransitioning = true;
     let finishedVideo;
 
     if ('target' in e) {
@@ -390,6 +401,12 @@ export class ExperienceScene extends InteractiveScene {
   }
 
   _startVideoLooping() {
+    this._currentlyPlayedId = 1;
+    this._isTransitioning = false;
+    this._videosArray.forEach(vid => {
+      vid.currentTime = 0;
+      vid.style.opacity = '0';
+    });
     const video = this._videosArray.find(
       vid => vid.dataset.particle === VideoNames.VID_PART + this._currentlyPlayedId.toString()
     ) as HTMLVideoElement;
@@ -444,7 +461,10 @@ export class ExperienceScene extends InteractiveScene {
       this._videosWrapper.removeChild(video);
     });
     this._planeGeometry?.dispose();
-    if (globalState.canvasApp) globalState.canvasApp.cursor2D.setCurrentText('');
+
+    this._paragraphTimeoutsIds.forEach(timeout => {
+      clearTimeout(timeout);
+    });
 
     this._splitParagraphsArray.forEach(el => {
       el.revert();
@@ -453,5 +473,9 @@ export class ExperienceScene extends InteractiveScene {
     this._paragraphsArray.forEach(el => {
       this._videosWrapper.removeChild(el);
     });
+
+    this._transitionTl1 && this._transitionTl1.kill();
+    if (globalState.canvasApp) globalState.canvasApp.cursor2D.setCurrentText('');
+    console.log('destroyed');
   }
 }

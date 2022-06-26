@@ -31,6 +31,7 @@ interface PointAsset {
 }
 
 export class PointObject3D extends InteractiveObject3D {
+  static defaultEase = 'power2.inOut';
   _points: THREE.Points<THREE.BufferGeometry, THREE.ShaderMaterial>;
   _material: THREE.ShaderMaterial;
   _mouse2D = [0, 0];
@@ -100,74 +101,70 @@ export class PointObject3D extends InteractiveObject3D {
     this._points.material.uniforms[name].value = value;
   }
 
-  async animatePointSize(destination: number, duration: number, delay = 0) {
+  animatePointSize(destination: number, duration: number) {
     return gsap.to(this._points.material.uniforms.uSizeFactor, {
       value: destination,
       duration,
-      ease: 'power2.inOut',
-      delay,
+      ease: PointObject3D.defaultEase,
     });
   }
 
-  async animateDistortion(destination: number, duration: number, delay = 0, ease = 'power2.inOut') {
+  animateDistortion(destination: number, duration: number) {
     return gsap.to(this._points.material.uniforms.uDistortion, {
       value: destination,
       duration,
-      ease,
-      delay,
+      ease: PointObject3D.defaultEase,
     });
   }
 
-  async _animateProgress1(destination: number, duration: number, delay = 0) {
+  _animateProgress1(destination: number, duration: number) {
     return gsap.to(this._points.material.uniforms.uProgress1, {
       value: destination,
       duration,
-      ease: 'power2.inOut',
-      delay,
+      ease: PointObject3D.defaultEase,
     });
   }
 
-  async _animateProgress2(destination: number, duration: number, delay = 0) {
+  _animateProgress2(destination: number, duration: number) {
     return gsap.to(this._points.material.uniforms.uProgress2, {
       value: destination,
       duration,
-      ease: 'power2.inOut',
-      delay,
+      ease: PointObject3D.defaultEase,
     });
   }
 
-  async showT(position: number, duration: number, delay = 0) {
+  showT(position: number, duration: number) {
     switch (position) {
       case 1:
-        return this._showT1(duration, delay);
+        return this._showT1(duration);
       case 2:
-        return this._showT2(duration, delay);
+        return this._showT2(duration);
       case 3:
-        return this._showT3(duration, delay);
+        return this._showT3(duration);
       default:
-        return Promise.reject();
+        return this._showT1(duration);
     }
   }
 
-  async _showT1(duration: number, delay = 0) {
-    return Promise.allSettled([
-      this._animateProgress1(0, duration, delay),
-      this._animateProgress2(0, duration, delay),
-    ]);
+  _showT1(duration: number) {
+    const tl = gsap.timeline();
+    const offset = `>-${duration}`;
+    tl.add(this._animateProgress1(0, duration)).add(this._animateProgress2(0, duration), offset);
+    return tl;
   }
 
-  async _showT2(duration: number, delay = 0) {
-    return Promise.allSettled([
-      this._animateProgress1(1, duration, delay),
-      this._animateProgress2(0, duration, delay),
-    ]);
+  _showT2(duration: number) {
+    const tl = gsap.timeline();
+    const offset = `>-${duration}`;
+    tl.add(this._animateProgress1(1, duration)).add(this._animateProgress2(0, duration), offset);
+    return tl;
   }
 
-  async _showT3(duration: number, delay = 0) {
-    return Promise.allSettled([
-      this._animateProgress1(0, duration, delay),
-      this._animateProgress2(1, duration, delay),
-    ]);
+  _showT3(duration: number) {
+    const tl = gsap.timeline();
+    const offset = `>-${duration}`;
+    tl.add(this._animateProgress1(0, duration)).add(this._animateProgress2(1, duration), offset);
+    return tl;
   }
 
   setMouse(mouse: Mouse) {
