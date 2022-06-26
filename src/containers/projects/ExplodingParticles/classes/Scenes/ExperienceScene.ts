@@ -483,6 +483,5 @@ export class ExperienceScene extends InteractiveScene {
     this._transitionTl1 && this._transitionTl1.kill();
 
     if (globalState.canvasApp) globalState.canvasApp.cursor2D.setCurrentText('');
-    console.log('destroyed');
   }
 }
