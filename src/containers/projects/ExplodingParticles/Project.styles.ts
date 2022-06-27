@@ -24,8 +24,7 @@ export const ReadyWrapper = styled.div<ReadyWrapperProps>`
   height: 100%;
   z-index: 8;
   opacity: 1;
-  transition: opacity 1s ease-in-out;
-  background-color: white;
+  transition: opacity 0.5s ease-in-out;
 
   ${props =>
     props.shouldReveal &&
