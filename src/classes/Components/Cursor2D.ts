@@ -165,12 +165,31 @@ export class Cursor2D {
     this._animateShow(0);
   }
 
+  _onMouseOut = (event: MouseEvent) => {
+    if (
+      event.clientY <= 0 ||
+      event.clientX <= 0 ||
+      event.clientX >= this._rendererBounds.width ||
+      event.clientY >= this._rendererBounds.height
+    ) {
+      this._animateShow(0);
+    }
+  };
+
+  _onMouseEnter = () => {
+    this._animateShow(1);
+  };
+
   _addListeners() {
     this._mouseMove.addEventListener('mousemove', this._onMouseMove);
+    document.addEventListener('mouseleave', this._onMouseOut);
+    document.addEventListener('mouseenter', this._onMouseEnter);
   }
 
   _removeListeners() {
     this._mouseMove.removeEventListener('mousemove', this._onMouseMove);
+    document.removeEventListener('mouseenter', this._onMouseEnter);
+    document.removeEventListener('mouseleave', this._onMouseOut);
   }
 
   _draw() {
