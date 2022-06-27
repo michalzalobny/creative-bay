@@ -126,12 +126,10 @@ export class Cursor2D {
 
   _zoomIn() {
     this._animateZoom(1);
-    this._animateTextShow(0);
   }
 
   _zoomOut() {
     this._animateZoom(0);
-    this._animateTextShow(1);
   }
 
   _animateIn() {
@@ -171,11 +169,13 @@ export class Cursor2D {
     this._ctx.fill();
 
     this._ctx.font = `${Cursor2D.fontSize}px opensans`;
-    this._ctx.fillStyle = `rgba(255,255,255,${this._textShowProgress * this._showProgress})`;
+    this._ctx.fillStyle = `rgba(255,255,255,${
+      this._textShowProgress * this._showProgress * (1 - this._zoomProgress)
+    })`;
     this._ctx.textAlign = 'center';
     this._ctx.fillText(
       this._textValue,
-      x + 20 * (1 - this._textShowProgress * this._showProgress),
+      x + 20 * (1 - this._textShowProgress * this._showProgress * (1 - this._zoomProgress)),
       y - Cursor2D.fontSize - Cursor2D.radiusDefault
     );
   }
