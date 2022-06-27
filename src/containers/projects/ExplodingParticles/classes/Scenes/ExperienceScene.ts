@@ -296,7 +296,7 @@ export class ExperienceScene extends InteractiveScene {
 
   _animateVidOpacity(video: HTMLVideoElement, destination: number, duration: number) {
     return gsap.to(video, {
-      duration,
+      duration: duration + 0.4,
       opacity: destination,
     });
   }
