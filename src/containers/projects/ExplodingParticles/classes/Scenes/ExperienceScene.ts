@@ -427,7 +427,6 @@ export class ExperienceScene extends InteractiveScene {
     ) as HTMLVideoElement;
 
     this._animateParagraphIn(this._currentlyPlayedId);
-    if (globalState.canvasApp) globalState.canvasApp.cursor2D.setCurrentText('click for explosion');
 
     video.style.opacity = '1';
     void video.play();
