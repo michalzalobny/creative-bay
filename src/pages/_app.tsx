@@ -70,12 +70,14 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     const handleMouseEnter = () => {
       if (globalState.canvasApp) {
         globalState.canvasApp.cursor2D.zoomIn();
+        globalState.canvasApp.cursor2D.slowLerp();
       }
     };
 
     const handleMouseLeave = () => {
       if (globalState.canvasApp) {
         globalState.canvasApp.cursor2D.zoomOut();
+        globalState.canvasApp.cursor2D.speedLerp();
       }
     };
 
@@ -91,7 +93,10 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         link.removeEventListener('mouseenter', handleMouseEnter);
         link.removeEventListener('mouseleave', handleMouseLeave);
       });
-      if (globalState.canvasApp) globalState.canvasApp.cursor2D.zoomOut();
+      if (globalState.canvasApp) {
+        globalState.canvasApp.cursor2D.zoomOut();
+        globalState.canvasApp.cursor2D.speedLerp();
+      }
     };
   }, [router]);
 

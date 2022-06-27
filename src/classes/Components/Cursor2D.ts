@@ -42,6 +42,9 @@ export class Cursor2D {
   _zoomProgress = 0;
   _zoomProgressTween: Tween<{ progress: number }> | null = null;
 
+  _lerpSpeedProgress = 1;
+  _lerpSpeedProgressTween: Tween<{ progress: number }> | null = null;
+
   constructor() {
     this._canvas = document.createElement('canvas');
     this._canvas.className = 'circle-cursor';
@@ -108,12 +111,25 @@ export class Cursor2D {
     this._zoomProgressTween = new TWEEN.Tween({
       progress: this._zoomProgress,
     })
-      .to({ progress: destination }, 1000)
+      .to({ progress: destination }, 800)
       .easing(TWEEN.Easing.Exponential.InOut)
       .onUpdate(obj => {
         this._zoomProgress = obj.progress;
       });
     this._zoomProgressTween.start();
+  }
+
+  _animateLerpSpeed(destination: number) {
+    if (this._lerpSpeedProgressTween) this._lerpSpeedProgressTween.stop();
+    this._lerpSpeedProgressTween = new TWEEN.Tween({
+      progress: this._lerpSpeedProgress,
+    })
+      .to({ progress: destination }, 800)
+      .easing(TWEEN.Easing.Sinusoidal.InOut)
+      .onUpdate(obj => {
+        this._lerpSpeedProgress = obj.progress;
+      });
+    this._lerpSpeedProgressTween.start();
   }
 
   _setTextTimeout = () => {
@@ -168,7 +184,7 @@ export class Cursor2D {
       x,
       y,
       Cursor2D.radiusDefault * this._showProgress +
-        Cursor2D.radiusDefault * 2 * this._zoomProgress * this._showProgress,
+        Cursor2D.radiusDefault * 1.2 * this._zoomProgress * this._showProgress,
       0,
       2 * Math.PI
     );
@@ -204,13 +220,13 @@ export class Cursor2D {
     this._mouse.x.current = lerp(
       this._mouse.x.current,
       this._mouse.x.target,
-      Cursor2D.mouseLerp * updateInfo.slowDownFactor
+      Cursor2D.mouseLerp * updateInfo.slowDownFactor * this._lerpSpeedProgress
     );
 
     this._mouse.y.current = lerp(
       this._mouse.y.current,
       this._mouse.y.target,
-      Cursor2D.mouseLerp * updateInfo.slowDownFactor
+      Cursor2D.mouseLerp * updateInfo.slowDownFactor * this._lerpSpeedProgress
     );
   }
 
@@ -233,6 +249,14 @@ export class Cursor2D {
 
   show() {
     void this._animateIn();
+  }
+
+  slowLerp() {
+    this._animateLerpSpeed(0.2);
+  }
+
+  speedLerp() {
+    this._animateLerpSpeed(1);
   }
 
   destroy() {
