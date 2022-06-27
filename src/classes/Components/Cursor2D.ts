@@ -111,7 +111,7 @@ export class Cursor2D {
     this._zoomProgressTween = new TWEEN.Tween({
       progress: this._zoomProgress,
     })
-      .to({ progress: destination }, 800)
+      .to({ progress: destination }, 850)
       .easing(TWEEN.Easing.Exponential.InOut)
       .onUpdate(obj => {
         this._zoomProgress = obj.progress;
@@ -124,8 +124,8 @@ export class Cursor2D {
     this._lerpSpeedProgressTween = new TWEEN.Tween({
       progress: this._lerpSpeedProgress,
     })
-      .to({ progress: destination }, 800)
-      .easing(TWEEN.Easing.Sinusoidal.InOut)
+      .to({ progress: destination }, 850)
+      .easing(TWEEN.Easing.Exponential.InOut)
       .onUpdate(obj => {
         this._lerpSpeedProgress = obj.progress;
       });
