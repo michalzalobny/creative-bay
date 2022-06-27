@@ -25,6 +25,7 @@ export const ReadyWrapper = styled.div<ReadyWrapperProps>`
   z-index: 8;
   opacity: 1;
   transition: opacity 0.5s ease-in-out;
+  transition-delay: 1s;
 
   ${props =>
     props.shouldReveal &&
