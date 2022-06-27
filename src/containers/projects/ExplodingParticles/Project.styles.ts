@@ -58,6 +58,7 @@ export const GateWrapper = styled.div<GateWrapperProps>`
   height: 100%;
   z-index: 5;
   display: none;
+  background: white;
 
   ${props =>
     props.$showGate &&
