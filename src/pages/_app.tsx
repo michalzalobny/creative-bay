@@ -80,12 +80,14 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     };
 
     links.forEach(link => {
+      if ((link as HTMLElement).dataset.cursor === 'nohover') return;
       link.addEventListener('mouseenter', handleMouseEnter);
       link.addEventListener('mouseleave', handleMouseLeave);
     });
 
     return () => {
       links.forEach(link => {
+        if ((link as HTMLElement).dataset.cursor === 'nohover') return;
         link.removeEventListener('mouseenter', handleMouseEnter);
         link.removeEventListener('mouseleave', handleMouseLeave);
       });

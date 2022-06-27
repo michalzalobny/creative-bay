@@ -56,7 +56,7 @@ export default function Project(props: PageProps) {
       <Head {...head} />
       <S.Wrapper>
         <S.GateWrapper $showGate={showGate}>
-          <S.GateEnterButton onClick={handleGateClick}>
+          <S.GateEnterButton data-cursor="nohover" onClick={handleGateClick}>
             Click to enter the experience
           </S.GateEnterButton>
         </S.GateWrapper>
