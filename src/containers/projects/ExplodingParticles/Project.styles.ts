@@ -99,7 +99,7 @@ export const VideoWrapper = styled.div`
     line-height: 1.1;
     color: white;
     z-index: 3;
-    position: fixed;
+    position: absolute;
     bottom: 0;
     left: 50%;
     text-align: center;
