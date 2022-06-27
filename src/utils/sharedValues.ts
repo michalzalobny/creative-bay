@@ -26,4 +26,5 @@ export const sharedValues = {
     MOMENTUM_CARRY: 0.6,
   },
   ISR_TIMEOUT: 5,
+  hideCursorArr: ['/projects/drop-unveil', '/projects/meta-office', '/projects/shader-blob'],
 };

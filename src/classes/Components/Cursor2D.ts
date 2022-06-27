@@ -1,6 +1,7 @@
 import TWEEN, { Tween } from '@tweenjs/tween.js';
 
 import { Bounds, UpdateInfo } from 'utils/sharedTypes';
+import { sharedValues } from 'utils/sharedValues';
 
 import { MouseMove } from 'utils/helperClasses/MouseMove';
 import { lerp } from 'utils/functions/lerp';
@@ -177,6 +178,9 @@ export class Cursor2D {
   };
 
   _onMouseEnter = () => {
+    const match = sharedValues.hideCursorArr.find(el => el === window.location.pathname);
+    if (match) return;
+
     this._animateShow(1);
   };
 

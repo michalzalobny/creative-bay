@@ -1,16 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
-import 'focus-visible';
-import '../styles/index.scss';
-
 import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
 import FontFaceObserver from 'fontfaceobserver';
+import 'focus-visible';
+import '../styles/index.scss';
+
 import { GlobalStyles } from 'utils/GlobalStyles';
 import { globalState } from 'utils/globalState';
 import { Layout } from 'components/Layout/Layout';
 import { CanvasApp } from 'classes/CanvasApp';
 import { PageProps } from 'utils/sharedTypes';
 import { useEffectOnce } from 'hooks/useEffectOnce';
+import { sharedValues } from 'utils/sharedValues';
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -49,13 +50,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
     if (!globalState.canvasApp) return;
 
-    const hideCursorArr = [
-      '/projects/drop-unveil',
-      '/projects/meta-office',
-      '/projects/shader-blob',
-    ];
-
-    const match = hideCursorArr.find(el => el === router.route);
+    const match = sharedValues.hideCursorArr.find(el => el === router.route);
 
     if (match) {
       globalState.canvasApp.cursor2D.hide();
