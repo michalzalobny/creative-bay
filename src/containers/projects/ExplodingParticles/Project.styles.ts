@@ -136,7 +136,7 @@ export const VideoWrapper = styled.div`
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
     opacity: 0;
   }
 `;
