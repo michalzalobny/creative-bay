@@ -7,8 +7,9 @@ import { lerp } from 'utils/functions/lerp';
 
 export class Cursor2D {
   static mouseLerp = 0.15;
-  static radiusDefault = 10;
+  static radiusDefault = 8;
   static fontSize = 12;
+  static textShowDuration = 500;
 
   _mouseMove = MouseMove.getInstance();
   _canvas: HTMLCanvasElement;
@@ -30,6 +31,7 @@ export class Cursor2D {
   _textValue = '';
   _destinationTextValue = '';
   _pixelRatio = 1;
+  _animateCurrentTextId: ReturnType<typeof setTimeout> | null = null;
 
   _showProgress = 0;
   _showProgressTween: Tween<{ progress: number }> | null = null;
@@ -87,22 +89,17 @@ export class Cursor2D {
     this._showProgressTween.start();
   }
 
-  _animateTextShow(destination: number, fireOnComplete?: boolean) {
+  _animateTextShow(destination: number) {
     if (this._textShowProgressTween) this._textShowProgressTween.stop();
     this._textShowProgressTween = new TWEEN.Tween({
       progress: this._textShowProgress,
     })
-      .to({ progress: destination }, 600)
+      .to({ progress: destination }, Cursor2D.textShowDuration)
       .easing(TWEEN.Easing.Sinusoidal.InOut)
       .onUpdate(obj => {
         this._textShowProgress = obj.progress;
-      })
-      .onComplete(() => {
-        if (fireOnComplete) {
-          this._textValue = this._destinationTextValue;
-          this._animateTextShow(1);
-        }
       });
+
     this._textShowProgressTween.start();
   }
 
@@ -111,17 +108,29 @@ export class Cursor2D {
     this._zoomProgressTween = new TWEEN.Tween({
       progress: this._zoomProgress,
     })
-      .to({ progress: destination }, 600)
-      .easing(TWEEN.Easing.Sinusoidal.InOut)
+      .to({ progress: destination }, 1000)
+      .easing(TWEEN.Easing.Exponential.InOut)
       .onUpdate(obj => {
         this._zoomProgress = obj.progress;
       });
     this._zoomProgressTween.start();
   }
 
+  _setTextTimeout = () => {
+    this._textValue = this._destinationTextValue;
+    this._animateTextShow(1);
+  };
+
   setCurrentText(text: string) {
     this._destinationTextValue = text;
-    this._animateTextShow(0, true);
+    if (this._animateCurrentTextId) clearTimeout(this._animateCurrentTextId);
+    if (this._textValue === '') {
+      this._textShowProgress = 0;
+      this._setTextTimeout();
+    } else {
+      this._animateTextShow(0);
+      this._animateCurrentTextId = setTimeout(this._setTextTimeout, Cursor2D.textShowDuration);
+    }
   }
 
   _zoomIn() {
@@ -159,7 +168,7 @@ export class Cursor2D {
       x,
       y,
       Cursor2D.radiusDefault * this._showProgress +
-        Cursor2D.radiusDefault * 1.2 * this._zoomProgress * this._showProgress,
+        Cursor2D.radiusDefault * 2 * this._zoomProgress * this._showProgress,
       0,
       2 * Math.PI
     );
@@ -228,5 +237,6 @@ export class Cursor2D {
 
   destroy() {
     this._removeListeners();
+    if (this._animateCurrentTextId) clearTimeout(this._animateCurrentTextId);
   }
 }
