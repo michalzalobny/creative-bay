@@ -49,6 +49,8 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
     if (!globalState.canvasApp) return;
 
+    console.log('ready');
+
     const hideCursorArr = [
       '/projects/drop-unveil',
       '/projects/meta-office',
