@@ -232,7 +232,6 @@ export class Cursor2D {
   }
 
   show() {
-    console.log('show');
     void this._animateIn();
   }
 
