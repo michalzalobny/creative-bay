@@ -6,7 +6,7 @@ import { MouseMove } from 'utils/helperClasses/MouseMove';
 import { lerp } from 'utils/functions/lerp';
 
 export class Cursor2D {
-  static mouseLerp = 0.15;
+  static mouseLerp = 0.25;
   static radiusDefault = 8;
   static fontSize = 12;
   static textShowDuration = 500;
@@ -111,7 +111,7 @@ export class Cursor2D {
     this._zoomProgressTween = new TWEEN.Tween({
       progress: this._zoomProgress,
     })
-      .to({ progress: destination }, 850)
+      .to({ progress: destination }, 800)
       .easing(TWEEN.Easing.Exponential.InOut)
       .onUpdate(obj => {
         this._zoomProgress = obj.progress;
@@ -124,7 +124,7 @@ export class Cursor2D {
     this._lerpSpeedProgressTween = new TWEEN.Tween({
       progress: this._lerpSpeedProgress,
     })
-      .to({ progress: destination }, 850)
+      .to({ progress: destination }, 800)
       .easing(TWEEN.Easing.Exponential.InOut)
       .onUpdate(obj => {
         this._lerpSpeedProgress = obj.progress;
