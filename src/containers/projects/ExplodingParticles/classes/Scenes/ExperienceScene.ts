@@ -214,6 +214,8 @@ export class ExperienceScene extends InteractiveScene {
       video.preload = 'auto'; //fixes canplaythrough firing issues issues
       video.muted = true;
       video.playsInline = true;
+      video.disablePictureInPicture = true;
+      video.disableRemotePlayback = true;
       video.load();
       video.addEventListener('canplaythrough', onVideoLoaded, { once: true });
       this._videosArray.push(video);
