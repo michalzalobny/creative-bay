@@ -50,12 +50,12 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
     if (!globalState.canvasApp) return;
 
-    const match = sharedValues.hideCursorArr.find(el => el === router.route);
+    const match = sharedValues.showCursorArr.find(el => el === router.route);
 
     if (match) {
-      globalState.canvasApp.cursor2D.hide();
-    } else {
       globalState.canvasApp.cursor2D.show();
+    } else {
+      globalState.canvasApp.cursor2D.hide();
     }
   }, [router]);
 

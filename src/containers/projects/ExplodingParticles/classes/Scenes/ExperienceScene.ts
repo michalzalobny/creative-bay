@@ -37,6 +37,7 @@ export class ExperienceScene extends InteractiveScene {
   _postProcess: PostProcess;
   _isTransitioning = false;
   _isLoaded = false;
+  _isReady = false;
   _videoFrameSettings = {
     particlesAmount: 400,
     particlesSize: 10.2, //10.2 ensures that all the pixels used will take the whole space
@@ -47,11 +48,13 @@ export class ExperienceScene extends InteractiveScene {
     uVar3: 0.5,
     uVar4: 0.5,
   };
-  _namesArray = ['青いバラ', '桜の花', 'カモミール'];
+  _namesArray = ['ブルーダンサー', '赤いバラ', 'カモミール']; //['青いバラ', '桜の花', 'カモミール']
   _paragraphsArray: HTMLParagraphElement[] = [];
   _splitParagraphsArray: SplitType[] = [];
-  _paragraphTimeoutsIds: ReturnType<typeof setTimeout>[] = [];
   _transitionTl1: gsap.core.Timeline | null = null;
+  _cursorShowTimeoutId: ReturnType<typeof setTimeout> | null = null;
+  _sceneSetupTimeoutId: ReturnType<typeof setTimeout> | null = null;
+  _paragraphTimeoutsIds: ReturnType<typeof setTimeout>[] = [];
 
   constructor({ postProcess, gui, camera }: Constructor) {
     super({ camera, gui });
@@ -202,7 +205,9 @@ export class ExperienceScene extends InteractiveScene {
       if (loaded === this._videosArray.length) {
         this.dispatchEvent({ type: 'loaded' });
         this._isLoaded = true;
-        this._setupScene();
+
+        if (this._sceneSetupTimeoutId) clearTimeout(this._sceneSetupTimeoutId);
+        this._sceneSetupTimeoutId = setTimeout(this._setupScene, 500);
       }
     };
 
@@ -270,21 +275,24 @@ export class ExperienceScene extends InteractiveScene {
     });
   }
 
-  _setupScene() {
+  _setupScene = () => {
     if (!this._isLoaded) return;
     this._isTransitioning = false;
+    if (globalState.canvasApp) globalState.canvasApp.cursor2D.hide();
+    if (this._cursorShowTimeoutId) clearTimeout(this._cursorShowTimeoutId);
+    if (this._sceneSetupTimeoutId) clearTimeout(this._sceneSetupTimeoutId);
     this._transitionTl1 && this._transitionTl1.kill();
     if (this._postProcess.unrealBloomPass) this._postProcess.unrealBloomPass.strength = 0;
     this._generateParagraphs();
 
     this._createNewPointObject();
     this._startVideoLooping();
-  }
+  };
 
   setRendererBounds(bounds: Bounds) {
     super.setRendererBounds(bounds);
     if (bounds.width <= breakpoints.tablet) {
-      this._videoFrameSettings.particlesAmount = 300;
+      this._videoFrameSettings.particlesAmount = 250;
     }
     this._setupScene();
   }
@@ -295,8 +303,9 @@ export class ExperienceScene extends InteractiveScene {
   }
 
   _animateVidOpacity(video: HTMLVideoElement, destination: number, duration: number) {
+    video.classList.remove('hasTransition');
     return gsap.to(video, {
-      duration: duration + 0.4,
+      duration,
       opacity: destination,
     });
   }
@@ -416,25 +425,37 @@ export class ExperienceScene extends InteractiveScene {
     });
   }
 
+  _showCursor = () => {
+    if (globalState.canvasApp) {
+      this._isReady = true;
+      this._animateParagraphIn(this._currentlyPlayedId);
+      const video = this._videosArray.find(
+        vid => vid.dataset.particle === VideoNames.VID_PART + this._currentlyPlayedId.toString()
+      ) as HTMLVideoElement;
+
+      globalState.canvasApp.cursor2D.show();
+      void video.play();
+      video.classList.add('hasTransition');
+      video.style.opacity = '1';
+    }
+  };
+
   _startVideoLooping() {
+    this._isReady = false;
     this._currentlyPlayedId = 1;
     this._videosArray.forEach(vid => {
-      vid.currentTime = 0;
+      vid.classList.remove('hasTransition');
       vid.style.opacity = '0';
+      vid.currentTime = 0;
     });
-    const video = this._videosArray.find(
-      vid => vid.dataset.particle === VideoNames.VID_PART + this._currentlyPlayedId.toString()
-    ) as HTMLVideoElement;
 
-    this._animateParagraphIn(this._currentlyPlayedId);
     if (globalState.canvasApp) globalState.canvasApp.cursor2D.setCurrentText('click for explosion');
-
-    video.style.opacity = '1';
-    void video.play();
+    if (this._cursorShowTimeoutId) clearTimeout(this._cursorShowTimeoutId);
+    this._cursorShowTimeoutId = setTimeout(this._showCursor, 600);
   }
 
   _handleClick = () => {
-    if (!this._isLoaded) return;
+    if (!this._isLoaded || !this._isReady) return;
     const currentVideo = this._videosArray.find(
       vid => vid.dataset.particle === VideoNames.VID_PART + this._currentlyPlayedId.toString()
     ) as HTMLVideoElement;
@@ -484,6 +505,8 @@ export class ExperienceScene extends InteractiveScene {
 
     this._transitionTl1 && this._transitionTl1.kill();
 
+    if (this._sceneSetupTimeoutId) clearTimeout(this._sceneSetupTimeoutId);
+    if (this._cursorShowTimeoutId) clearTimeout(this._cursorShowTimeoutId);
     if (globalState.canvasApp) globalState.canvasApp.cursor2D.setCurrentText('');
   }
 }

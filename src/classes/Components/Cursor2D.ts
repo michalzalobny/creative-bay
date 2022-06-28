@@ -15,7 +15,7 @@ export class Cursor2D {
   _mouseMove = MouseMove.getInstance();
   _canvas: HTMLCanvasElement;
   _ctx: CanvasRenderingContext2D | null;
-  _rendererBounds: Bounds = { height: 10, width: 100 };
+  _rendererBounds: Bounds = { height: 100, width: 100 };
   _mouse = {
     x: {
       target: 0,
@@ -33,6 +33,7 @@ export class Cursor2D {
   _destinationTextValue = '';
   _pixelRatio = 1;
   _animateCurrentTextId: ReturnType<typeof setTimeout> | null = null;
+  _isVisible = false;
 
   _showProgress = 0;
   _showProgressTween: Tween<{ progress: number }> | null = null;
@@ -167,6 +168,7 @@ export class Cursor2D {
   }
 
   _onMouseOut = (event: MouseEvent) => {
+    if (!this._isVisible) return;
     if (
       event.clientY <= 0 ||
       event.clientX <= 0 ||
@@ -178,8 +180,11 @@ export class Cursor2D {
   };
 
   _onMouseEnter = () => {
-    const match = sharedValues.hideCursorArr.find(el => el === window.location.pathname);
-    if (match) return;
+    if (!this._isVisible) return;
+    const match = sharedValues.showCursorArr.find(
+      el => el.replace('@', '') === window.location.pathname
+    );
+    if (!match) return;
 
     this._animateShow(1);
   };
@@ -259,19 +264,21 @@ export class Cursor2D {
   }
 
   zoomIn() {
-    void this._zoomIn();
+    this._zoomIn();
   }
 
   zoomOut() {
-    void this._zoomOut();
+    this._zoomOut();
   }
 
   hide() {
-    void this._animateOut();
+    this._animateOut();
+    this._isVisible = false;
   }
 
   show() {
-    void this._animateIn();
+    this._animateIn();
+    this._isVisible = true;
   }
 
   slowLerp() {

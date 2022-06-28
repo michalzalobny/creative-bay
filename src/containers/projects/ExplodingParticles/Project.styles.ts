@@ -24,8 +24,7 @@ export const ReadyWrapper = styled.div<ReadyWrapperProps>`
   height: 100%;
   z-index: 8;
   opacity: 1;
-  transition: opacity 0.5s ease-in-out;
-  transition-delay: 0.5s;
+  transition: opacity 0.5s;
   background: white;
 
   ${props =>
@@ -96,7 +95,7 @@ export const VideoWrapper = styled.div`
     font-size: 4rem;
     font-weight: 400;
     letter-spacing: 0.5rem;
-    line-height: 1.1;
+    line-height: 1.2;
     color: white;
     z-index: 3;
     position: absolute;
@@ -138,5 +137,9 @@ export const VideoWrapper = styled.div`
     height: 100%;
     object-fit: cover;
     opacity: 0;
+  }
+
+  .hasTransition {
+    transition: opacity 0.65s;
   }
 `;

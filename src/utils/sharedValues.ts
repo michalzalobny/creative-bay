@@ -26,5 +26,11 @@ export const sharedValues = {
     MOMENTUM_CARRY: 0.6,
   },
   ISR_TIMEOUT: 5,
-  hideCursorArr: ['/projects/drop-unveil', '/projects/meta-office', '/projects/shader-blob'],
+  /*
+  @ before value meaning:
+  1. Mouse enter/leave events in Cursor will work normally
+  2. .show() will have to be fire manually by subpage, beacause it won't be fired in _app.ts
+  */
+
+  showCursorArr: ['/', '@/projects/exploding-particles'],
 };
