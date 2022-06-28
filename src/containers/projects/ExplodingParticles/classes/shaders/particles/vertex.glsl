@@ -86,7 +86,7 @@ void main(){
     stablePosition += distortion * uDistortion;
     stablePosition.z *= 0.35;
 
-    float rotationRatio = 0.5;
+    float rotationRatio = 0.6;
     stablePosition.xz *= rotate2d( PI * 0.50 * -uMouse2D.x * uDistortion * rotationRatio);
     stablePosition.yz *= rotate2d( PI * 0.50 * -uMouse2D.y * uDistortion * rotationRatio);
 
