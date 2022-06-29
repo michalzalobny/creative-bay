@@ -12,8 +12,8 @@ export default function IndexPage() {
       <S.Wrapper>
         <S.ProjectsWrapper>
           <S.ProjectContainer>
-            <Link href="/projects/shader-blob" passHref>
-              <S.ProjectLink>1. Shader Blob</S.ProjectLink>
+            <Link href="/projects/exploding-particles" passHref>
+              <S.ProjectLink>1. Exploding Particles</S.ProjectLink>
             </Link>
           </S.ProjectContainer>
           <S.ProjectContainer>
@@ -22,8 +22,13 @@ export default function IndexPage() {
             </Link>
           </S.ProjectContainer>
           <S.ProjectContainer>
+            <Link href="/projects/shader-blob" passHref>
+              <S.ProjectLink>3. Shader Blob</S.ProjectLink>
+            </Link>
+          </S.ProjectContainer>
+          <S.ProjectContainer>
             <S.ProjectLink target="_blank" href="https://michalzalobny.com/">
-              3. Portfolio 2021
+              4. Portfolio 2021
             </S.ProjectLink>
           </S.ProjectContainer>
         </S.ProjectsWrapper>
