@@ -165,7 +165,7 @@ export class App extends THREE.EventDispatcher {
     this._postProcess.shaderPass = new ShaderPass(GammaCorrectionShader as THREE.ShaderMaterial);
     this._postProcess.bokehPass = new BokehPass(this._experienceScene, this._camera, {
       aperture: 0.001 * 0.8,
-      maxblur: 0.005 * 0.35,
+      maxblur: 0.005 * 0.65, //*0.35
     });
 
     this._postProcess.composer = new EffectComposer(this._renderer);
