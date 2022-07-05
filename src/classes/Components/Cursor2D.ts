@@ -7,7 +7,7 @@ import { MouseMove } from 'utils/helperClasses/MouseMove';
 import { lerp } from 'utils/functions/lerp';
 
 export class Cursor2D {
-  static mouseLerp = 0.25;
+  static mouseLerp = 0.23;
   static radiusDefault = 8;
   static fontSize = 12;
   static textShowDuration = 500;
@@ -282,7 +282,7 @@ export class Cursor2D {
   }
 
   slowLerp() {
-    this._animateLerpSpeed(0.2);
+    this._animateLerpSpeed(0.5);
   }
 
   speedLerp() {
