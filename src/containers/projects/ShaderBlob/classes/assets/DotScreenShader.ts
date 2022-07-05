@@ -49,6 +49,16 @@ export const DotScreenShader = {
 		}
 
 		void main() {
+			// Pixel shader
+			// float pixelSize = 10.0;
+			// float x = mod(gl_FragCoord.x,pixelSize);
+			// float y = mod(gl_FragCoord.y,pixelSize);
+			// x = floor(pixelSize / 2.0) - x;
+			// y = floor(pixelSize / 2.0) - y;
+			// x = gl_FragCoord.x + x;
+			// y = gl_FragCoord.y + y;
+			// vec2 uv = vec2(x, y) / vec2(1920.0, 1080.0);
+			
 			vec4 color = texture2D( tDiffuse, vUv );
 			vec2 uvRandom = vUv;
 			uvRandom.y *= random(vec2(uvRandom.y, 0.4));
