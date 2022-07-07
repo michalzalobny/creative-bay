@@ -16,7 +16,7 @@ export const getStaticProps: GetStaticProps = () => {
       inspirationName: 'Le Polish Bureau headquarters',
       inspirationHref: 'https://lepolishbureau.com/',
       repoHref:
-        'https://github.com/javusScriptus/creative-bay/tree/main/src/containers/projects/MetaOffice',
+        'https://github.com/michalzalobny/creative-bay/tree/main/src/containers/projects/MetaOffice',
     },
     revalidate: sharedValues.ISR_TIMEOUT,
   };

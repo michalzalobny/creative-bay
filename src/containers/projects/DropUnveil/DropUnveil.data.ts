@@ -16,7 +16,7 @@ export const getStaticProps: GetStaticProps = () => {
       inspirationName: 'Monopo London',
       inspirationHref: 'https://monopo.london/',
       repoHref:
-        'https://github.com/javusScriptus/creative-bay/tree/main/src/containers/projects/DropUnveil',
+        'https://github.com/michalzalobny/creative-bay/tree/main/src/containers/projects/DropUnveil',
     },
     revalidate: sharedValues.ISR_TIMEOUT,
   };

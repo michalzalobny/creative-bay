@@ -14,7 +14,7 @@ export const getStaticProps: GetStaticProps = () => {
     props: {
       head,
       repoHref:
-        'https://github.com/javusScriptus/creative-bay/tree/main/src/containers/projects/ShaderBlob',
+        'https://github.com/michalzalobny/creative-bay/tree/main/src/containers/projects/ShaderBlob',
     },
     revalidate: sharedValues.ISR_TIMEOUT,
   };

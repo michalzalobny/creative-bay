@@ -20,7 +20,7 @@ export const getStaticProps: GetStaticProps = () => {
       inspirationName: 'MTrust website',
       inspirationHref: 'https://www.m-trust.co.jp/',
       repoHref:
-        'https://github.com/javusScriptus/creative-bay/tree/main/src/containers/projects/ExplodingParticles',
+        'https://github.com/michalzalobny/creative-bay/tree/main/src/containers/projects/ExplodingParticles',
     },
     revalidate: sharedValues.ISR_TIMEOUT,
   };

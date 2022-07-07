@@ -12,7 +12,7 @@ interface Props {
 
 export const CopyInfo = (props: Props) => {
   const {
-    repoHref = 'https://github.com/javusScriptus/creative-bay',
+    repoHref = 'https://github.com/michalzalobny/creative-bay',
     inspirationHref,
     inspirationName,
   } = props;

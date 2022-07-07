@@ -75,7 +75,7 @@ export const AuthorInfo = () => {
             </LinkHandler>
           </S.IconWrapper>
           <S.IconWrapper>
-            <LinkHandler isExternal elHref={'https://github.com/javusScriptus'}>
+            <LinkHandler isExternal elHref={'https://github.com/michalzalobny'}>
               <S.GithubSvgComp />
             </LinkHandler>
           </S.IconWrapper>
