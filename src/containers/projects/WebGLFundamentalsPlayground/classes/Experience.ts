@@ -25,15 +25,47 @@ export class Experience {
     this._gl.clear(this._gl.COLOR_BUFFER_BIT);
   }
 
+  randomInt(range: number) {
+    return Math.floor(Math.random() * range);
+  }
+
+  setRectangle(
+    gl: WebGL2RenderingContext | null,
+    x: number,
+    y: number,
+    width: number,
+    height: number
+  ) {
+    if (!gl) return;
+    const x1 = x;
+    const x2 = x + width;
+    const y1 = y;
+    const y2 = y + height;
+
+    // NOTE: gl.bufferData(gl.ARRAY_BUFFER, ...) will affect
+    // whatever buffer is bound to the `ARRAY_BUFFER` bind point
+    // but so far we only have one buffer. If we had more than one
+    // buffer we'd want to bind that buffer to `ARRAY_BUFFER` first.
+
+    gl.bufferData(
+      gl.ARRAY_BUFFER,
+      new Float32Array([x1, y1, x2, y1, x1, y2, x1, y2, x2, y1, x2, y2]),
+      gl.STATIC_DRAW
+    );
+  }
+
   _supplyData() {
     if (!this._gl || !this._program) return;
+    this._gl.useProgram(this._program);
+
     const positionAttributeLocation = this._gl.getAttribLocation(this._program, 'a_position');
+    const resolutionUniformLocation = this._gl.getUniformLocation(this._program, 'u_resolution');
+    const colorLocation = this._gl.getUniformLocation(this._program, 'u_color');
+
+    this._gl.uniform2f(resolutionUniformLocation, this._gl.canvas.width, this._gl.canvas.height);
+
     const positionBuffer = this._gl.createBuffer();
     this._gl.bindBuffer(this._gl.ARRAY_BUFFER, positionBuffer);
-
-    // three 2d points
-    const positions = [0, 0, 0, 0.5, 0.7, 0];
-    this._gl.bufferData(this._gl.ARRAY_BUFFER, new Float32Array(positions), this._gl.STATIC_DRAW);
 
     const vao = this._gl.createVertexArray(); //vertex array object
     this._gl.bindVertexArray(vao);
@@ -49,19 +81,26 @@ export class Experience {
 
     this._updateGlSize();
 
-    // Tell it to use our program (pair of shaders)
-    if (this._program) {
-      this._gl.useProgram(this._program);
+    if (this._program) this._gl.useProgram(this._program);
+
+    // draw 50 random rectangles in random colors
+    for (let ii = 0; ii < 50; ++ii) {
+      this.setRectangle(
+        this._gl,
+        this.randomInt(300),
+        this.randomInt(300),
+        this.randomInt(300),
+        this.randomInt(300)
+      );
+
+      this._gl.uniform4f(colorLocation, Math.random(), Math.random(), Math.random(), 1);
+
+      // Draw the rectangle.
+      const primitiveType = this._gl.TRIANGLES;
+      const offset2 = 0;
+      const count = 6;
+      this._gl.drawArrays(primitiveType, offset2, count);
     }
-
-    // Bind the attribute/buffer set we want.
-    this._gl.bindVertexArray(vao);
-
-    //After all that we can finally ask WebGL to execute our GLSL program.
-    const primitiveType = this._gl.TRIANGLES;
-    const offset2 = 0;
-    const count = 3;
-    this._gl.drawArrays(primitiveType, offset2, count);
   }
 
   _generateShaders() {
