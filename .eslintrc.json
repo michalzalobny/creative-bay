@@ -26,5 +26,6 @@
     "react": {
       "version": "detect"
     }
-  }
+  },
+  "ignorePatterns": ["**/*.ext-lib.ts"]
 }

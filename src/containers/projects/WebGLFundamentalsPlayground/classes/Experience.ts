@@ -1,6 +1,9 @@
 import fragmentShader from './shaders/helloWorld/fragment.glsl';
 import vertexShader from './shaders/helloWorld/vertex.glsl';
 import * as webglUtils from './utils/webglUtils';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-ignore
+import * as m3 from './utils/m3.ext-lib';
 
 interface Constructor {
   gl: WebGL2RenderingContext | null;
@@ -10,6 +13,8 @@ export class Experience {
   _program: WebGLProgram | null = null;
   _shader: WebGLShader | null = null;
   _gl: WebGL2RenderingContext | null;
+  _vao: WebGLVertexArrayObject | null = null;
+  _matrixLocation: WebGLUniformLocation | null = null;
 
   constructor({ gl }: Constructor) {
     this._gl = gl;
@@ -54,53 +59,145 @@ export class Experience {
     );
   }
 
+  setGeometry(gl: WebGL2RenderingContext | null) {
+    if (!gl) return;
+    gl.bufferData(
+      gl.ARRAY_BUFFER,
+      new Float32Array([-150, -100, 150, -100, -150, 100, 150, -100, -150, 100, 150, 100]),
+      gl.STATIC_DRAW
+    );
+  }
+
   _supplyData() {
     if (!this._gl || !this._program) return;
     this._gl.useProgram(this._program);
 
-    const positionAttributeLocation = this._gl.getAttribLocation(this._program, 'a_position');
-    const resolutionUniformLocation = this._gl.getUniformLocation(this._program, 'u_resolution');
-    const colorLocation = this._gl.getUniformLocation(this._program, 'u_color');
+    // Create set of attributes
+    this._vao = this._gl.createVertexArray();
+    this._gl.bindVertexArray(this._vao);
 
-    this._gl.uniform2f(resolutionUniformLocation, this._gl.canvas.width, this._gl.canvas.height);
+    //attributes
+    const positionLocation = this._gl.getAttribLocation(this._program, 'a_position');
+    const colorLocation = this._gl.getAttribLocation(this._program, 'a_color');
 
-    const positionBuffer = this._gl.createBuffer();
-    this._gl.bindBuffer(this._gl.ARRAY_BUFFER, positionBuffer);
+    //uniforms
+    this._matrixLocation = this._gl.getUniformLocation(this._program, 'u_matrix');
 
-    const vao = this._gl.createVertexArray(); //vertex array object
-    this._gl.bindVertexArray(vao);
-    this._gl.enableVertexAttribArray(positionAttributeLocation);
+    // Create a buffer for the positons.
+    let buffer = this._gl.createBuffer();
+    this._gl.bindBuffer(this._gl.ARRAY_BUFFER, buffer);
 
-    //How to pull the data out
-    const size = 2; // 2 components per iteration
-    const type = this._gl.FLOAT; // the data is 32bit floats
-    const normalize = false; // don't normalize the data
-    const stride = 0; // 0 = move forward size * sizeof(type) each iteration to get the next position
-    const offset = 0; // start at the beginning of the buffer
-    this._gl.vertexAttribPointer(positionAttributeLocation, size, type, normalize, stride, offset);
+    this.setGeometry(this._gl);
 
-    this._updateGlSize();
+    // tell the position attribute how to pull data out of the current ARRAY_BUFFER
+    this._gl.enableVertexAttribArray(positionLocation);
+    let size = 2;
+    let type = this._gl.FLOAT;
+    let normalize = false;
+    let stride = 0;
+    let offset = 0;
+    this._gl.vertexAttribPointer(positionLocation, size, type, normalize, stride, offset);
 
-    if (this._program) this._gl.useProgram(this._program);
+    // Create a buffer for the colors.
+    buffer = this._gl.createBuffer();
+    this._gl.bindBuffer(this._gl.ARRAY_BUFFER, buffer);
 
-    // draw 50 random rectangles in random colors
-    for (let ii = 0; ii < 50; ++ii) {
-      this.setRectangle(
-        this._gl,
-        this.randomInt(300),
-        this.randomInt(300),
-        this.randomInt(300),
-        this.randomInt(300)
-      );
+    // Set the colors.
+    this.setColors(this._gl);
 
-      this._gl.uniform4f(colorLocation, Math.random(), Math.random(), Math.random(), 1);
+    // tell the color attribute how to pull data out of the current ARRAY_BUFFER
+    this._gl.enableVertexAttribArray(colorLocation);
+    size = 4;
+    type = this._gl.FLOAT;
+    normalize = false;
+    stride = 0;
+    offset = 0;
+    this._gl.vertexAttribPointer(colorLocation, size, type, normalize, stride, offset);
 
-      // Draw the rectangle.
-      const primitiveType = this._gl.TRIANGLES;
-      const offset2 = 0;
-      const count = 6;
-      this._gl.drawArrays(primitiveType, offset2, count);
-    }
+    this.drawScene(this._gl, this._vao);
+  }
+
+  drawScene(gl: WebGL2RenderingContext | null, vao: WebGLVertexArrayObject | null) {
+    if (!gl || !vao) return;
+    webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+    // Clear the canvas
+    gl.clearColor(0, 0, 0, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    // Tell it to use our program (pair of shaders)
+    gl.useProgram(this._program);
+
+    // Bind the attribute/buffer set we want.
+    gl.bindVertexArray(vao);
+
+    // Compute the matrices
+    const translation = [400, 150];
+    const angleInRadians = 0;
+    const scale = [1, 1];
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+    let matrix = m3.projection(gl.canvas.clientWidth, gl.canvas.clientHeight);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+    matrix = m3.translate(matrix, translation[0], translation[1]);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+    matrix = m3.rotate(matrix, angleInRadians);
+
+    matrix = m3.scale(matrix, scale[0], scale[1]);
+
+    // Set the matrix.
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    gl.uniformMatrix3fv(this._matrixLocation, false, matrix);
+
+    // Draw the geometry.
+    const offset = 0;
+    const count = 6;
+    gl.drawArrays(gl.TRIANGLES, offset, count);
+  }
+
+  setColors(gl: WebGL2RenderingContext | null) {
+    if (!gl) return;
+    // Pick 2 random colors.
+    const r1 = Math.random();
+    const b1 = Math.random();
+    const g1 = Math.random();
+
+    const r2 = Math.random();
+    const b2 = Math.random();
+    const g2 = Math.random();
+
+    gl.bufferData(
+      gl.ARRAY_BUFFER,
+      new Float32Array([
+        r1,
+        b1,
+        g1,
+        1,
+        r1,
+        b1,
+        g1,
+        1,
+        r1,
+        b1,
+        g1,
+        1,
+        r2,
+        b2,
+        g2,
+        1,
+        r2,
+        b2,
+        g2,
+        1,
+        r2,
+        b2,
+        g2,
+        1,
+      ]),
+      gl.STATIC_DRAW
+    );
   }
 
   _generateShaders() {
