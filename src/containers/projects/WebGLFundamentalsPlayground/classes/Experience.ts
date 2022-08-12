@@ -144,7 +144,7 @@ export class Experience {
     matrix = m3.translate(matrix, translation[0], translation[1]);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     matrix = m3.rotate(matrix, angleInRadians);
-
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     matrix = m3.scale(matrix, scale[0], scale[1]);
 
     // Set the matrix.
