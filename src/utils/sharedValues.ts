@@ -32,5 +32,6 @@ export const sharedValues = {
   2. .show() will have to be fire manually by subpage, beacause it won't be fired in _app.ts
   */
 
-  showCursorArr: ['/', '@/projects/exploding-particles'],
+  // showCursorArr: ['/', '@/projects/exploding-particles'],
+  showCursorArr: ['@/projects/exploding-particles'],
 };
