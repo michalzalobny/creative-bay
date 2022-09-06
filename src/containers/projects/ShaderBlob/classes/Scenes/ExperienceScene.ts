@@ -76,6 +76,7 @@ export class ExperienceScene extends InteractiveScene {
   }
 
   destroy() {
+    super.destroy();
     this.remove(this._sphere1);
     this._sphere1.destroy();
     this.remove(this._blobSphere1);

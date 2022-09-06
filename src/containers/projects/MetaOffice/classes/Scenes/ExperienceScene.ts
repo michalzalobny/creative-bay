@@ -228,6 +228,7 @@ export class ExperienceScene extends InteractiveScene {
   }
 
   destroy() {
+    super.destroy();
     if (this._blenderScene) this.remove(this._blenderScene);
     this._particles3D.destroy();
     this.remove(this._particles3D);

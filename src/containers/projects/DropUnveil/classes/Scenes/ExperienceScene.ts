@@ -104,6 +104,7 @@ export class ExperienceScene extends InteractiveScene {
   }
 
   destroy() {
+    super.destroy();
     this._background3D.destroy();
     this.remove(this._background3D);
 

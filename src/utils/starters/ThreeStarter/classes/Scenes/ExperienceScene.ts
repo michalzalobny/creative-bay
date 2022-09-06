@@ -41,6 +41,7 @@ export class ExperienceScene extends InteractiveScene {
   }
 
   destroy() {
+    super.destroy();
     this._starterImage3D.destroy();
     this.remove(this._starterImage3D);
     this._planeGeometry.dispose();

@@ -490,6 +490,7 @@ export class ExperienceScene extends InteractiveScene {
   }
 
   destroy() {
+    super.destroy();
     if (this._pointPlane3D) {
       this._pointPlane3D.destroy();
       this.remove(this._pointPlane3D);
