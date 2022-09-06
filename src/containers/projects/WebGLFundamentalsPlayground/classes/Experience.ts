@@ -108,8 +108,8 @@ export class Experience {
     // tell the color attribute how to pull data out of the current ARRAY_BUFFER
     this._gl.enableVertexAttribArray(colorLocation);
     size = 4;
-    type = this._gl.FLOAT;
-    normalize = false;
+    type = this._gl.UNSIGNED_BYTE;
+    normalize = true;
     stride = 0;
     offset = 0;
     this._gl.vertexAttribPointer(colorLocation, size, type, normalize, stride, offset);
@@ -160,41 +160,41 @@ export class Experience {
   setColors(gl: WebGL2RenderingContext | null) {
     if (!gl) return;
     // Pick 2 random colors.
-    const r1 = Math.random();
-    const b1 = Math.random();
-    const g1 = Math.random();
-
-    const r2 = Math.random();
-    const b2 = Math.random();
-    const g2 = Math.random();
+    const r1 = Math.random() * 256; // 0 to 255.99999
+    const b1 = Math.random() * 256; // these values
+    const g1 = Math.random() * 256; // will be truncated
+    const r2 = Math.random() * 256; // when stored in the
+    const b2 = Math.random() * 256; // Uint8Array
+    const g2 = Math.random() * 256;
 
     gl.bufferData(
       gl.ARRAY_BUFFER,
-      new Float32Array([
-        r1,
-        b1,
-        g1,
-        1,
-        r1,
-        b1,
-        g1,
-        1,
-        r1,
-        b1,
-        g1,
-        1,
-        r2,
-        b2,
-        g2,
-        1,
-        r2,
-        b2,
-        g2,
-        1,
-        r2,
-        b2,
-        g2,
-        1,
+      new Uint8Array([
+        // Uint8Array
+        Math.random() * 256,
+        Math.random() * 256,
+        Math.random() * 256,
+        255,
+        Math.random() * 256,
+        Math.random() * 256,
+        Math.random() * 256,
+        255,
+        Math.random() * 256,
+        Math.random() * 256,
+        Math.random() * 256,
+        255,
+        Math.random() * 256,
+        Math.random() * 256,
+        Math.random() * 256,
+        255,
+        Math.random() * 256,
+        Math.random() * 256,
+        Math.random() * 256,
+        255,
+        Math.random() * 256,
+        Math.random() * 256,
+        Math.random() * 256,
+        255,
       ]),
       gl.STATIC_DRAW
     );
