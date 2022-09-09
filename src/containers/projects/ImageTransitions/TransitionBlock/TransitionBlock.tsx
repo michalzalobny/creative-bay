@@ -28,6 +28,7 @@ export const TransitionBlock = (props: Props) => {
         </S.ImageContainer>
         <S.ButtonContainer data-itransition="shouldScroll">
           <RoundButton
+            elId={elId}
             setIsHovered={setIsHovered}
             data-itransition="shouldScroll"
             label="Click for transition"

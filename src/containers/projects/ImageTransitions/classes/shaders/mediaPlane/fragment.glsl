@@ -6,6 +6,7 @@ uniform vec2 uMouse2D;
 uniform sampler2D tMap1;
 uniform sampler2D tMap2;
 uniform float uTime;
+uniform float uTransitionProgress;
 
 varying vec2 vUv;
 
@@ -33,6 +34,7 @@ void main() {
         vUv.y * ratio2.y + (1.0 - ratio2.y) * 0.5
     );
 
-    gl_FragColor.rgba = texture2D(tMap2, uv2).rgba;
-    
+    vec4 image1 = texture2D(tMap1,uv1);
+    vec4 image2 = texture2D(tMap2,uv2);
+    gl_FragColor = mix(image1, image2, uTransitionProgress); 
 }

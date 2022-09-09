@@ -22,6 +22,8 @@ export class MediaPlane3D extends InteractiveObject3D {
   _geometry: THREE.PlaneBufferGeometry; //Remember to dispose passed geometry
   _domEl: HTMLElement | null = null;
   _domElBounds: DOMRect | null = null;
+  _buttonEl: HTMLElement | null = null;
+  _currentImage: 1 | 0 = 0;
 
   constructor({ fragmentShader, geometry, vertexShader }: Constructor) {
     super();
@@ -53,6 +55,7 @@ export class MediaPlane3D extends InteractiveObject3D {
         uMouse: {
           value: [1, 1], //Mouse coords from [0,0] (top left corner) to [screenWidth , screenHeight]
         },
+        uTransitionProgress: { value: 0 },
       },
     });
 

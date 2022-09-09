@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import GUI from 'lil-gui';
+import TWEEN, { Tween } from '@tweenjs/tween.js';
 
 import { Bounds, UpdateInfo } from 'utils/sharedTypes';
 
@@ -15,6 +16,7 @@ interface Constructor {
 export class Image3D extends MediaPlane3D {
   _gui: GUI;
   _elId;
+  _transitionProgressTween: Tween<{ progress: number }> | null = null;
 
   constructor({ elId, gui, fragmentShader, geometry, vertexShader }: Constructor) {
     super({ fragmentShader, geometry, vertexShader });
@@ -22,10 +24,27 @@ export class Image3D extends MediaPlane3D {
     this._gui = gui;
 
     this._setHTMLElements();
+    this._addListeners();
+  }
+
+  _animateTransition(destination: number) {
+    if (this._transitionProgressTween) this._transitionProgressTween.stop();
+    this._transitionProgressTween = new TWEEN.Tween({
+      progress: this._mesh.material.uniforms.uTransitionProgress.value as number,
+    })
+      .to({ progress: destination }, 1200)
+      .easing(TWEEN.Easing.Exponential.InOut)
+      .onUpdate(obj => {
+        this._mesh.material.uniforms.uTransitionProgress.value = obj.progress;
+      });
+    this._transitionProgressTween.start();
   }
 
   _setHTMLElements() {
     this._domEl = document.querySelector(`[data-itransition-id="${this._elId}"]`) as HTMLElement;
+    this._buttonEl = document.querySelector(
+      `[data-itransition-btn="${this._elId}"]`
+    ) as HTMLElement;
     this._updateRects();
   }
 
@@ -48,6 +67,23 @@ export class Image3D extends MediaPlane3D {
     }
   }
 
+  _handleClick = () => {
+    if (this._currentImage === 0) {
+      this._currentImage = 1;
+    } else {
+      this._currentImage = 0;
+    }
+    this._animateTransition(this._currentImage);
+  };
+
+  _addListeners() {
+    this._buttonEl?.addEventListener('click', this._handleClick);
+  }
+
+  _removeListeners() {
+    this._buttonEl?.removeEventListener('click', this._handleClick);
+  }
+
   update(updateInfo: UpdateInfo, offsetY?: number) {
     super.update(updateInfo);
 
@@ -66,5 +102,6 @@ export class Image3D extends MediaPlane3D {
 
   destroy() {
     super.destroy();
+    this._removeListeners();
   }
 }

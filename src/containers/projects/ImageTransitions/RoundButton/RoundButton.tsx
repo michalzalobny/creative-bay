@@ -7,10 +7,11 @@ import * as S from './RoundButton.styles';
 interface Props {
   label: string;
   setIsHovered: React.Dispatch<React.SetStateAction<boolean>>;
+  elId: number;
 }
 
 export const RoundButton = (props: Props) => {
-  const { setIsHovered, label } = props;
+  const { elId, setIsHovered, label } = props;
 
   const wrapperRef = useRef(null);
 
@@ -22,7 +23,7 @@ export const RoundButton = (props: Props) => {
 
   return (
     <>
-      <S.Wrapper ref={wrapperRef}>
+      <S.Wrapper data-itransition-btn={elId} ref={wrapperRef}>
         <S.LabelsContainer>
           <S.Label data-rb="label">{label}</S.Label>
           <S.LabelCopy data-rb="labelCopy">{label}</S.LabelCopy>
