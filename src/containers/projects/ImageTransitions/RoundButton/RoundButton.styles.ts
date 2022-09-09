@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
 import { sharedValues } from 'utils/sharedValues';
-import { media } from 'utils/media';
 
 export const Wrapper = styled.div`
   display: flex;

@@ -1,18 +1,15 @@
 import React, { useState } from 'react';
 
-import { PreloadImage } from 'components/PreloadImage/PreloadImage';
-
 import { RoundButton } from '../RoundButton/RoundButton';
 import * as S from './TransitionBlock.styles';
 
 interface Props {
   elId: number;
   title: string;
-  img1: string;
 }
 
 export const TransitionBlock = (props: Props) => {
-  const { img1, title, elId } = props;
+  const { title, elId } = props;
 
   const [isHovered, setIsHovered] = useState(false);
 

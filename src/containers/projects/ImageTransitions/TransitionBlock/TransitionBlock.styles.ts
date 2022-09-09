@@ -59,7 +59,6 @@ export const ImageContainer = styled.div`
 
 export const BoxShadow = styled.div`
   position: absolute;
-  z-index: 10;
   top: 0;
   left: 0;
   width: 100%;
