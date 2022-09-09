@@ -3,8 +3,8 @@ import * as THREE from 'three';
 import { UpdateInfo, LoadedAsset, Bounds, Mouse } from 'utils/sharedTypes';
 
 import { InteractiveObject3D } from './InteractiveObject3D';
-import fragmentShaderDefault from '../shaders/mediaPlane/fragment.glsl';
-import vertexShaderDefault from '../shaders/mediaPlane/vertex.glsl';
+import fragmentShaderDefault from '../shaders/defaultTransition/fragment.glsl';
+import vertexShaderDefault from '../shaders/defaultTransition/vertex.glsl';
 
 interface Constructor {
   fragmentShader?: string;

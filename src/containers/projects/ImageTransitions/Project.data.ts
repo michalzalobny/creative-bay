@@ -3,6 +3,8 @@ import { GetStaticProps } from 'next';
 import { HeadProps } from 'seo/Head/Head';
 import { sharedValues } from 'utils/sharedValues';
 
+import fragment0 from './transitionShaders/fragment0.glsl';
+
 export interface PageProps {
   head: HeadProps;
 }
@@ -16,6 +18,7 @@ export const dataArray = [
     title: 'Tiled Transition',
     repoHref: 'https://github.com/',
     elId: 0,
+    fragmentShader: fragment0,
   },
   {
     img1Src:
@@ -25,6 +28,7 @@ export const dataArray = [
     title: 'Wave Transition',
     repoHref: 'https://github.com/',
     elId: 1,
+    fragmentShader: fragment0,
   },
 ];
 

@@ -115,7 +115,12 @@ export class ExperienceScene extends InteractiveScene {
     this._loadedAssets = assets;
 
     dataArray.forEach(el => {
-      const image3D = new Image3D({ elId: el.elId, gui: this._gui, geometry: this._planeGeometry });
+      const image3D = new Image3D({
+        fragmentShader: el.fragmentShader,
+        elId: el.elId,
+        gui: this._gui,
+        geometry: this._planeGeometry,
+      });
       this._images3D.push(image3D);
       this.add(image3D);
     });

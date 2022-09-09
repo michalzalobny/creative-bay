@@ -36,5 +36,7 @@ void main() {
 
     vec4 image1 = texture2D(tMap1,uv1);
     vec4 image2 = texture2D(tMap2,uv2);
+
     gl_FragColor = mix(image1, image2, uTransitionProgress); 
+    
 }
