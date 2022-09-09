@@ -57,7 +57,7 @@ export class App extends THREE.EventDispatcher {
     this._orbitControls.update();
 
     this._gui.title('Scene settings');
-    this._gui.hide();
+    // this._gui.hide();
     this._experienceScene = new ExperienceScene({ camera: this._camera, gui: this._gui });
 
     this._onResize();
@@ -65,9 +65,12 @@ export class App extends THREE.EventDispatcher {
     this._resumeAppFrame();
 
     const assetsToPreload: AssetToPreload[] = imagesToPreload.map(item => {
+      let type: 'image' | 'video' = 'image';
+      const lastFourChars = item.slice(-4);
+      if (lastFourChars === '.mp4') type = 'video';
       return {
         src: item,
-        type: 'image',
+        type,
       };
     });
 

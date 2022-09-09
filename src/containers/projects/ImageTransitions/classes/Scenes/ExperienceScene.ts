@@ -38,11 +38,42 @@ export class ExperienceScene extends InteractiveScene {
     target: 0,
   };
 
+  _imagesSettings = {
+    uVar1: 0,
+    uVar2: 0,
+    uVar3: 0,
+  };
+
   constructor({ gui, camera }: Constructor) {
     super({ camera, gui });
 
     this._getHTMLElements();
     this._addListeners();
+    this._setGui();
+  }
+
+  _setGui() {
+    const images = this._gui.addFolder('Images Settings');
+    images.close();
+
+    images
+      .add(this._imagesSettings, 'uVar1', 0, 1, 0.01)
+      .name('var1')
+      .onChange((val: number) => {
+        this._images3D.forEach(obj => obj.setUniformVar('uVar1', val));
+      });
+    images
+      .add(this._imagesSettings, 'uVar2', 0, 1, 0.01)
+      .name('var2')
+      .onChange((val: number) => {
+        this._images3D.forEach(obj => obj.setUniformVar('uVar2', val));
+      });
+    images
+      .add(this._imagesSettings, 'uVar3', 0, 10, 0.01)
+      .name('var3')
+      .onChange((val: number) => {
+        this._images3D.forEach(obj => obj.setUniformVar('uVar3', val));
+      });
   }
 
   _getHTMLElements() {
@@ -120,6 +151,7 @@ export class ExperienceScene extends InteractiveScene {
         elId: el.elId,
         gui: this._gui,
         geometry: this._planeGeometry,
+        imagesSettings: this._imagesSettings,
       });
       this._images3D.push(image3D);
       this.add(image3D);

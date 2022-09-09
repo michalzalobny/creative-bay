@@ -12,9 +12,8 @@ export interface PageProps {
 export const dataArray = [
   {
     img1Src:
-      'https://res.cloudinary.com/dpv0ukspz/image/upload/v1662632246/fynn-schmidt-hKwWA1nNKt4-unsplash_1_lwk6n3.jpg',
-    img2Src:
-      'https://res.cloudinary.com/dpv0ukspz/image/upload/v1662632243/mehmet-turgut-kirkgoz-1-6BbBXcEf0-unsplash_1_klrw1p.jpg',
+      'https://res.cloudinary.com/dpv0ukspz/video/upload/v1662755666/Instruments_-_10551_qypuol.mp4',
+    img2Src: 'https://res.cloudinary.com/dpv0ukspz/image/upload/v1662747854/2_zzi7ej.jpg',
     title: 'Tiled Transition',
     repoHref: 'https://github.com/',
     elId: 0,
@@ -24,10 +23,20 @@ export const dataArray = [
     img1Src:
       'https://res.cloudinary.com/dpv0ukspz/image/upload/v1662632246/fynn-schmidt-hKwWA1nNKt4-unsplash_1_lwk6n3.jpg',
     img2Src:
+      'https://res.cloudinary.com/dpv0ukspz/image/upload/v1662632243/mehmet-turgut-kirkgoz-1-6BbBXcEf0-unsplash_1_klrw1p.jpg',
+    title: 'Tiled Transition',
+    repoHref: 'https://github.com/',
+    elId: 1,
+    fragmentShader: fragment0,
+  },
+  {
+    img1Src:
+      'https://res.cloudinary.com/dpv0ukspz/image/upload/v1662632246/fynn-schmidt-hKwWA1nNKt4-unsplash_1_lwk6n3.jpg',
+    img2Src:
       'https://res.cloudinary.com/dpv0ukspz/image/upload/v1662673720/pawel-czerwinski-OG44d93iNJk-unsplash_mlqhts.jpg',
     title: 'Wave Transition',
     repoHref: 'https://github.com/',
-    elId: 1,
+    elId: 2,
     fragmentShader: fragment0,
   },
 ];

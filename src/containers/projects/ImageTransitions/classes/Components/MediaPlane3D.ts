@@ -6,10 +6,17 @@ import { InteractiveObject3D } from './InteractiveObject3D';
 import fragmentShaderDefault from '../shaders/defaultTransition/fragment.glsl';
 import vertexShaderDefault from '../shaders/defaultTransition/vertex.glsl';
 
+export interface ImagesSettings {
+  uVar1: number;
+  uVar2: number;
+  uVar3: number;
+}
+
 interface Constructor {
   fragmentShader?: string;
   vertexShader?: string;
   geometry: THREE.PlaneBufferGeometry;
+  imagesSettings: ImagesSettings;
 }
 
 export class MediaPlane3D extends InteractiveObject3D {
@@ -25,7 +32,7 @@ export class MediaPlane3D extends InteractiveObject3D {
   _buttonEl: HTMLElement | null = null;
   _currentImage: 1 | 0 = 0;
 
-  constructor({ fragmentShader, geometry, vertexShader }: Constructor) {
+  constructor({ imagesSettings, fragmentShader, geometry, vertexShader }: Constructor) {
     super();
     this._fragmentShader = fragmentShader || fragmentShaderDefault;
     this._vertexShader = vertexShader || vertexShaderDefault;
@@ -56,11 +63,18 @@ export class MediaPlane3D extends InteractiveObject3D {
           value: [1, 1], //Mouse coords from [0,0] (top left corner) to [screenWidth , screenHeight]
         },
         uTransitionProgress: { value: 0 },
+        uVar1: { value: imagesSettings.uVar1 },
+        uVar2: { value: imagesSettings.uVar2 },
+        uVar3: { value: imagesSettings.uVar3 },
       },
     });
 
     this._mesh = new THREE.Mesh(this._geometry, this._material);
     this.add(this._mesh);
+  }
+
+  setUniformVar(name: string, value: number) {
+    this._mesh.material.uniforms[name].value = value;
   }
 
   setMouse(mouse: Mouse) {

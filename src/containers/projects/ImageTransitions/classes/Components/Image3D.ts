@@ -4,7 +4,7 @@ import TWEEN, { Tween } from '@tweenjs/tween.js';
 
 import { Bounds, UpdateInfo } from 'utils/sharedTypes';
 
-import { MediaPlane3D } from './MediaPlane3D';
+import { MediaPlane3D, ImagesSettings } from './MediaPlane3D';
 
 interface Constructor {
   gui: GUI;
@@ -12,14 +12,15 @@ interface Constructor {
   elId: number;
   fragmentShader?: string;
   vertexShader?: string;
+  imagesSettings: ImagesSettings;
 }
 export class Image3D extends MediaPlane3D {
   _gui: GUI;
   _elId;
   _transitionProgressTween: Tween<{ progress: number }> | null = null;
 
-  constructor({ elId, gui, fragmentShader, geometry, vertexShader }: Constructor) {
-    super({ fragmentShader, geometry, vertexShader });
+  constructor({ imagesSettings, elId, gui, fragmentShader, geometry, vertexShader }: Constructor) {
+    super({ imagesSettings, fragmentShader, geometry, vertexShader });
     this._elId = elId;
     this._gui = gui;
 
@@ -32,7 +33,7 @@ export class Image3D extends MediaPlane3D {
     this._transitionProgressTween = new TWEEN.Tween({
       progress: this._mesh.material.uniforms.uTransitionProgress.value as number,
     })
-      .to({ progress: destination }, 800)
+      .to({ progress: destination }, 1500)
       .easing(TWEEN.Easing.Exponential.InOut)
       .onUpdate(obj => {
         this._mesh.material.uniforms.uTransitionProgress.value = obj.progress;
