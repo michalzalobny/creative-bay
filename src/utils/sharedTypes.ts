@@ -74,3 +74,14 @@ export interface PageProps {
   inspirationHref?: string;
   repoHref?: string;
 }
+
+export const EmptySSRRect: DomRectSSR = {
+  bottom: 1,
+  height: 1,
+  left: 1,
+  right: 1,
+  top: 1,
+  width: 1,
+  x: 1,
+  y: 1,
+};
