@@ -8,7 +8,7 @@ export const Wrapper = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: #ededed;
+  /* background-color: #ededed; */
 `;
 
 interface ReadyWrapperProps {
@@ -41,7 +41,8 @@ export const CanvasWrapper = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: -1;
+  z-index: 10;
+  pointer-events: none;
 `;
 
 export const ScrollContainer = styled.div`

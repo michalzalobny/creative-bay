@@ -5,10 +5,10 @@ import GUI from 'lil-gui';
 
 import { sharedValues } from 'utils/sharedValues';
 import { Preloader } from 'utils/helperClasses/Preloader';
+import { AssetToPreload } from 'utils/sharedTypes';
 
 import { ExperienceScene } from './Scenes/ExperienceScene';
-//Assets imports
-import starterImageSrc from './assets/starter.jpg';
+import { imagesToPreload } from '../Project.data';
 
 interface Constructor {
   rendererEl: HTMLDivElement;
@@ -51,9 +51,9 @@ export class App extends THREE.EventDispatcher {
 
     this._orbitControls = new OrbitControls(this._camera, this._rendererEl);
     this._orbitControls.enableDamping = true;
-    // this._orbitControls.enablePan = false;
-    // this._orbitControls.enableRotate = false;
-    // this._orbitControls.enableZoom = false;
+    this._orbitControls.enablePan = false;
+    this._orbitControls.enableRotate = false;
+    this._orbitControls.enableZoom = false;
     this._orbitControls.update();
 
     this._gui.title('Scene settings');
@@ -64,9 +64,14 @@ export class App extends THREE.EventDispatcher {
     this._addListeners();
     this._resumeAppFrame();
 
-    this._preloader.setAssetsToPreload([
-      { src: starterImageSrc.src, type: 'image', targetName: 'starterImage' },
-    ]);
+    const assetsToPreload: AssetToPreload[] = imagesToPreload.map(item => {
+      return {
+        src: item,
+        type: 'image',
+      };
+    });
+
+    this._preloader.setAssetsToPreload(assetsToPreload);
   }
 
   _onResizeDebounced = debounce(() => this._onResize(), 300);

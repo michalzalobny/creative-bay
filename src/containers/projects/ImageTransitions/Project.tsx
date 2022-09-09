@@ -8,6 +8,7 @@ import * as S from './Project.styles';
 import { appState } from './Project.state';
 import { App } from './classes/App';
 import { TransitionBlock } from './TransitionBlock/TransitionBlock';
+import { dataArray } from './Project.data';
 
 export default function Project(props: PageProps) {
   const { head } = props;
@@ -28,27 +29,6 @@ export default function Project(props: PageProps) {
       }
     };
   });
-
-  const dataArray = [
-    {
-      img1Src:
-        'https://res.cloudinary.com/dpv0ukspz/image/upload/v1662632246/fynn-schmidt-hKwWA1nNKt4-unsplash_1_lwk6n3.jpg',
-      img2Src:
-        'https://res.cloudinary.com/dpv0ukspz/image/upload/v1662632243/mehmet-turgut-kirkgoz-1-6BbBXcEf0-unsplash_1_klrw1p.jpg',
-      title: 'Tiled Transition',
-      repoHref: 'https://github.com/',
-      elId: 0,
-    },
-    {
-      img1Src:
-        'https://res.cloudinary.com/dpv0ukspz/image/upload/v1662632246/fynn-schmidt-hKwWA1nNKt4-unsplash_1_lwk6n3.jpg',
-      img2Src:
-        'https://res.cloudinary.com/dpv0ukspz/image/upload/v1662673720/pawel-czerwinski-OG44d93iNJk-unsplash_mlqhts.jpg',
-      title: 'Wave Transition',
-      repoHref: 'https://github.com/',
-      elId: 1,
-    },
-  ];
 
   return (
     <>

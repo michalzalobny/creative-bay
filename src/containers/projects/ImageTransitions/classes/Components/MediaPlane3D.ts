@@ -20,7 +20,8 @@ export class MediaPlane3D extends InteractiveObject3D {
   _fragmentShader: string;
   _vertexShader: string;
   _geometry: THREE.PlaneBufferGeometry; //Remember to dispose passed geometry
-  _loadedAsset: LoadedAsset | null = null;
+  _domEl: HTMLElement | null = null;
+  _domElBounds: DOMRect | null = null;
 
   constructor({ fragmentShader, geometry, vertexShader }: Constructor) {
     super();
@@ -35,15 +36,19 @@ export class MediaPlane3D extends InteractiveObject3D {
       transparent: true,
       uniforms: {
         uTime: { value: 0 },
-        tMap: { value: null },
+        tMap1: { value: null },
+        tMap2: { value: null },
         uCanvasRes: {
           value: [0, 0], //Canvas size in pixels
         },
         uPlaneRes: {
           value: [1, 1], //Plane size in pixels
         },
-        uMediaRes: {
-          value: [1, 1], //Image size in pixels
+        uMediaRes1: {
+          value: [1, 1], //Image1 size in pixels
+        },
+        uMediaRes2: {
+          value: [1, 1], //Image2 size in pixels
         },
         uMouse: {
           value: [1, 1], //Mouse coords from [0,0] (top left corner) to [screenWidth , screenHeight]
@@ -74,14 +79,12 @@ export class MediaPlane3D extends InteractiveObject3D {
     ];
   }
 
-  setAsset(asset: LoadedAsset) {
-    this._loadedAsset = asset;
+  setAssets(asset1: LoadedAsset, asset2: LoadedAsset) {
+    this._mesh.material.uniforms.tMap1.value = asset1.asset as THREE.Texture;
+    this._mesh.material.uniforms.uMediaRes1.value = [asset1.naturalWidth, asset1.naturalHeight];
 
-    this._mesh.material.uniforms.tMap.value = this._loadedAsset.asset as THREE.Texture;
-    this._mesh.material.uniforms.uMediaRes.value = [
-      this._loadedAsset.naturalWidth,
-      this._loadedAsset.naturalHeight,
-    ];
+    this._mesh.material.uniforms.tMap2.value = asset2.asset as THREE.Texture;
+    this._mesh.material.uniforms.uMediaRes2.value = [asset2.naturalWidth, asset2.naturalHeight];
   }
 
   update(updateInfo: UpdateInfo) {

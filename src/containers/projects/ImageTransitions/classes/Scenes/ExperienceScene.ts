@@ -11,6 +11,7 @@ import { lerp } from 'utils/functions/lerp';
 
 import { InteractiveScene } from './InteractiveScene';
 import { Image3D } from '../Components/Image3D';
+import { dataArray } from '../../Project.data';
 
 interface Constructor {
   camera: THREE.PerspectiveCamera;
@@ -19,7 +20,7 @@ interface Constructor {
 
 export class ExperienceScene extends InteractiveScene {
   static scrollLerp = 0.15;
-  _starterImage3D: Image3D;
+  _images3D: Image3D[] = [];
   _planeGeometry = new THREE.PlaneGeometry(1, 1, 32, 32);
   _loadedAssets: LoadedAssets | null = null;
 
@@ -42,9 +43,6 @@ export class ExperienceScene extends InteractiveScene {
 
     this._getHTMLElements();
     this._addListeners();
-
-    this._starterImage3D = new Image3D({ gui, geometry: this._planeGeometry });
-    this.add(this._starterImage3D);
   }
 
   _getHTMLElements() {
@@ -107,12 +105,32 @@ export class ExperienceScene extends InteractiveScene {
     super.setRendererBounds(bounds);
     this._updateRectSizes();
     this._handleScroll();
-    this._starterImage3D.setRendererBounds(bounds);
+
+    this._images3D.forEach(el => {
+      el.setRendererBounds(bounds);
+    });
   }
 
   setLoadedAssets(assets: LoadedAssets) {
     this._loadedAssets = assets;
-    this._starterImage3D.setAsset(this._loadedAssets['starterImage']);
+
+    dataArray.forEach(el => {
+      const image3D = new Image3D({ elId: el.elId, gui: this._gui, geometry: this._planeGeometry });
+      this._images3D.push(image3D);
+      this.add(image3D);
+    });
+
+    this._images3D.forEach(el => {
+      const dataEntry = dataArray.find(item => item.elId === el._elId);
+      if (!dataEntry || !this._loadedAssets) return;
+
+      const asset1 = this._loadedAssets[dataEntry.img1Src];
+      const asset2 = this._loadedAssets[dataEntry.img2Src];
+
+      el.setAssets(asset1, asset2);
+    });
+
+    this.setRendererBounds(this._rendererBounds);
   }
 
   update(updateInfo: UpdateInfo) {
@@ -129,13 +147,21 @@ export class ExperienceScene extends InteractiveScene {
     this._shouldScrollEls.forEach(el => {
       el.style.transform = `translate3d(0,${offsetY}px,0)`;
     });
+
+    this._images3D.forEach(el => {
+      el.update(updateInfo, offsetY);
+    });
   }
 
   destroy() {
     super.destroy();
     this._removeListeners();
-    this._starterImage3D.destroy();
-    this.remove(this._starterImage3D);
+
+    this._images3D.forEach(el => {
+      el.destroy();
+      this.remove(el);
+    });
+
     this._planeGeometry.dispose();
   }
 }

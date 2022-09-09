@@ -49,17 +49,23 @@ export const Title = styled.h3<TitleProps>`
 
 export const ImageContainer = styled.div`
   width: 100%;
-  background-color: red;
-  border-radius: 10px;
-  overflow: hidden;
-  /* box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.35); */
-  filter: drop-shadow(0 -10px 30px rgba(0, 0, 0, 0.35));
-
+  position: relative;
   &:before {
     content: '';
     display: block;
     padding-bottom: 46.25%;
   }
+`;
+
+export const BoxShadow = styled.div`
+  position: absolute;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.35);
 `;
 
 export const ButtonContainer = styled.div`
