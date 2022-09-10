@@ -62,7 +62,7 @@ export const ContentWrapper = styled.div`
 
   ${media.tablet} {
     width: 120rem;
-    padding: 10rem 0;
+    padding: 12rem 0;
   }
 `;
 
