@@ -39,10 +39,10 @@ export class MediaPlane3D extends InteractiveObject3D {
     this._geometry = geometry;
 
     this._material = new THREE.ShaderMaterial({
-      side: THREE.FrontSide,
       vertexShader: this._vertexShader,
       fragmentShader: this._fragmentShader,
       transparent: true,
+      side: THREE.DoubleSide,
       uniforms: {
         uTime: { value: 0 },
         tMap1: { value: null },

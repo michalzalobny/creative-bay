@@ -21,7 +21,7 @@ interface Constructor {
 export class ExperienceScene extends InteractiveScene {
   static scrollLerp = 0.15;
   _images3D: Image3D[] = [];
-  _planeGeometry = new THREE.PlaneGeometry(1, 1, 32, 32);
+  _planeGeometry = new THREE.PlaneGeometry(1, 1, 64, 64);
   _loadedAssets: LoadedAssets | null = null;
 
   _scrollContainerEl: HTMLElement | null = null;
@@ -155,6 +155,7 @@ export class ExperienceScene extends InteractiveScene {
         imagesSettings: this._imagesSettings,
       });
       this._images3D.push(image3D);
+      // image3D.rotation.x = Math.PI * -0.45;
       this.add(image3D);
     });
 

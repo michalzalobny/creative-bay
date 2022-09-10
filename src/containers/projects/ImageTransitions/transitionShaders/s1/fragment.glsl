@@ -31,16 +31,8 @@ vec2 getUvs(vec2 planeRes, vec2 mediaRes, vec2 uv) {
 
 void main() {
     vec2 uv1 = getUvs(uPlaneRes, uMediaRes1, vUv);
-    vec2 uv2 = getUvs(uPlaneRes, uMediaRes2, vUv);
-    vec2 uv3 = getUvs(uPlaneRes, uMediaRes3, vUv);
 
-    float tilesAmount = 10.0;
-    float offsetStrength = 0.36; //[0-1]
-    
-    vec2 uvDividedF1 = floor(uv1 * vec2( tilesAmount ,1.0));
-    vec2 uvDisplaced1 = uv1 - (vec2(1.0, 0.0)  * uvDividedF1.x / tilesAmount) * offsetStrength * uTransitionProgress;
+    vec4 image1 = texture2D(tMap1, uv1);
 
-    vec4 image1 = texture2D(tMap1,uvDisplaced1);
-
-    gl_FragColor = mix(image1, image1, 0.0); 
+    gl_FragColor = image1; 
 }

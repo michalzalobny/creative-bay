@@ -80,8 +80,18 @@ export const BoxShadow = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  border-radius: 10px;
-  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.35);
+
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.35);
+    transform: scale(0.99);
+    background-color: #ededed;
+  }
 `;
 
 export const ButtonContainer = styled.div`
