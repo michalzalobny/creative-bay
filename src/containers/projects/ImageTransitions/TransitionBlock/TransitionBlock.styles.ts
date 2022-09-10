@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 import { sharedValues } from 'utils/sharedValues';
 import { media } from 'utils/media';
@@ -48,11 +48,7 @@ export const Wrapper = styled.div`
 
 export const TitleWrapper = styled.div``;
 
-interface TitleProps {
-  $isHovered: boolean;
-}
-
-export const Title = styled.h3<TitleProps>`
+export const Title = styled.h3`
   color: #111111;
   font-size: 2.5rem;
   font-weight: 800;
@@ -61,12 +57,6 @@ export const Title = styled.h3<TitleProps>`
   transform: translateY(22%);
   transform-origin: left;
   transition: transform 0.65s ${sharedValues.timings.t1};
-
-  ${props =>
-    props.$isHovered &&
-    css`
-      transform: translateY(-30%) scale(0.8);
-    `}
 
   ${media.tablet} {
     padding-left: 40px;

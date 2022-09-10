@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import { LinkHandler } from 'components/LinkHandler/LinkHandler';
 
@@ -14,13 +14,11 @@ interface Props {
 export const TransitionBlock = (props: Props) => {
   const { repoHref, title, elId } = props;
 
-  const [isHovered, setIsHovered] = useState(false);
-
   return (
     <>
       <S.Wrapper>
         <S.TitleWrapper data-itransition="shouldScroll">
-          <S.Title $isHovered={false}>{title}</S.Title>
+          <S.Title>{title}</S.Title>
         </S.TitleWrapper>
 
         <S.ImageContainer data-itransition-id={elId}>
@@ -33,12 +31,7 @@ export const TransitionBlock = (props: Props) => {
           </S.GithubWrapper>
         </S.ImageContainer>
         <S.ButtonContainer data-itransition="shouldScroll">
-          <RoundButton
-            elId={elId}
-            setIsHovered={setIsHovered}
-            data-itransition="shouldScroll"
-            label="Click for transition"
-          />
+          <RoundButton elId={elId} data-itransition="shouldScroll" label="Click for transition" />
         </S.ButtonContainer>
       </S.Wrapper>
     </>
