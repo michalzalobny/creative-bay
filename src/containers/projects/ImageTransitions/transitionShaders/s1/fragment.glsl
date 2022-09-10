@@ -14,6 +14,7 @@ uniform float uVar2;
 uniform float uVar3;
 
 varying vec2 vUv;
+varying float vShadowFront;
 
 #define PI 3.14159265359
 
@@ -35,4 +36,5 @@ void main() {
     vec4 image1 = texture2D(tMap1, uv1);
 
     gl_FragColor = image1; 
+    gl_FragColor.rgb *= vShadowFront;
 }
