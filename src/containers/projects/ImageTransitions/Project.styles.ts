@@ -56,7 +56,7 @@ export const ScrollContainer = styled.div`
 
 export const ContentWrapper = styled.div`
   margin: 0 auto;
-  width: 90%;
+  width: 82%;
 
   padding: 10rem 0;
 

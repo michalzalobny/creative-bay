@@ -27,7 +27,7 @@ vec3 rotate(vec3 v, vec3 axis, float angle) {
 
 void main() {
     float uProgress = uTransitionProgress;
-    float uAngle = PI * 0.025;
+    float uAngle = PI * 0.015;
     float rad = 0.05;
     float rolls = 5.0;
 
