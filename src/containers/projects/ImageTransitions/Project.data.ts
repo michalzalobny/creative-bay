@@ -3,7 +3,11 @@ import { GetStaticProps } from 'next';
 import { HeadProps } from 'seo/Head/Head';
 import { sharedValues } from 'utils/sharedValues';
 
-import fragment0 from './transitionShaders/fragment0.glsl';
+import fragment0 from './transitionShaders/s0/fragment.glsl';
+import vertex0 from './transitionShaders/s0/vertex.glsl';
+
+import fragment1 from './transitionShaders/s1/fragment.glsl';
+import vertex1 from './transitionShaders/s1/vertex.glsl';
 
 export interface PageProps {
   head: HeadProps;
@@ -20,6 +24,7 @@ export const dataArray = [
       'https://github.com/michalzalobny/creative-bay/blob/main/src/containers/projects/ImageTransitions/transitionShaders/fragment0.glsl',
     elId: 0,
     fragmentShader: fragment0,
+    vertexShader: vertex0,
   },
   {
     img1Src:
@@ -31,7 +36,8 @@ export const dataArray = [
     repoHref:
       'https://github.com/michalzalobny/creative-bay/blob/main/src/containers/projects/ImageTransitions/transitionShaders/fragment0.glsl',
     elId: 1,
-    fragmentShader: fragment0,
+    fragmentShader: fragment1,
+    vertexShader: vertex1,
   },
 ];
 

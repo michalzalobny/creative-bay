@@ -148,6 +148,7 @@ export class ExperienceScene extends InteractiveScene {
     dataArray.forEach(el => {
       const image3D = new Image3D({
         fragmentShader: el.fragmentShader,
+        vertexShader: el.vertexShader,
         elId: el.elId,
         gui: this._gui,
         geometry: this._planeGeometry,
