@@ -58,11 +58,11 @@ export const ContentWrapper = styled.div`
   margin: 0 auto;
   width: 90%;
 
-  padding: 8rem 0;
+  padding: 10rem 0;
 
   ${media.tablet} {
     width: 120rem;
-    padding: 20rem 0;
+    padding: 10rem 0;
   }
 `;
 

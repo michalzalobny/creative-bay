@@ -1,11 +1,12 @@
 import styled from 'styled-components';
 
+import { media } from 'utils/media';
 import { sharedValues } from 'utils/sharedValues';
 
 export const Wrapper = styled.div`
   display: flex;
   cursor: pointer;
-  padding: 10px 20px;
+  padding: 8px 12px;
   border: 2px solid black;
   border-radius: 50px;
   pointer-events: initial;
@@ -19,23 +20,28 @@ export const Wrapper = styled.div`
       transform: translateY(0%);
     }
   }
+
+  ${media.tablet} {
+    padding: 8px 15px;
+  }
 `;
 
 export const LabelsContainer = styled.div`
   position: relative;
   overflow: hidden;
+  font-size: 12px;
+  line-height: 1.2;
+  ${media.tablet} {
+    font-size: 14px;
+  }
 `;
 
 export const Label = styled.span`
-  font-size: 14px;
-  line-height: 1.2;
   transition: transform 0.55s ${sharedValues.timings.t1};
   display: flex;
 `;
 
 export const LabelCopy = styled.span`
-  font-size: 14px;
-  line-height: 1.2;
   transition: transform 0.55s ${sharedValues.timings.t1};
   display: flex;
   position: absolute;
