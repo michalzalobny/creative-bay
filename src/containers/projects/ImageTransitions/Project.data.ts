@@ -16,18 +16,6 @@ export interface PageProps {
 export const dataArray = [
   {
     img1Src:
-      'https://res.cloudinary.com/dpv0ukspz/video/upload/v1662755666/Instruments_-_10551_qypuol.mp4',
-    img2Src: 'https://res.cloudinary.com/dpv0ukspz/image/upload/v1662747854/2_zzi7ej.jpg',
-    imgDisplacementSrc: '',
-    title: 'Tiled Transition',
-    repoHref:
-      'https://github.com/michalzalobny/creative-bay/tree/main/src/containers/projects/ImageTransitions/transitionShaders/s0',
-    elId: 0,
-    fragmentShader: fragment0,
-    vertexShader: vertex0,
-  },
-  {
-    img1Src:
       'https://res.cloudinary.com/dpv0ukspz/image/upload/v1662632246/fynn-schmidt-hKwWA1nNKt4-unsplash_1_lwk6n3.jpg',
     img2Src:
       'https://res.cloudinary.com/dpv0ukspz/image/upload/v1662632243/mehmet-turgut-kirkgoz-1-6BbBXcEf0-unsplash_1_klrw1p.jpg',
@@ -38,6 +26,18 @@ export const dataArray = [
     elId: 1,
     fragmentShader: fragment1,
     vertexShader: vertex1,
+  },
+  {
+    img1Src:
+      'https://res.cloudinary.com/dpv0ukspz/video/upload/v1662755666/Instruments_-_10551_qypuol.mp4',
+    img2Src: 'https://res.cloudinary.com/dpv0ukspz/image/upload/v1662747854/2_zzi7ej.jpg',
+    imgDisplacementSrc: '',
+    title: 'Tiled Transition',
+    repoHref:
+      'https://github.com/michalzalobny/creative-bay/tree/main/src/containers/projects/ImageTransitions/transitionShaders/s0',
+    elId: 0,
+    fragmentShader: fragment0,
+    vertexShader: vertex0,
   },
 ];
 
