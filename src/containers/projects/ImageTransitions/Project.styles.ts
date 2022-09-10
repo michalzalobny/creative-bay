@@ -56,12 +56,12 @@ export const ScrollContainer = styled.div`
 
 export const ContentWrapper = styled.div`
   margin: 0 auto;
-  width: 80%;
+  width: 90%;
 
   padding: 8rem 0;
 
   ${media.tablet} {
-    width: 100rem;
+    width: 120rem;
     padding: 20rem 0;
   }
 `;

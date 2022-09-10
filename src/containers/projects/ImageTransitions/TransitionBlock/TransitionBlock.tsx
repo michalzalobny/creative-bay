@@ -17,7 +17,7 @@ export const TransitionBlock = (props: Props) => {
     <>
       <S.Wrapper>
         <S.TitleWrapper data-itransition="shouldScroll">
-          <S.Title $isHovered={isHovered}>{title}</S.Title>
+          <S.Title $isHovered={false}>{title}</S.Title>
         </S.TitleWrapper>
 
         <S.ImageContainer data-itransition-id={elId}>
