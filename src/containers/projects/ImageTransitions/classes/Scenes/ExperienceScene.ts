@@ -163,8 +163,9 @@ export class ExperienceScene extends InteractiveScene {
 
       const asset1 = this._loadedAssets[dataEntry.img1Src];
       const asset2 = this._loadedAssets[dataEntry.img2Src];
+      const asset3 = this._loadedAssets[dataEntry.imgDisplacementSrc];
 
-      el.setAssets(asset1, asset2);
+      el.setAssets(asset1, asset2, asset3);
     });
 
     this.setRendererBounds(this._rendererBounds);
