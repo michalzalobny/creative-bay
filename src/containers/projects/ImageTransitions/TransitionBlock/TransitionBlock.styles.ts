@@ -3,6 +3,33 @@ import styled, { css } from 'styled-components';
 import { sharedValues } from 'utils/sharedValues';
 import { media } from 'utils/media';
 
+import { underline } from 'utils/sharedStyled';
+
+export const GithubWrapper = styled.div`
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  color: black;
+  transform: translateY(150%);
+  margin-right: 25px;
+
+  ${media.tablet} {
+    margin-right: 40px;
+  }
+`;
+
+export const GithubLink = styled.span`
+  display: inline-block;
+  position: relative;
+  ${underline};
+
+  font-size: 12px;
+  line-height: 1.6;
+  ${media.tablet} {
+    font-size: 14px;
+  }
+`;
+
 export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;

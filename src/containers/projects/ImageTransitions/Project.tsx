@@ -42,7 +42,14 @@ export default function Project(props: PageProps) {
         <S.MockWrapper style={{ overflowY: 'scroll' }} data-itransition="scrollMockWrapper">
           <S.ContentWrapper>
             {dataArray.map(item => {
-              return <TransitionBlock title={item.title} elId={item.elId} key={item.elId} />;
+              return (
+                <TransitionBlock
+                  repoHref={item.repoHref}
+                  title={item.title}
+                  elId={item.elId}
+                  key={item.elId}
+                />
+              );
             })}
           </S.ContentWrapper>
         </S.MockWrapper>
