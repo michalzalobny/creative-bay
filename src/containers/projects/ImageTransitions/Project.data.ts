@@ -9,11 +9,27 @@ import vertex0 from './transitionShaders/s0/vertex.glsl';
 import fragment1 from './transitionShaders/s1/fragment.glsl';
 import vertex1 from './transitionShaders/s1/vertex.glsl';
 
+import fragment2 from './transitionShaders/s2/fragment.glsl';
+import vertex2 from './transitionShaders/s2/vertex.glsl';
+
 export interface PageProps {
   head: HeadProps;
 }
 
 export const dataArray = [
+  {
+    img1Src:
+      'https://res.cloudinary.com/dpv0ukspz/image/upload/v1662632246/fynn-schmidt-hKwWA1nNKt4-unsplash_1_lwk6n3.jpg',
+    img2Src:
+      'https://res.cloudinary.com/dpv0ukspz/image/upload/v1662886426/pawel-czerwinski-Lki74Jj7H-U-unsplash_1_aoacff.jpg',
+    imgDisplacementSrc: '',
+    title: 'Tiled Transition',
+    repoHref:
+      'https://github.com/michalzalobny/creative-bay/tree/main/src/containers/projects/ImageTransitions/transitionShaders/s2',
+    elId: 2,
+    fragmentShader: fragment2,
+    vertexShader: vertex2,
+  },
   {
     img1Src:
       'https://res.cloudinary.com/dpv0ukspz/image/upload/v1662886426/pawel-czerwinski-Lki74Jj7H-U-unsplash_1_aoacff.jpg',
