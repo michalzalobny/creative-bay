@@ -13,7 +13,7 @@ export default function IndexPage() {
         <S.ProjectsWrapper>
           <S.ProjectContainer>
             <Link href="/projects/image-transitions" passHref>
-              <S.ProjectLink>1. Image Transitions</S.ProjectLink>
+              <S.ProjectLink>1. GLSL Image Transitions</S.ProjectLink>
             </Link>
           </S.ProjectContainer>
           <S.ProjectContainer>
