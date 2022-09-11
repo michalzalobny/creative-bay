@@ -57,7 +57,7 @@ export class App extends THREE.EventDispatcher {
     this._orbitControls.update();
 
     this._gui.title('Scene settings');
-    // this._gui.hide();
+    this._gui.hide();
     this._experienceScene = new ExperienceScene({ camera: this._camera, gui: this._gui });
 
     this._onResize();
