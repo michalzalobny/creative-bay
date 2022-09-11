@@ -100,16 +100,19 @@ export class MediaPlane3D extends InteractiveObject3D {
     ];
   }
 
-  setAssets(asset1: LoadedAsset, asset2: LoadedAsset, asset3?: LoadedAsset) {
+  setAssets(asset1: LoadedAsset, asset2?: LoadedAsset, asset3?: LoadedAsset) {
     this._mesh.material.uniforms.tMap1.value = asset1.asset as THREE.Texture;
     this._mesh.material.uniforms.uMediaRes1.value = [asset1.naturalWidth, asset1.naturalHeight];
 
-    this._mesh.material.uniforms.tMap2.value = asset2.asset as THREE.Texture;
-    this._mesh.material.uniforms.uMediaRes2.value = [asset2.naturalWidth, asset2.naturalHeight];
+    if (asset2) {
+      this._mesh.material.uniforms.tMap2.value = asset2.asset as THREE.Texture;
+      this._mesh.material.uniforms.uMediaRes2.value = [asset2.naturalWidth, asset2.naturalHeight];
+    }
 
-    if (!asset3) return;
-    this._mesh.material.uniforms.tMap3.value = asset3.asset as THREE.Texture;
-    this._mesh.material.uniforms.uMediaRes3.value = [asset3.naturalWidth, asset3.naturalHeight];
+    if (asset3) {
+      this._mesh.material.uniforms.tMap3.value = asset3.asset as THREE.Texture;
+      this._mesh.material.uniforms.uMediaRes3.value = [asset3.naturalWidth, asset3.naturalHeight];
+    }
   }
 
   update(updateInfo: UpdateInfo) {

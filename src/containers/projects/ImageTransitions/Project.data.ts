@@ -16,9 +16,8 @@ export interface PageProps {
 export const dataArray = [
   {
     img1Src:
-      'https://res.cloudinary.com/dpv0ukspz/image/upload/v1662632246/fynn-schmidt-hKwWA1nNKt4-unsplash_1_lwk6n3.jpg',
-    img2Src:
-      'https://res.cloudinary.com/dpv0ukspz/image/upload/v1662632243/mehmet-turgut-kirkgoz-1-6BbBXcEf0-unsplash_1_klrw1p.jpg',
+      'https://res.cloudinary.com/dpv0ukspz/image/upload/v1662886426/pawel-czerwinski-Lki74Jj7H-U-unsplash_1_aoacff.jpg',
+    img2Src: '',
     imgDisplacementSrc: '',
     title: 'Roll Transition',
     repoHref:
@@ -29,8 +28,8 @@ export const dataArray = [
   },
   {
     img1Src:
-      'https://res.cloudinary.com/dpv0ukspz/video/upload/v1662755666/Instruments_-_10551_qypuol.mp4',
-    img2Src: 'https://res.cloudinary.com/dpv0ukspz/image/upload/v1662747854/2_zzi7ej.jpg',
+      'https://res.cloudinary.com/dpv0ukspz/image/upload/v1662632246/fynn-schmidt-hKwWA1nNKt4-unsplash_1_lwk6n3.jpg',
+    img2Src: '',
     imgDisplacementSrc: '',
     title: 'Tiled Transition',
     repoHref:
