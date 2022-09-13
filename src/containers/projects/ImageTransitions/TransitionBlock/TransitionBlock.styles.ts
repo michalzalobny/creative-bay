@@ -90,6 +90,7 @@ export const BoxShadow = styled.div`
     height: 100%;
     box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.35);
     transform: scale(0.99);
+    border-radius: 15px;
     background-color: #ededed;
   }
 `;

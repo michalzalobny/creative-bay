@@ -33,7 +33,7 @@ export class Image3D extends MediaPlane3D {
     this._transitionProgressTween = new TWEEN.Tween({
       progress: this._mesh.material.uniforms.uTransitionProgress.value as number,
     })
-      .to({ progress: destination }, 1500)
+      .to({ progress: destination }, 1800)
       .easing(TWEEN.Easing.Exponential.InOut)
       .onUpdate(obj => {
         this._mesh.material.uniforms.uTransitionProgress.value = obj.progress;

@@ -30,6 +30,16 @@ vec2 getUvs(vec2 planeRes, vec2 mediaRes, vec2 uv) {
     return finalUv;
 }
 
+float udRoundBox( vec2 p, vec2 b, float r ){
+    return length(max(abs(p)-b+r,0.0))-r;
+}
+float roundCorners(vec2 planeRes, vec2 uv, float radius) {
+    float iRadius = min(planeRes.x, planeRes.y) * radius;
+    vec2 halfRes = 0.5 * planeRes.xy;
+    float b = udRoundBox( (uv * planeRes) - halfRes, halfRes, iRadius );
+    return clamp(1.0 - b, 0.0, 1.0);
+}
+
 void main() {
     vec2 uv1 = getUvs(uPlaneRes, uMediaRes1, vUv);
 
@@ -37,4 +47,7 @@ void main() {
 
     gl_FragColor = image1; 
     gl_FragColor.rgb *= vShadowFront;
+
+    float roundC = roundCorners(uPlaneRes, vUv, 0.024);
+    gl_FragColor.a *= roundC;
 }

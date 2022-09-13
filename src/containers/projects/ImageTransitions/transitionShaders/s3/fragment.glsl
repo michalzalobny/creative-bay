@@ -29,16 +29,16 @@ vec2 getUvs(vec2 planeRes, vec2 mediaRes, vec2 uv) {
     return finalUv;
 }
 
-//https://github.com/yuichiroharai/glsl-y-repeat/blob/master/mirrored.glsl
+float parabola( float x, float k ) {
+    return pow( 4. * x * ( 1. - x ), k );
+}
+
 vec2 mirrored(vec2 v) {
     vec2 m = mod(v,2.0);
     return mix(m, 2.0-m, step(1.0, m));
 }
 
-float tri(float v) {
-    return mix(v, 1.0 - v, step(0.5, v)) * 2.0;
-}
-
+//https://www.shadertoy.com/view/ldfSDj
 float udRoundBox( vec2 p, vec2 b, float r ){
     return length(max(abs(p)-b+r,0.0))-r;
 }
@@ -49,32 +49,64 @@ float roundCorners(vec2 planeRes, vec2 uv, float radius) {
     return clamp(1.0 - b, 0.0, 1.0);
 }
 
+float tri(float v) {
+    return mix(v, 1.0 - v, step(0.5, v)) * 2.0;
+}
+
+float remap01 (float a, float b, float t){
+    return (t-a) / (b-a);
+}
+
+float remap(float a, float b, float c, float d, float t){
+    return remap01(a, b, t) * (d-c) + c;
+}
+
+float paintCircle (vec2 uv, vec2 center, float rad, float width, float distortion) {
+    vec2 diff = center-uv;
+    float len = length(diff);
+
+    float circle = smoothstep(rad-width, rad, len - distortion) ;
+    return circle;
+}
+
 void main() {
     vec2 uv1 = getUvs(uPlaneRes, uMediaRes1, vUv);
     vec2 uv2 = getUvs(uPlaneRes, uMediaRes2, vUv);
+    vec2 uv3 = getUvs(uPlaneRes, uMediaRes3, vUv);
 
-    vec2 uv = vUv;
-    uv.y = 1.0 - uv.y;
+    vec4 image3 = texture2D(tMap3,  fract(mirrored(uv3  + uTime*0.04)));
+    vec4 noise = image3;
+
+
     float progress = uTransitionProgress;
-    float edge = 0.5 * (uv.y + uv.x);
-    float sm = 0.12;
-    float str = smoothstep(edge-sm, edge+sm, progress);
-    float crossLine = str * smoothstep(edge+sm, edge-sm, progress);
+    // progress = uVar1;
+    vec2 aspect = vec2(uPlaneRes.x / uPlaneRes.y, 1.0);
     
-    vec2 trans =  vec2(0.015) * crossLine;
-    vec2 trans1 = progress * vec2(0.5, -1.0) + trans;
-    vec2 trans2 = (1.0 - progress) * vec2(-0.5, 1.0) + trans;
+    float radiusC = progress * aspect.x * 0.5 * 1.5; //*1.5 to compensate the aspect ratio (it makes the circle bigger to disappear)
+    float fade = 0.2;
+    float c1 = 1.0 - paintCircle(vUv * aspect, vec2(0.5) * aspect, radiusC, fade, 0.0);
+    float c2 = 1.0 - paintCircle(vUv * aspect, vec2(0.5) * aspect, radiusC - fade, fade, 0.0);
+    float c3 = c1 - c2;
+
 
     float w = sin(sin(uTime) * 0.3 + vUv.x * 4.0);
-    vec2 xy =  0.3 * w * (tri(progress) + tri(crossLine * 5.0)) * vec2(0.0, 1.0);
+    vec2 xy =  0.25 * w * (tri(progress) + tri(c1 * 3.0)) * vec2(0.0, 1.0);
+    
+    float strength = 1.5;
 
-    uv1 = mirrored(uv1 + trans1 + xy);
-    uv2 = mirrored(uv2 + trans2 + xy);
+    uv1 = mirrored(uv1 + xy * c3 * 4.0 * progress + xy * (1.0 - c1) * progress * strength * 2.0);
+    uv2 = mirrored(uv2 + xy * c3 * 4.0 * progress + xy * c2 * (1.0 - progress) * strength);
+
 
     vec4 image1 = texture2D(tMap1, uv1);
     vec4 image2 = texture2D(tMap2, uv2);
 
-    gl_FragColor = mix(image1, image2, str); 
+    gl_FragColor = mix( image1, image2, c1 );
+    
     float roundC = roundCorners(uPlaneRes, vUv, 0.024);
     gl_FragColor.a *= roundC;
+    
+
+
+
 }
