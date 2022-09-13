@@ -54,7 +54,7 @@ export const Title = styled.h3`
   font-weight: 800;
   padding-left: 25px;
 
-  transform: translateY(22%);
+  transform: translateY(18%);
   transform-origin: left;
   transition: transform 0.65s ${sharedValues.timings.t1};
 
