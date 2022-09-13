@@ -21,12 +21,10 @@ export interface PageProps {
 
 export const dataArray = [
   {
-    img1Src:
-      'https://res.cloudinary.com/dpv0ukspz/image/upload/v1662920742/krystian-tambur-k7rZ8wTfABA-unsplash_ykee7e.jpg',
+    img1Src: 'https://res.cloudinary.com/dpv0ukspz/image/upload/v1628285130/z5_0f74f06f1b.jpg',
     img2Src:
-      'https://res.cloudinary.com/dpv0ukspz/image/upload/v1662920941/keith-hardy-PP8Escz15d8-unsplash_pwfug2.jpg',
-    imgDisplacementSrc:
-      'https://res.cloudinary.com/dpv0ukspz/image/upload/v1663024171/disp3_qmq6h7_1_aey1rw.jpg',
+      'https://res.cloudinary.com/dpv0ukspz/image/upload/v1663082103/steven-kamenar-MMJx78V7xS8-unsplash_gwuicp.jpg',
+    imgDisplacementSrc: '',
     title: 'Drop Transition',
     repoHref:
       'https://github.com/michalzalobny/creative-bay/tree/main/src/containers/projects/ImageTransitions/transitionShaders/s3',

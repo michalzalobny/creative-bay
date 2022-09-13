@@ -72,11 +72,6 @@ float paintCircle (vec2 uv, vec2 center, float rad, float width, float distortio
 void main() {
     vec2 uv1 = getUvs(uPlaneRes, uMediaRes1, vUv);
     vec2 uv2 = getUvs(uPlaneRes, uMediaRes2, vUv);
-    vec2 uv3 = getUvs(uPlaneRes, uMediaRes3, vUv);
-
-    vec4 image3 = texture2D(tMap3,  fract(mirrored(uv3  + uTime*0.04)));
-    vec4 noise = image3;
-
 
     float progress = uTransitionProgress;
     // progress = uVar1;
