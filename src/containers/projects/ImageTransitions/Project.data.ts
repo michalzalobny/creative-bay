@@ -15,11 +15,28 @@ import vertex2 from './transitionShaders/s2/vertex.glsl';
 import fragment3 from './transitionShaders/s3/fragment.glsl';
 import vertex3 from './transitionShaders/s3/vertex.glsl';
 
+import fragment4 from './transitionShaders/s4/fragment.glsl';
+import vertex4 from './transitionShaders/s4/vertex.glsl';
+
 export interface PageProps {
   head: HeadProps;
 }
 
 export const dataArray = [
+  {
+    img1Src:
+      ' https://res.cloudinary.com/dpv0ukspz/image/upload/v1663089936/antonio-grosz-iwzRmK6vNLg-unsplash_hlljfl.jpg ',
+    img2Src:
+      'https://res.cloudinary.com/dpv0ukspz/image/upload/v1663090533/demi-deherrera-L-sm1B4L1Ns-unsplash_oaguvf.jpg',
+    imgDisplacementSrc: '',
+    title: 'Color Offset Transition',
+    repoHref:
+      'https://github.com/michalzalobny/creative-bay/tree/main/src/containers/projects/ImageTransitions/transitionShaders/s4',
+    elId: 4,
+    fragmentShader: fragment4,
+    vertexShader: vertex4,
+  },
+
   {
     img1Src: 'https://res.cloudinary.com/dpv0ukspz/image/upload/v1628285130/z5_0f74f06f1b.jpg',
     img2Src:
