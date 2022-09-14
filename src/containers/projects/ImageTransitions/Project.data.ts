@@ -52,19 +52,6 @@ export const dataArray = [
 
   {
     img1Src:
-      'https://res.cloudinary.com/dpv0ukspz/image/upload/v1662886426/pawel-czerwinski-Lki74Jj7H-U-unsplash_1_aoacff.jpg',
-    img2Src: '',
-    imgDisplacementSrc: '',
-    title: 'Roll Transition',
-    repoHref:
-      'https://github.com/michalzalobny/creative-bay/tree/main/src/containers/projects/ImageTransitions/transitionShaders/s1',
-    elId: 1,
-    fragmentShader: fragment1,
-    vertexShader: vertex1,
-  },
-
-  {
-    img1Src:
       'https://res.cloudinary.com/dpv0ukspz/image/upload/v1662920941/keith-hardy-PP8Escz15d8-unsplash_pwfug2.jpg',
     img2Src:
       'https://res.cloudinary.com/dpv0ukspz/image/upload/v1662920742/krystian-tambur-k7rZ8wTfABA-unsplash_ykee7e.jpg ',
@@ -75,6 +62,19 @@ export const dataArray = [
     elId: 2,
     fragmentShader: fragment2,
     vertexShader: vertex2,
+  },
+
+  {
+    img1Src:
+      'https://res.cloudinary.com/dpv0ukspz/image/upload/v1662886426/pawel-czerwinski-Lki74Jj7H-U-unsplash_1_aoacff.jpg',
+    img2Src: '',
+    imgDisplacementSrc: '',
+    title: 'Roll Transition',
+    repoHref:
+      'https://github.com/michalzalobny/creative-bay/tree/main/src/containers/projects/ImageTransitions/transitionShaders/s1',
+    elId: 1,
+    fragmentShader: fragment1,
+    vertexShader: vertex1,
   },
 
   // {
