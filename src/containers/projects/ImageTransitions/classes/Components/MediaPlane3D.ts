@@ -67,6 +67,7 @@ export class MediaPlane3D extends InteractiveObject3D {
           value: [1, 1], //Mouse coords from [0,0] (top left corner) to [screenWidth , screenHeight]
         },
         uTransitionProgress: { value: 0 },
+        uHoverProgress: { value: 0 },
         uVar1: { value: imagesSettings.uVar1 },
         uVar2: { value: imagesSettings.uVar2 },
         uVar3: { value: imagesSettings.uVar3 },

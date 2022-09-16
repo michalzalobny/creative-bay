@@ -18,6 +18,7 @@ export class Image3D extends MediaPlane3D {
   _gui: GUI;
   _elId;
   _transitionProgressTween: Tween<{ progress: number }> | null = null;
+  _hoverProgressTween: Tween<{ progress: number }> | null = null;
 
   constructor({ imagesSettings, elId, gui, fragmentShader, geometry, vertexShader }: Constructor) {
     super({ imagesSettings, fragmentShader, geometry, vertexShader });
@@ -39,6 +40,19 @@ export class Image3D extends MediaPlane3D {
         this._mesh.material.uniforms.uTransitionProgress.value = obj.progress;
       });
     this._transitionProgressTween.start();
+  }
+
+  _animateHover(destination: number) {
+    if (this._hoverProgressTween) this._hoverProgressTween.stop();
+    this._hoverProgressTween = new TWEEN.Tween({
+      progress: this._mesh.material.uniforms.uHoverProgress.value as number,
+    })
+      .to({ progress: destination }, 1800 * 0.8)
+      .easing(TWEEN.Easing.Exponential.InOut)
+      .onUpdate(obj => {
+        this._mesh.material.uniforms.uHoverProgress.value = obj.progress;
+      });
+    this._hoverProgressTween.start();
   }
 
   _setHTMLElements() {
@@ -77,12 +91,24 @@ export class Image3D extends MediaPlane3D {
     this._animateTransition(this._currentImage);
   };
 
+  _handlePointerEnter = () => {
+    this._animateHover(1);
+  };
+
+  _handlePointerLeave = () => {
+    this._animateHover(0);
+  };
+
   _addListeners() {
     this._buttonEl?.addEventListener('click', this._handleClick);
+    this._buttonEl?.addEventListener('pointerenter', this._handlePointerEnter);
+    this._buttonEl?.addEventListener('pointerleave', this._handlePointerLeave);
   }
 
   _removeListeners() {
     this._buttonEl?.removeEventListener('click', this._handleClick);
+    this._buttonEl?.removeEventListener('pointerenter', this._handlePointerEnter);
+    this._buttonEl?.removeEventListener('pointerleave', this._handlePointerLeave);
   }
 
   update(updateInfo: UpdateInfo, offsetY?: number) {

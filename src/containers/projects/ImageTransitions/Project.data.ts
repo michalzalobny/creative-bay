@@ -37,18 +37,19 @@ export const dataArray = [
   //   vertexShader: vertex4,
   // },
 
-  // {
-  //   img1Src: 'https://res.cloudinary.com/dpv0ukspz/image/upload/v1628285130/z5_0f74f06f1b.jpg',
-  //   img2Src:
-  //     'https://res.cloudinary.com/dpv0ukspz/image/upload/v1663082103/steven-kamenar-MMJx78V7xS8-unsplash_gwuicp.jpg',
-  //   imgDisplacementSrc: '',
-  //   title: 'Drop Transition',
-  //   repoHref:
-  //     'https://github.com/michalzalobny/creative-bay/tree/main/src/containers/projects/ImageTransitions/transitionShaders/s3',
-  //   elId: 3,
-  //   fragmentShader: fragment3,
-  //   vertexShader: vertex3,
-  // },
+  {
+    img1Src:
+      'https://res.cloudinary.com/dpv0ukspz/image/upload/v1663317911/rsz_1cristian-escobar-abkeaojny0s-unsplash_bircp0.jpg',
+    img2Src:
+      'https://res.cloudinary.com/dpv0ukspz/image/upload/v1663319792/todd-quackenbush-eStCg6FRw_E-unsplash_rvvp2j.jpg',
+    imgDisplacementSrc: '',
+    title: 'Drop Transition',
+    repoHref:
+      'https://github.com/michalzalobny/creative-bay/tree/main/src/containers/projects/ImageTransitions/transitionShaders/s3',
+    elId: 3,
+    fragmentShader: fragment3,
+    vertexShader: vertex3,
+  },
 
   {
     img1Src:
