@@ -23,20 +23,6 @@ export interface PageProps {
 }
 
 export const dataArray = [
-  // {
-  //   img1Src:
-  //     ' https://res.cloudinary.com/dpv0ukspz/image/upload/v1663089936/antonio-grosz-iwzRmK6vNLg-unsplash_hlljfl.jpg ',
-  //   img2Src:
-  //     'https://res.cloudinary.com/dpv0ukspz/image/upload/v1663090533/demi-deherrera-L-sm1B4L1Ns-unsplash_oaguvf.jpg',
-  //   imgDisplacementSrc: '',
-  //   title: 'Color Offset Transition',
-  //   repoHref:
-  //     'https://github.com/michalzalobny/creative-bay/tree/main/src/containers/projects/ImageTransitions/transitionShaders/s4',
-  //   elId: 4,
-  //   fragmentShader: fragment4,
-  //   vertexShader: vertex4,
-  // },
-
   {
     img1Src:
       'https://res.cloudinary.com/dpv0ukspz/image/upload/v1663317911/rsz_1cristian-escobar-abkeaojny0s-unsplash_bircp0.jpg',
@@ -49,6 +35,31 @@ export const dataArray = [
     elId: 3,
     fragmentShader: fragment3,
     vertexShader: vertex3,
+  },
+  {
+    img1Src:
+      'https://res.cloudinary.com/dpv0ukspz/image/upload/v1662632246/fynn-schmidt-hKwWA1nNKt4-unsplash_1_lwk6n3.jpg',
+    img2Src: '',
+    imgDisplacementSrc: '',
+    title: 'Tiled Transition',
+    repoHref:
+      'https://github.com/michalzalobny/creative-bay/tree/main/src/containers/projects/ImageTransitions/transitionShaders/s0',
+    elId: 0,
+    fragmentShader: fragment0,
+    vertexShader: vertex0,
+  },
+  {
+    img1Src:
+      ' https://res.cloudinary.com/dpv0ukspz/image/upload/v1663089936/antonio-grosz-iwzRmK6vNLg-unsplash_hlljfl.jpg ',
+    img2Src:
+      'https://res.cloudinary.com/dpv0ukspz/image/upload/v1663090533/demi-deherrera-L-sm1B4L1Ns-unsplash_oaguvf.jpg',
+    imgDisplacementSrc: '',
+    title: 'Color Offset Transition',
+    repoHref:
+      'https://github.com/michalzalobny/creative-bay/tree/main/src/containers/projects/ImageTransitions/transitionShaders/s4',
+    elId: 4,
+    fragmentShader: fragment4,
+    vertexShader: vertex4,
   },
 
   {
@@ -77,19 +88,6 @@ export const dataArray = [
     fragmentShader: fragment1,
     vertexShader: vertex1,
   },
-
-  // {
-  //   img1Src:
-  //     'https://res.cloudinary.com/dpv0ukspz/image/upload/v1662632246/fynn-schmidt-hKwWA1nNKt4-unsplash_1_lwk6n3.jpg',
-  //   img2Src: '',
-  //   imgDisplacementSrc: '',
-  //   title: 'Tiled Transition',
-  //   repoHref:
-  //     'https://github.com/michalzalobny/creative-bay/tree/main/src/containers/projects/ImageTransitions/transitionShaders/s0',
-  //   elId: 0,
-  //   fragmentShader: fragment0,
-  //   vertexShader: vertex0,
-  // },
 ];
 
 export const imagesToPreload = dataArray
