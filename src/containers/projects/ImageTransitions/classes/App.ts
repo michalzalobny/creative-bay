@@ -106,8 +106,15 @@ export class App extends THREE.EventDispatcher {
   };
 
   _onAssetsLoaded = (e: THREE.Event) => {
+    const assets = (e.target as Preloader).loadedAssets;
+
+    Object.entries(assets).forEach(el => {
+      const texture = el[1].asset;
+      if (texture) this._renderer.initTexture(texture as THREE.Texture);
+    });
+
+    this._experienceScene.setLoadedAssets(assets);
     this._setShouldRevealReact(true);
-    this._experienceScene.setLoadedAssets((e.target as Preloader).loadedAssets);
   };
 
   _onPreloaderProgress = (e: THREE.Event) => {
