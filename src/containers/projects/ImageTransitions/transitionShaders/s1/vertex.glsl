@@ -38,7 +38,7 @@ void main() {
     float uProgress = uTransitionProgress;
     // uProgress = uVar1;
     float uAngle = PI * 0.015;
-    float rad = 0.05;
+    float rad = 0.055;
     float rolls = 5.0;
 
     float finalAngle = uAngle - 0.0 * 0.3 * sin(uProgress * 6.0);
