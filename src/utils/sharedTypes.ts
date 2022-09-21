@@ -75,7 +75,7 @@ export interface PageProps {
   repoHref?: string;
 }
 
-export const EmptySSRRect: DomRectSSR = {
+export const emptySSRRect: DomRectSSR = {
   bottom: 1,
   height: 1,
   left: 1,

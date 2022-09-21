@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import GUI from 'lil-gui';
 
-import { UpdateInfo, LoadedAssets, Bounds, EmptySSRRect } from 'utils/sharedTypes';
+import { UpdateInfo, LoadedAssets, Bounds, emptySSRRect } from 'utils/sharedTypes';
 import {
   ScrollValues,
   defaultScrollValues,
@@ -29,7 +29,7 @@ export class ExperienceScene extends InteractiveScene {
   _scrollMockWrapperEl: HTMLElement | null = null;
   _shouldScrollEls: HTMLElement[] = [];
 
-  _scrollMockWrapperElRect = EmptySSRRect;
+  _scrollMockWrapperElRect = emptySSRRect;
 
   _scrollValues: ScrollValues = defaultScrollValues;
 

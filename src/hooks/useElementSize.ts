@@ -12,7 +12,7 @@ interface Size {
   isReady: boolean;
 }
 
-const EmptySSRRect: DomRectSSR = {
+const emptySSRRect: DomRectSSR = {
   bottom: 1,
   height: 1,
   left: 1,
@@ -24,7 +24,7 @@ const EmptySSRRect: DomRectSSR = {
 };
 
 const emptySize: Size = {
-  clientRect: EmptySSRRect,
+  clientRect: emptySSRRect,
   offsetTop: 1,
   offsetLeft: 1,
   isReady: false,
