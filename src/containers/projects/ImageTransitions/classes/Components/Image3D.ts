@@ -19,6 +19,7 @@ export class Image3D extends MediaPlane3D {
   _elId;
   _transitionProgressTween: Tween<{ progress: number }> | null = null;
   _hoverProgressTween: Tween<{ progress: number }> | null = null;
+  _hasBeenSeen = false;
 
   constructor({ imagesSettings, elId, gui, fragmentShader, geometry, vertexShader }: Constructor) {
     super({ imagesSettings, fragmentShader, geometry, vertexShader });
@@ -76,6 +77,11 @@ export class Image3D extends MediaPlane3D {
   }
 
   _updateY(y: number) {
+    if (!this._hasBeenSeen) {
+      this._mesh.position.y = 0;
+      this._hasBeenSeen = true;
+      return;
+    }
     if (this._mesh && this._domElBounds) {
       this._mesh.position.y =
         -y - this._domElBounds.top + this._rendererBounds.height / 2 - this._mesh.scale.y / 2;
