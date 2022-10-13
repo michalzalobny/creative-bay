@@ -31,7 +31,7 @@ export class FirstPersonCamera {
   _theta = 0;
   _phiSpeed = 5 * 0.3;
   _thetaSpeed = 5 * 0.3;
-  _moveSpeed = 1.6;
+  _moveSpeed = 1.7;
   _stepSpeed = 1.9;
   _stepHeight = 0.7;
   _objectsToLookAt;
