@@ -31,6 +31,7 @@ export class FirstPersonCamera {
   _theta = 0;
   _phiSpeed = 5 * 0.3;
   _thetaSpeed = 5 * 0.3;
+  _moveSpeed = 2;
   _objectsToLookAt;
   _rendererBounds: Bounds = { height: 100, width: 100 };
 
@@ -101,11 +102,11 @@ export class FirstPersonCamera {
 
     const forward = new THREE.Vector3(0, 0, -1);
     forward.applyQuaternion(qx);
-    forward.multiplyScalar(forwardVelocity * updateInfo.slowDownFactor * 3);
+    forward.multiplyScalar(forwardVelocity * updateInfo.slowDownFactor * this._moveSpeed);
 
     const left = new THREE.Vector3(-1, 0, 0);
     left.applyQuaternion(qx);
-    left.multiplyScalar(strafeVelocity * updateInfo.slowDownFactor * 3);
+    left.multiplyScalar(strafeVelocity * updateInfo.slowDownFactor * this._moveSpeed);
 
     this._translation.add(forward);
     this._translation.add(left);
