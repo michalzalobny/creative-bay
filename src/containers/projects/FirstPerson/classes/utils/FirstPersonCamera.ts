@@ -31,7 +31,7 @@ export class FirstPersonCamera {
   _phiSpeed = 5 * 0.5;
   _thetaSpeed = 5 * 0.5;
   _moveSpeed = 1.7 * 0.7;
-  _stepSpeed = 1.9 * 0.6;
+  _stepSpeed = 1.9;
   _stepHeight = 1.5;
   _objectsToLookAt: THREE.Object3D[] = [];
   _rendererBounds: Bounds = { height: 100, width: 100 };
