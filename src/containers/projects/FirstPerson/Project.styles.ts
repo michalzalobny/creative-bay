@@ -7,6 +7,19 @@ export const Wrapper = styled.div`
   width: 100%;
   height: 100%;
 
+  &:before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 15px;
+    height: 15px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    z-index: 10;
+  }
+
   /* cursor: none; */
 `;
 

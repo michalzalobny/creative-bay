@@ -8,7 +8,6 @@ import { InputControls } from './InputControls';
 interface Props {
   camera: THREE.Camera;
   inputControls: InputControls;
-  objectsToLookAt?: THREE.Object3D[];
 }
 
 const KEYS = {
@@ -31,10 +30,10 @@ export class FirstPersonCamera {
   _theta = 0;
   _phiSpeed = 5 * 0.3;
   _thetaSpeed = 5 * 0.3;
-  _moveSpeed = 1.7;
-  _stepSpeed = 1.9;
-  _stepHeight = 0.7;
-  _objectsToLookAt;
+  _moveSpeed = 1.7 * 0.5;
+  _stepSpeed = 1.9 * 0.5;
+  _stepHeight = 5.7;
+  _objectsToLookAt: THREE.Object3D[] = [];
   _rendererBounds: Bounds = { height: 100, width: 100 };
   _headBobActive = false;
   _headBobTimer = 0;
@@ -42,7 +41,6 @@ export class FirstPersonCamera {
   constructor(props: Props) {
     this._camera = props.camera;
     this._inputControls = props.inputControls;
-    this._objectsToLookAt = props.objectsToLookAt;
   }
 
   _updateCamera(updateInfo: UpdateInfo) {
@@ -51,24 +49,27 @@ export class FirstPersonCamera {
     this._camera.position.copy(this._translation);
     this._camera.position.y += Math.sin(this._headBobTimer) * this._stepHeight;
 
-    // this._camera.position.copy(this._translation);
-    // this._camera.position.y += Math.sin(this._headBobTimer * 10) * 1.5;
-    // const forward = new THREE.Vector3(0, 0, -1);
-    // forward.applyQuaternion(this._rotation);
-    // const dir = forward.clone();
-    // forward.multiplyScalar(100);
-    // forward.add(this._translation);
-    // let closest = forward;
-    // const result = new THREE.Vector3();
-    // const ray = new THREE.Ray(this._translation, dir);
-    // for (let i = 0; i < this._objectsToLookAt.length; ++i) {
-    //   if (ray.intersectBox(this._objectsToLookAt[i], result)) {
-    //     if (result.distanceTo(ray.origin) < closest.distanceTo(ray.origin)) {
-    //       closest = result.clone();
-    //     }
-    //   }
-    // }
-    // this._camera.lookAt(closest);
+    const forward = new THREE.Vector3(0, 0, -1);
+    forward.applyQuaternion(this._rotation);
+    const dir = forward.clone();
+
+    forward.multiplyScalar(100);
+    forward.add(this._translation);
+    let closest = forward;
+
+    const raycaster = new THREE.Raycaster(this._translation, dir);
+
+    if (this._objectsToLookAt.length === 0) return;
+    for (let i = 0; i < this._objectsToLookAt.length; ++i) {
+      const intersected = raycaster.intersectObject(this._objectsToLookAt[i])[0];
+      if (intersected) {
+        if (intersected.distance < closest.distanceTo(raycaster.ray.origin)) {
+          closest = intersected.point.clone();
+        }
+      }
+    }
+
+    this._camera.lookAt(closest);
   }
 
   _updateRotation(updateInfo: UpdateInfo) {
@@ -153,6 +154,10 @@ export class FirstPersonCamera {
   setRendererBounds(bounds: Bounds) {
     this._rendererBounds = bounds;
     this._inputControls.setRendererBounds(bounds);
+  }
+
+  setObjectsToLookAt(objectsToLookAt: THREE.Object3D[]) {
+    this._objectsToLookAt = objectsToLookAt;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function

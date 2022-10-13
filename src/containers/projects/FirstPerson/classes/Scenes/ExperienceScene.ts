@@ -37,11 +37,19 @@ export class ExperienceScene extends InteractiveScene {
     pointLight.position.x = 30;
     this.add(pointLight);
 
-    const box = new THREE.Mesh(new THREE.BoxBufferGeometry(5, 5, 5), this._whiteMaterial);
-    box.position.y = -10 + 2.5;
-    box.position.x = 15;
+    const box = new THREE.Mesh(new THREE.BoxBufferGeometry(20, 20, 20), this._whiteMaterial);
+    box.position.y = -10 + 2.5 * 4;
+    box.position.x = 95;
     box.position.z = -5;
     this.add(box);
+
+    const box2 = new THREE.Mesh(new THREE.BoxBufferGeometry(20, 20, 20), this._whiteMaterial);
+    box2.position.y = 15;
+    box2.position.x = -95;
+    box2.position.z = 5;
+    this.add(box2);
+
+    this._fpsCamera.setObjectsToLookAt([box, box2, this._planeMesh]);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
