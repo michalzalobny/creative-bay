@@ -28,11 +28,11 @@ export class FirstPersonCamera {
   _translation = new THREE.Vector3();
   _phi = 0;
   _theta = 0;
-  _phiSpeed = 5 * 0.3;
-  _thetaSpeed = 5 * 0.3;
-  _moveSpeed = 1.7 * 0.5;
-  _stepSpeed = 1.9 * 0.5;
-  _stepHeight = 5.7;
+  _phiSpeed = 5 * 0.5;
+  _thetaSpeed = 5 * 0.5;
+  _moveSpeed = 1.7 * 0.7;
+  _stepSpeed = 1.9 * 0.6;
+  _stepHeight = 1.5;
   _objectsToLookAt: THREE.Object3D[] = [];
   _rendererBounds: Bounds = { height: 100, width: 100 };
   _headBobActive = false;
@@ -95,11 +95,6 @@ export class FirstPersonCamera {
   }
 
   _updateHeadBob(updateInfo: UpdateInfo) {
-    // if (this._headBobActive) {
-    //   this._headBobTimer += 0.03 * updateInfo.slowDownFactor;
-    //   this._headBobActive = false;
-    // }
-
     if (this._headBobActive) {
       const wavelength = Math.PI;
       const nextStep = 1 + Math.floor((this._headBobTimer + 0.000001) / wavelength);
