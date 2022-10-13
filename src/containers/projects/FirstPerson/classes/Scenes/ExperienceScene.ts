@@ -13,7 +13,7 @@ interface Constructor {
 export class ExperienceScene extends InteractiveScene {
   _loadedAssets: LoadedAssets | null = null;
   _ambientLight1: THREE.AmbientLight;
-  _planeGeometry = new THREE.PlaneBufferGeometry(100, 100, 10, 10);
+  _planeGeometry = new THREE.PlaneBufferGeometry(200, 200, 10, 10);
   _whiteMaterial: THREE.MeshStandardMaterial;
   _planeMesh: THREE.Mesh;
 
@@ -27,7 +27,7 @@ export class ExperienceScene extends InteractiveScene {
     this._planeMesh.castShadow = false;
     this._planeMesh.receiveShadow = true;
     this._planeMesh.rotation.x = (-Math.PI / 2) * 1;
-    this._planeMesh.position.y = -8;
+    this._planeMesh.position.y = -10;
     this.add(this._planeMesh);
   }
 

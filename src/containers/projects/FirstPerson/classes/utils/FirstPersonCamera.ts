@@ -31,9 +31,13 @@ export class FirstPersonCamera {
   _theta = 0;
   _phiSpeed = 5 * 0.3;
   _thetaSpeed = 5 * 0.3;
-  _moveSpeed = 2;
+  _moveSpeed = 1.6;
+  _stepSpeed = 1.9;
+  _stepHeight = 0.7;
   _objectsToLookAt;
   _rendererBounds: Bounds = { height: 100, width: 100 };
+  _headBobActive = false;
+  _headBobTimer = 0;
 
   constructor(props: Props) {
     this._camera = props.camera;
@@ -41,12 +45,14 @@ export class FirstPersonCamera {
     this._objectsToLookAt = props.objectsToLookAt;
   }
 
-  _updateCamera() {
+  _updateCamera(updateInfo: UpdateInfo) {
     // console.log(this._rotation);
     this._camera.quaternion.copy(this._rotation);
     this._camera.position.copy(this._translation);
+    this._camera.position.y += Math.sin(this._headBobTimer) * this._stepHeight;
+
     // this._camera.position.copy(this._translation);
-    // this._camera.position.y += Math.sin(this.headBobTimer_ * 10) * 1.5;
+    // this._camera.position.y += Math.sin(this._headBobTimer * 10) * 1.5;
     // const forward = new THREE.Vector3(0, 0, -1);
     // forward.applyQuaternion(this._rotation);
     // const dir = forward.clone();
@@ -87,6 +93,27 @@ export class FirstPersonCamera {
     this._rotation.copy(q);
   }
 
+  _updateHeadBob(updateInfo: UpdateInfo) {
+    // if (this._headBobActive) {
+    //   this._headBobTimer += 0.03 * updateInfo.slowDownFactor;
+    //   this._headBobActive = false;
+    // }
+
+    if (this._headBobActive) {
+      const wavelength = Math.PI;
+      const nextStep = 1 + Math.floor((this._headBobTimer + 0.000001) / wavelength);
+      const nextStepTime = nextStep * wavelength;
+      this._headBobTimer = Math.min(
+        this._headBobTimer + 0.15 * updateInfo.slowDownFactor * this._stepSpeed,
+        nextStepTime
+      );
+
+      if (this._headBobTimer == nextStepTime) {
+        this._headBobActive = false;
+      }
+    }
+  }
+
   _updateTranslation(updateInfo: UpdateInfo) {
     const keys = this._inputControls.inputState.keys;
     const forwardVelocity =
@@ -111,15 +138,16 @@ export class FirstPersonCamera {
     this._translation.add(forward);
     this._translation.add(left);
 
-    // if (forwardVelocity != 0 || strafeVelocity != 0) {
-    //   this.headBobActive_ = true;
-    // }
+    if (forwardVelocity != 0 || strafeVelocity != 0) {
+      this._headBobActive = true;
+    }
   }
 
   update(updateInfo: UpdateInfo) {
     this._updateRotation(updateInfo);
     this._updateTranslation(updateInfo);
-    this._updateCamera();
+    this._updateCamera(updateInfo);
+    this._updateHeadBob(updateInfo);
   }
 
   setRendererBounds(bounds: Bounds) {
