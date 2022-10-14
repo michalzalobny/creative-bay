@@ -47,7 +47,7 @@ export class FirstPersonCamera {
   _firstPersonControls;
   _forwardVelocity = 0;
   _strafeVelocity = 0;
-  _mouseSpeed = 0.6;
+  _mouseSpeed = 0.75;
   _domElement: HTMLElement;
 
   constructor(props: Props) {
