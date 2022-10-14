@@ -94,8 +94,8 @@ export class FirstPersonCamera {
     this._phi.target = this._phi.target + -xh * this._phiSpeed;
     this._theta.target = clamp(
       this._theta.target + -yh * this._thetaSpeed,
-      -Math.PI / 3,
-      Math.PI / 3
+      -Math.PI / 2.01, //2.01 to fix approximation issue
+      Math.PI / 2.01
     );
   };
 
