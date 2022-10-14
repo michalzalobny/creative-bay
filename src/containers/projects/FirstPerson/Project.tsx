@@ -33,7 +33,7 @@ export default function Project(props: PageProps) {
       <Head {...head} />
       <S.Wrapper>
         <S.ReadyWrapper shouldReveal={shouldReveal} />
-        <S.CanvasWrapper ref={rendererEl} />
+        <S.CanvasWrapper data-first-peron="holder" ref={rendererEl} />
       </S.Wrapper>
     </>
   );

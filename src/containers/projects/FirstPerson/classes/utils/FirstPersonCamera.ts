@@ -2,12 +2,12 @@ import * as THREE from 'three';
 import { clamp } from 'three/src/math/MathUtils';
 
 import { UpdateInfo, Bounds } from 'utils/sharedTypes';
+import { lerp } from 'utils/functions/lerp';
 
-import { InputControls } from './InputControls';
+import { FirstPersonControls, Keys } from './FirstPersonControls';
 
 interface Props {
   camera: THREE.Camera;
-  inputControls: InputControls;
 }
 
 const KEYS = {
@@ -22,12 +22,19 @@ const KEYS = {
 };
 
 export class FirstPersonCamera {
+  static cameraEase = 0.9;
+
   _camera;
-  _inputControls;
   _rotation = new THREE.Quaternion();
   _translation = new THREE.Vector3();
-  _phi = 0;
-  _theta = 0;
+  _phi = {
+    current: 0,
+    target: 0,
+  };
+  _theta = {
+    current: 0,
+    target: 0,
+  };
   _phiSpeed = 5 * 0.5;
   _thetaSpeed = 5 * 0.5;
   _moveSpeed = 1.7 * 0.7;
@@ -37,14 +44,22 @@ export class FirstPersonCamera {
   _rendererBounds: Bounds = { height: 100, width: 100 };
   _headBobActive = false;
   _headBobTimer = 0;
+  _firstPersonControls;
+  _forwardVelocity = 0;
+  _strafeVelocity = 0;
+  _domElement: HTMLElement;
 
   constructor(props: Props) {
     this._camera = props.camera;
-    this._inputControls = props.inputControls;
+    this._domElement = document.body;
+    this._firstPersonControls = new FirstPersonControls({
+      camera: this._camera,
+      domElement: this._domElement,
+    });
+    this._addEvents();
   }
 
-  _updateCamera(updateInfo: UpdateInfo) {
-    // console.log(this._rotation);
+  _updateCamera() {
     this._camera.quaternion.copy(this._rotation);
     this._camera.position.copy(this._translation);
     this._camera.position.y += Math.sin(this._headBobTimer) * this._stepHeight;
@@ -55,37 +70,40 @@ export class FirstPersonCamera {
 
     forward.multiplyScalar(100);
     forward.add(this._translation);
-    let closest = forward;
+    const closest = forward;
 
-    const raycaster = new THREE.Raycaster(this._translation, dir);
+    // const raycaster = new THREE.Raycaster(this._translation, dir);
 
-    if (this._objectsToLookAt.length === 0) return;
-    for (let i = 0; i < this._objectsToLookAt.length; ++i) {
-      const intersected = raycaster.intersectObject(this._objectsToLookAt[i])[0];
-      if (intersected) {
-        if (intersected.distance < closest.distanceTo(raycaster.ray.origin)) {
-          closest = intersected.point.clone();
-        }
-      }
-    }
+    // if (this._objectsToLookAt.length === 0) return;
+    // for (let i = 0; i < this._objectsToLookAt.length; ++i) {
+    //   const intersected = raycaster.intersectObject(this._objectsToLookAt[i])[0];
+    //   if (intersected) {
+    //     if (intersected.distance < closest.distanceTo(raycaster.ray.origin)) {
+    //       closest = intersected.point.clone();
+    //     }
+    //   }
+    // }
 
     this._camera.lookAt(closest);
   }
 
-  _updateRotation(updateInfo: UpdateInfo) {
-    const xh = this._inputControls.inputState.mouseDelta.x / this._rendererBounds.width;
-    const yh = this._inputControls.inputState.mouseDelta.y / this._rendererBounds.height;
+  _handleMouseMove = (e: THREE.Event) => {
+    const xh = e.dx / this._rendererBounds.width;
+    const yh = e.dy / this._rendererBounds.height;
 
-    // xh = this._inputControls.inputState.mouseNormalized.x * 0.01;
-    // yh = this._inputControls.inputState.mouseNormalized.y * 0.01;
+    this._phi.target = this._phi.target + -xh * this._phiSpeed;
+    this._theta.target = clamp(
+      this._theta.target + -yh * this._thetaSpeed,
+      -Math.PI / 3,
+      Math.PI / 3
+    );
+  };
 
-    this._phi += -xh * this._phiSpeed;
-    this._theta = clamp(this._theta + -yh * this._thetaSpeed, -Math.PI / 3, Math.PI / 3);
-
+  _updateRotation() {
     const qx = new THREE.Quaternion();
-    qx.setFromAxisAngle(new THREE.Vector3(0, 1, 0), this._phi);
+    qx.setFromAxisAngle(new THREE.Vector3(0, 1, 0), this._phi.current);
     const qz = new THREE.Quaternion();
-    qz.setFromAxisAngle(new THREE.Vector3(1, 0, 0), this._theta);
+    qz.setFromAxisAngle(new THREE.Vector3(1, 0, 0), this._theta.current);
 
     const q = new THREE.Quaternion();
     q.multiply(qx);
@@ -110,51 +128,90 @@ export class FirstPersonCamera {
     }
   }
 
-  _updateTranslation(updateInfo: UpdateInfo) {
-    const keys = this._inputControls.inputState.keys;
-    const forwardVelocity =
+  _handleKeyChange = (e: THREE.Event) => {
+    const keys = e.keys as Keys;
+    this._forwardVelocity =
       (keys[KEYS.w] || keys[KEYS.arrowUp] ? 1 : 0) +
       (keys[KEYS.s] || keys[KEYS.arrowDown] ? -1 : 0);
 
-    const strafeVelocity =
+    this._strafeVelocity =
       (keys[KEYS.a] || keys[KEYS.arrowLeft] ? 1 : 0) +
       (keys[KEYS.d] || keys[KEYS.arrowRight] ? -1 : 0);
+  };
 
+  _updateTranslation(updateInfo: UpdateInfo) {
     const qx = new THREE.Quaternion();
-    qx.setFromAxisAngle(new THREE.Vector3(0, 1, 0), this._phi);
+    qx.setFromAxisAngle(new THREE.Vector3(0, 1, 0), this._phi.current);
 
     const forward = new THREE.Vector3(0, 0, -1);
     forward.applyQuaternion(qx);
-    forward.multiplyScalar(forwardVelocity * updateInfo.slowDownFactor * this._moveSpeed);
+    forward.multiplyScalar(this._forwardVelocity * updateInfo.slowDownFactor * this._moveSpeed);
 
     const left = new THREE.Vector3(-1, 0, 0);
     left.applyQuaternion(qx);
-    left.multiplyScalar(strafeVelocity * updateInfo.slowDownFactor * this._moveSpeed);
+    left.multiplyScalar(this._strafeVelocity * updateInfo.slowDownFactor * this._moveSpeed);
 
     this._translation.add(forward);
     this._translation.add(left);
 
-    if (forwardVelocity != 0 || strafeVelocity != 0) {
+    if (this._forwardVelocity != 0 || this._strafeVelocity != 0) {
       this._headBobActive = true;
     }
   }
 
+  _lerpValues(updateInfo: UpdateInfo) {
+    this._phi.current = lerp(
+      this._phi.current,
+      this._phi.target,
+      FirstPersonCamera.cameraEase * updateInfo.slowDownFactor
+    );
+
+    this._theta.current = lerp(
+      this._theta.current,
+      this._theta.target,
+      FirstPersonCamera.cameraEase * updateInfo.slowDownFactor
+    );
+  }
+
   update(updateInfo: UpdateInfo) {
-    this._updateRotation(updateInfo);
+    this._updateRotation();
     this._updateTranslation(updateInfo);
-    this._updateCamera(updateInfo);
     this._updateHeadBob(updateInfo);
+    this._updateCamera();
+    this._lerpValues(updateInfo);
   }
 
   setRendererBounds(bounds: Bounds) {
     this._rendererBounds = bounds;
-    this._inputControls.setRendererBounds(bounds);
   }
 
   setObjectsToLookAt(objectsToLookAt: THREE.Object3D[]) {
     this._objectsToLookAt = objectsToLookAt;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  destroy() {}
+  _handleClick = () => {
+    this._requestLock();
+  };
+
+  _requestLock() {
+    if (this._domElement.ownerDocument.pointerLockElement === this._domElement) return;
+    this._domElement.requestPointerLock();
+  }
+
+  _addEvents() {
+    this._firstPersonControls.addEventListener('mousemove', this._handleMouseMove);
+    this._firstPersonControls.addEventListener('keychange', this._handleKeyChange);
+    this._domElement.addEventListener('click', this._handleClick);
+  }
+
+  _removeEvents() {
+    this._firstPersonControls.removeEventListener('mousemove', this._handleMouseMove);
+    this._firstPersonControls.removeEventListener('keychange', this._handleKeyChange);
+    this._domElement.removeEventListener('click', this._handleClick);
+  }
+
+  destroy() {
+    this._removeEvents();
+    this._firstPersonControls.destroy();
+  }
 }

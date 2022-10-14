@@ -5,7 +5,6 @@ import { Bounds, UpdateInfo } from 'utils/sharedTypes';
 import { sharedValues } from 'utils/sharedValues';
 
 import { FirstPersonCamera } from '../utils/FirstPersonCamera';
-import { InputControls } from '../utils/InputControls';
 import { InteractiveObject3D, ColliderName } from '../Components/InteractiveObject3D';
 
 interface Constructor {
@@ -25,7 +24,6 @@ export class InteractiveScene extends THREE.Scene {
   _raycaster = new THREE.Raycaster();
   _rendererBounds: Bounds = { height: 100, width: 100 };
   _camera: THREE.PerspectiveCamera;
-  _inputControls = InputControls.getInstance();
   _gui: GUI;
   _pixelRatio = 1;
   _fpsCamera;
@@ -37,7 +35,7 @@ export class InteractiveScene extends THREE.Scene {
     super();
     this._camera = camera;
     this._gui = gui;
-    this._fpsCamera = new FirstPersonCamera({ camera, inputControls: this._inputControls });
+    this._fpsCamera = new FirstPersonCamera({ camera });
   }
 
   _performRaycast({ x, y, colliderName, fnToCallIfHit }: PerformRaycast) {
@@ -123,7 +121,6 @@ export class InteractiveScene extends THREE.Scene {
 
   update(updateInfo: UpdateInfo) {
     this._fpsCamera.update(updateInfo);
-    this._inputControls.update();
   }
 
   setPixelRatio(ratio: number) {
