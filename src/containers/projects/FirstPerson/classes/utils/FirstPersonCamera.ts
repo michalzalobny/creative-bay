@@ -47,6 +47,7 @@ export class FirstPersonCamera {
   _firstPersonControls;
   _forwardVelocity = 0;
   _strafeVelocity = 0;
+  _mouseSpeed = 0.6;
   _domElement: HTMLElement;
 
   constructor(props: Props) {
@@ -88,12 +89,12 @@ export class FirstPersonCamera {
   }
 
   _handleMouseMove = (e: THREE.Event) => {
-    const xh = e.dx / this._rendererBounds.width;
-    const yh = e.dy / this._rendererBounds.height;
+    const xh = (e.dx / this._rendererBounds.width) * this._mouseSpeed;
+    const yh = (e.dy / this._rendererBounds.height) * this._mouseSpeed;
 
-    this._phi.target = this._phi.target + -xh * this._phiSpeed;
-    this._theta.target = clamp(
-      this._theta.target + -yh * this._thetaSpeed,
+    this._phi.current = this._phi.current + -xh * this._phiSpeed;
+    this._theta.current = clamp(
+      this._theta.current + -yh * this._thetaSpeed,
       -Math.PI / 2.01, //2.01 to fix approximation issue
       Math.PI / 2.01
     );
@@ -178,7 +179,7 @@ export class FirstPersonCamera {
     this._updateTranslation(updateInfo);
     this._updateHeadBob(updateInfo);
     this._updateCamera();
-    this._lerpValues(updateInfo);
+    // this._lerpValues(updateInfo);
   }
 
   setRendererBounds(bounds: Bounds) {
