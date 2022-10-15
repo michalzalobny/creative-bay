@@ -26,7 +26,7 @@ export class FirstPersonCamera {
 
   _camera;
   _rotation = new THREE.Quaternion();
-  _translation = new THREE.Vector3();
+  _translation = new THREE.Vector3(0, 10, 0); //Starting position
   _phi = {
     current: 0,
     target: 0,
