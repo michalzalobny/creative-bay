@@ -1,10 +1,9 @@
 import * as THREE from 'three';
+import * as CANNON from 'cannon-es';
 import GUI from 'lil-gui';
-import RAPIER from '@dimforge/rapier3d-compat';
 
 import { UpdateInfo, LoadedAssets, Bounds } from 'utils/sharedTypes';
 
-import { appState } from '../../Project.state';
 import { InteractiveScene } from './InteractiveScene';
 import { addBox, GetObjectReturn } from '../utils/getObject3D';
 
@@ -14,7 +13,7 @@ interface Constructor {
 }
 
 export interface Physics {
-  world: RAPIER.World | null;
+  world: CANNON.World | null;
   bodies: GetObjectReturn[];
 }
 
@@ -46,9 +45,9 @@ export class ExperienceScene extends InteractiveScene {
   }
 
   _setupPhysics() {
-    if (!appState.RAPIER) return;
-    const gravity = { x: 0.0, y: -9.81, z: 0.0 };
-    this._physics.world = new appState.RAPIER.World(gravity);
+    this._physics.world = new CANNON.World({
+      gravity: new CANNON.Vec3(0, -9.82, 0),
+    });
 
     const box = addBox({
       world: this._physics.world,
@@ -56,19 +55,32 @@ export class ExperienceScene extends InteractiveScene {
       geometry: this._boxGeometry,
       material: this._whiteMaterial,
       size: { x: 10, y: 20, z: 10 },
+      position: new CANNON.Vec3(60, 60, 0),
+      mass: 1,
     });
-    box.rigidBody.setTranslation(new RAPIER.Vector3(60, 85, 0), true);
+    box.meshThree.castShadow = false;
     this._physics.bodies.push(box);
+
+    const box2 = addBox({
+      world: this._physics.world,
+      scene: this,
+      geometry: this._boxGeometry,
+      material: this._whiteMaterial,
+      size: { x: 5, y: 5, z: 5 },
+      position: new CANNON.Vec3(0, 30, -50),
+      mass: 0.2,
+    });
+    box2.meshThree.castShadow = false;
+    this._physics.bodies.push(box2);
 
     const ground = addBox({
       world: this._physics.world,
       scene: this,
       geometry: this._boxGeometry,
       material: this._whiteMaterial,
-      size: { x: 120, y: 1.5, z: 120 },
-      rigidBodyDesc: RAPIER.RigidBodyDesc.fixed(),
+      size: { x: 120, y: 0.5, z: 120 },
     });
-    ground.meshThree.castShadow = false;
+
     ground.meshThree.receiveShadow = true;
     this._physics.bodies.push(ground);
   }
@@ -85,15 +97,19 @@ export class ExperienceScene extends InteractiveScene {
     super.update(updateInfo);
 
     //Update physics
-    this._physics.world?.step();
-    this._physics.bodies.forEach(body => {
-      const pos = body.rigidBody.translation();
-      const rot = body.rigidBody.rotation();
-
-      body.meshThree.position.x = pos.x;
-      body.meshThree.position.y = pos.y;
-      body.meshThree.position.z = pos.z;
-      body.meshThree.setRotationFromQuaternion(new THREE.Quaternion(rot.x, rot.y, rot.z, rot.w));
+    this._physics.world?.step(1 / 60, updateInfo.delta, updateInfo.slowDownFactor);
+    this._physics.bodies.forEach(object => {
+      object.meshThree.position.set(
+        object.bodyCannon.position.x,
+        object.bodyCannon.position.y,
+        object.bodyCannon.position.z
+      );
+      object.meshThree.quaternion.set(
+        object.bodyCannon.quaternion.x,
+        object.bodyCannon.quaternion.y,
+        object.bodyCannon.quaternion.z,
+        object.bodyCannon.quaternion.w
+      );
     });
   }
 
@@ -104,10 +120,9 @@ export class ExperienceScene extends InteractiveScene {
   destroy() {
     super.destroy();
 
-    this._physics.bodies.forEach(el => {
-      this.remove(el.meshThree);
-      this._physics.world?.removeCollider(el.collider, true);
-      this._physics.world?.removeRigidBody(el.rigidBody);
+    this._physics.bodies.forEach(object => {
+      this.remove(object.meshThree);
+      this._physics.world?.removeBody(object.bodyCannon);
     });
 
     this.remove(this._ambientLight1);

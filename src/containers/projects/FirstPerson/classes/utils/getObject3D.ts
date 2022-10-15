@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import RAPIER from '@dimforge/rapier3d-compat';
+import * as CANNON from 'cannon-es';
 
 interface Size {
   x: number;
@@ -10,26 +10,27 @@ interface Size {
 interface AddBox {
   material: THREE.Material;
   size: Size;
-  world: RAPIER.World;
+  world: CANNON.World;
   scene: THREE.Scene;
   geometry: THREE.BufferGeometry;
-  rigidBodyDesc?: RAPIER.RigidBodyDesc;
+  mass?: number;
+  position?: CANNON.Vec3;
 }
 
 export interface GetObjectReturn {
   meshThree: THREE.Mesh<THREE.BufferGeometry, THREE.Material>;
-  rigidBody: RAPIER.RigidBody;
-  collider: RAPIER.Collider;
+  bodyCannon: CANNON.Body;
 }
 
 export const addBox = (props: AddBox): GetObjectReturn => {
   const {
+    position = new CANNON.Vec3(0, 0, 0),
+    mass = 0,
     material,
     size,
     world,
     geometry,
     scene,
-    rigidBodyDesc = RAPIER.RigidBodyDesc.dynamic(),
   } = props;
 
   //Three
@@ -39,10 +40,13 @@ export const addBox = (props: AddBox): GetObjectReturn => {
   meshThree.scale.z = size.z;
   scene.add(meshThree);
 
-  //Rapier
-  const rigidBody = world.createRigidBody(rigidBodyDesc);
-  const colliderDesc = RAPIER.ColliderDesc.cuboid(size.x / 2, size.y / 2, size.z / 2);
-  const collider = world.createCollider(colliderDesc, rigidBody);
+  //Cannon
+  const bodyCannon = new CANNON.Body({
+    mass, // kg
+    shape: new CANNON.Box(new CANNON.Vec3(size.x / 2, size.y / 2, size.z / 2)),
+  });
+  bodyCannon.position.copy(position);
+  world.addBody(bodyCannon);
 
-  return { meshThree, rigidBody, collider };
+  return { meshThree, bodyCannon };
 };
