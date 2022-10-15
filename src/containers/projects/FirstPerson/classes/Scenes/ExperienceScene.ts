@@ -42,7 +42,7 @@ export class ExperienceScene extends InteractiveScene {
     this._ambientLight1 = new THREE.AmbientLight(0xffffff, 0.05);
     this.add(this._ambientLight1);
 
-    this._pointLight1 = new THREE.PointLight(0xff0000);
+    this._pointLight1 = new THREE.PointLight(0x0000ff);
     this._pointLight1.position.y = 15;
     this.add(this._pointLight1);
   }

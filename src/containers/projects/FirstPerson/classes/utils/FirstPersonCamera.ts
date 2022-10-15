@@ -46,7 +46,7 @@ export class FirstPersonCamera {
   _firstPersonControls;
   _forwardVelocity = 0;
   _strafeVelocity = 0;
-  _mouseSpeed = 0.75;
+  _mouseSpeed = 0.76;
   _domElement: HTMLElement;
   _playerBody: CANNON.Body | null = null;
 
