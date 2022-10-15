@@ -87,13 +87,8 @@ export class App extends THREE.EventDispatcher {
   _onAssetsLoaded = (e: THREE.Event) => {
     this._assetsLoaded = true;
     this._experienceScene.setLoadedAssets((e.target as Preloader).loadedAssets);
-    this._revealApp();
-  };
-
-  _revealApp() {
     this._setShouldRevealReact(true);
-    this._experienceScene.onAppReady();
-  }
+  };
 
   _onPreloaderProgress = (e: THREE.Event) => {
     this._setProgressValueReact(e.progress as number);

@@ -42,6 +42,7 @@ export class ExperienceScene extends InteractiveScene {
     this._whiteMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
 
     this._fpsCamera.setObjectsToLookAt([]);
+    this._setupPhysics();
   }
 
   _setupPhysics() {
@@ -95,9 +96,12 @@ export class ExperienceScene extends InteractiveScene {
 
   update(updateInfo: UpdateInfo) {
     super.update(updateInfo);
+    this._updatePhysics();
+  }
 
-    //Update physics
-    this._physics.world?.step(1 / 60, updateInfo.delta, updateInfo.slowDownFactor);
+  _updatePhysics() {
+    // this._physics.world?.step(1 / 60, updateInfo.delta, updateInfo.slowDownFactor); //Alternative (need to test)
+    this._physics.world?.fixedStep();
     this._physics.bodies.forEach(object => {
       object.meshThree.position.set(
         object.bodyCannon.position.x,
@@ -111,10 +115,6 @@ export class ExperienceScene extends InteractiveScene {
         object.bodyCannon.quaternion.w
       );
     });
-  }
-
-  onAppReady() {
-    this._setupPhysics();
   }
 
   destroy() {
