@@ -83,5 +83,8 @@ export class FirstPersonControls extends THREE.EventDispatcher {
 
   destroy() {
     this.removeEvents();
+    if (this.domElement.ownerDocument.pointerLockElement === this.domElement) {
+      this.domElement.ownerDocument.exitPointerLock();
+    }
   }
 }
