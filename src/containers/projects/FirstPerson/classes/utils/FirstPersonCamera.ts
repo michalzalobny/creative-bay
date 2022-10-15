@@ -67,23 +67,10 @@ export class FirstPersonCamera {
 
     const forward = new THREE.Vector3(0, 0, -1);
     forward.applyQuaternion(this._rotation);
-    const dir = forward.clone();
 
     forward.multiplyScalar(100);
     forward.add(this._translation);
     const closest = forward;
-
-    // const raycaster = new THREE.Raycaster(this._translation, dir);
-
-    // if (this._objectsToLookAt.length === 0) return;
-    // for (let i = 0; i < this._objectsToLookAt.length; ++i) {
-    //   const intersected = raycaster.intersectObject(this._objectsToLookAt[i])[0];
-    //   if (intersected) {
-    //     if (intersected.distance < closest.distanceTo(raycaster.ray.origin)) {
-    //       closest = intersected.point.clone();
-    //     }
-    //   }
-    // }
 
     this._camera.lookAt(closest);
   }
