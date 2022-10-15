@@ -19,8 +19,8 @@ export interface Physics {
 
 export class ExperienceScene extends InteractiveScene {
   _loadedAssets: LoadedAssets | null = null;
-  _ambientLight1: THREE.AmbientLight;
-  _pointLight1: THREE.PointLight;
+  _ambientLight1: THREE.AmbientLight | null = null;
+  _pointLight1: THREE.PointLight | null = null;
   _boxGeometry = new THREE.BoxBufferGeometry(1, 1, 1);
   _whiteMaterial: THREE.MeshStandardMaterial;
 
@@ -32,17 +32,18 @@ export class ExperienceScene extends InteractiveScene {
   constructor({ gui, camera }: Constructor) {
     super({ camera, gui });
 
+    this._whiteMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
+    this._addLights();
+    this._setupPhysics();
+  }
+
+  _addLights() {
     this._ambientLight1 = new THREE.AmbientLight(0xffffff, 0.05);
     this.add(this._ambientLight1);
 
     this._pointLight1 = new THREE.PointLight(0xff0000);
     this._pointLight1.position.y = 15;
     this.add(this._pointLight1);
-
-    this._whiteMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
-
-    this._fpsCamera.setObjectsToLookAt([]);
-    this._setupPhysics();
   }
 
   _setupPhysics() {
@@ -125,8 +126,8 @@ export class ExperienceScene extends InteractiveScene {
       this._physics.world?.removeBody(object.bodyCannon);
     });
 
-    this.remove(this._ambientLight1);
-    this.remove(this._pointLight1);
+    this._ambientLight1 && this.remove(this._ambientLight1);
+    this._pointLight1 && this.remove(this._pointLight1);
     this._whiteMaterial.dispose();
     this._boxGeometry.dispose();
   }

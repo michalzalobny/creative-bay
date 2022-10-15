@@ -5,7 +5,6 @@ import GUI from 'lil-gui';
 import { sharedValues } from 'utils/sharedValues';
 import { Preloader } from 'utils/helperClasses/Preloader';
 
-import { appState } from '../Project.state';
 import { ExperienceScene } from './Scenes/ExperienceScene';
 //Assets imports
 import starterImageSrc from './assets/starter.jpg';

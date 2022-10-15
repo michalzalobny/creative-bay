@@ -40,7 +40,6 @@ export class FirstPersonCamera {
   _moveSpeed = 1.7 * 0.7;
   _stepSpeed = 1.9;
   _stepHeight = 1.5;
-  _objectsToLookAt: THREE.Object3D[] = [];
   _headBobActive = false;
   _headBobTimer = 0;
   _firstPersonControls;
@@ -166,10 +165,6 @@ export class FirstPersonCamera {
     this._updateHeadBob(updateInfo);
     this._updateCamera();
     // this._lerpValues(updateInfo);
-  }
-
-  setObjectsToLookAt(objectsToLookAt: THREE.Object3D[]) {
-    this._objectsToLookAt = objectsToLookAt;
   }
 
   _handleClick = () => {
