@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { clamp } from 'three/src/math/MathUtils';
 
-import { UpdateInfo, Bounds } from 'utils/sharedTypes';
+import { UpdateInfo } from 'utils/sharedTypes';
 import { lerp } from 'utils/functions/lerp';
 
 import { FirstPersonControls, Keys } from './FirstPersonControls';
@@ -41,7 +41,6 @@ export class FirstPersonCamera {
   _stepSpeed = 1.9;
   _stepHeight = 1.5;
   _objectsToLookAt: THREE.Object3D[] = [];
-  _rendererBounds: Bounds = { height: 100, width: 100 };
   _headBobActive = false;
   _headBobTimer = 0;
   _firstPersonControls;
@@ -76,8 +75,8 @@ export class FirstPersonCamera {
   }
 
   _handleMouseMove = (e: THREE.Event) => {
-    const xh = (e.dx / this._rendererBounds.width) * this._mouseSpeed;
-    const yh = (e.dy / this._rendererBounds.height) * this._mouseSpeed;
+    const xh = e.dx * 0.0005 * this._mouseSpeed;
+    const yh = e.dy * 0.0005 * this._mouseSpeed;
 
     this._phi.current = this._phi.current + -xh * this._phiSpeed;
     this._theta.current = clamp(
@@ -167,10 +166,6 @@ export class FirstPersonCamera {
     this._updateHeadBob(updateInfo);
     this._updateCamera();
     // this._lerpValues(updateInfo);
-  }
-
-  setRendererBounds(bounds: Bounds) {
-    this._rendererBounds = bounds;
   }
 
   setObjectsToLookAt(objectsToLookAt: THREE.Object3D[]) {

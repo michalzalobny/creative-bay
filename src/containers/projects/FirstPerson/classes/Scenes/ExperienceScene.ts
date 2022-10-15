@@ -52,9 +52,6 @@ export class ExperienceScene extends InteractiveScene {
     this._fpsCamera.setObjectsToLookAt([box, box2, this._planeMesh]);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  animateIn() {}
-
   setRendererBounds(bounds: Bounds) {
     super.setRendererBounds(bounds);
   }

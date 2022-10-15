@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import debounce from 'lodash.debounce';
-// import { OrbitControls } from 'three-stdlib';
 import GUI from 'lil-gui';
 
 import { sharedValues } from 'utils/sharedValues';
@@ -25,7 +24,6 @@ export class App extends THREE.EventDispatcher {
   _camera: THREE.PerspectiveCamera;
   _renderer: THREE.WebGLRenderer;
   _preloader = new Preloader();
-  // _orbitControls: OrbitControls;
   _experienceScene: ExperienceScene;
   _setShouldRevealReact: React.Dispatch<React.SetStateAction<boolean>>;
   _setProgressValueReact: React.Dispatch<React.SetStateAction<number>>;
@@ -49,13 +47,6 @@ export class App extends THREE.EventDispatcher {
       powerPreference: 'default',
     });
 
-    // this._orbitControls = new OrbitControls(this._camera, this._rendererEl);
-    // this._orbitControls.enableDamping = true;
-    // this._orbitControls.enablePan = false;
-    // this._orbitControls.enableRotate = false;
-    // this._orbitControls.enableZoom = false;
-    // this._orbitControls.update();
-
     this._gui.title('Scene settings');
     this._experienceScene = new ExperienceScene({ camera: this._camera, gui: this._gui });
 
@@ -74,11 +65,6 @@ export class App extends THREE.EventDispatcher {
     const rendererBounds = this._rendererEl.getBoundingClientRect();
     const aspectRatio = rendererBounds.width / rendererBounds.height;
     this._camera.aspect = aspectRatio;
-
-    //Set to match pixel size of the elements in three with pixel size of DOM elements
-    // this._camera.position.z = 1000;
-    // this._camera.fov =
-    //   2 * Math.atan(rendererBounds.height / 2 / this._camera.position.z) * (180 / Math.PI);
 
     this._renderer.setSize(rendererBounds.width, rendererBounds.height);
     this._pixelRatio = Math.min(window.devicePixelRatio, 2);
@@ -99,7 +85,6 @@ export class App extends THREE.EventDispatcher {
   _onAssetsLoaded = (e: THREE.Event) => {
     this._setShouldRevealReact(true);
     this._experienceScene.setLoadedAssets((e.target as Preloader).loadedAssets);
-    this._experienceScene.animateIn();
   };
 
   _onPreloaderProgress = (e: THREE.Event) => {
@@ -148,7 +133,6 @@ export class App extends THREE.EventDispatcher {
     this._lastFrameTime = time;
 
     this._experienceScene.update({ delta, slowDownFactor, time });
-    // this._orbitControls.update();
 
     this._renderer.render(this._experienceScene, this._camera);
   };
