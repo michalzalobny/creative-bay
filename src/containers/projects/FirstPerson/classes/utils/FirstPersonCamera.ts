@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import * as CANNON from 'cannon-es';
 import { clamp } from 'three/src/math/MathUtils';
 
 import { UpdateInfo } from 'utils/sharedTypes';
@@ -26,7 +27,7 @@ export class FirstPersonCamera {
 
   _camera;
   _rotation = new THREE.Quaternion();
-  _translation = new THREE.Vector3(0, 10, 0); //Starting position
+  _translation = new THREE.Vector3(0, 0, 0); //Starting position
   _phi = {
     current: 0,
     target: 0,
@@ -47,6 +48,7 @@ export class FirstPersonCamera {
   _strafeVelocity = 0;
   _mouseSpeed = 0.75;
   _domElement: HTMLElement;
+  _playerBody: CANNON.Body | null = null;
 
   constructor(props: Props) {
     this._camera = props.camera;
@@ -60,7 +62,18 @@ export class FirstPersonCamera {
 
   _updateCamera() {
     this._camera.quaternion.copy(this._rotation);
-    this._camera.position.copy(this._translation);
+
+    if (this._playerBody) {
+      this._playerBody.position.x = this._translation.x;
+      this._playerBody.position.z = this._translation.z;
+
+      //Stick camera to the position of player
+      this._camera.position.set(
+        this._playerBody.position.x,
+        this._playerBody.position.y,
+        this._playerBody.position.z
+      );
+    }
     this._camera.position.y += Math.sin(this._headBobTimer) * this._stepHeight;
 
     const forward = new THREE.Vector3(0, 0, -1);
@@ -157,6 +170,10 @@ export class FirstPersonCamera {
       this._theta.target,
       FirstPersonCamera.cameraEase * updateInfo.slowDownFactor
     );
+  }
+
+  setPlayerBody(body: CANNON.Body) {
+    this._playerBody = body;
   }
 
   update(updateInfo: UpdateInfo) {

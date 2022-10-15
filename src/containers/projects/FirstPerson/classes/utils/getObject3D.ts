@@ -15,6 +15,7 @@ interface AddBox {
   geometry: THREE.BufferGeometry;
   mass?: number;
   position?: CANNON.Vec3;
+  type?: CANNON.BodyType;
 }
 
 export interface GetObjectReturn {
@@ -31,6 +32,7 @@ export const addBox = (props: AddBox): GetObjectReturn => {
     world,
     geometry,
     scene,
+    type,
   } = props;
 
   //Three
@@ -46,6 +48,10 @@ export const addBox = (props: AddBox): GetObjectReturn => {
     shape: new CANNON.Box(new CANNON.Vec3(size.x / 2, size.y / 2, size.z / 2)),
   });
   bodyCannon.position.copy(position);
+  if (type) {
+    bodyCannon.type = type;
+  }
+
   world.addBody(bodyCannon);
 
   return { meshThree, bodyCannon };

@@ -35,6 +35,7 @@ export class ExperienceScene extends InteractiveScene {
     this._whiteMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
     this._addLights();
     this._setupPhysics();
+    this._fpsCamera.setPlayerBody(this._physics.bodies[3].bodyCannon);
   }
 
   _addLights() {
@@ -81,10 +82,35 @@ export class ExperienceScene extends InteractiveScene {
       geometry: this._boxGeometry,
       material: this._whiteMaterial,
       size: { x: 120, y: 0.5, z: 120 },
+      type: CANNON.Body.STATIC,
     });
-
     ground.meshThree.receiveShadow = true;
     this._physics.bodies.push(ground);
+
+    const player = addBox({
+      world: this._physics.world,
+      scene: this,
+      geometry: this._boxGeometry,
+      material: this._whiteMaterial,
+      size: { x: 5, y: 5, z: 5 },
+      position: new CANNON.Vec3(0, 10, 0),
+      type: CANNON.Body.KINEMATIC,
+      mass: 0.2,
+    });
+    player.meshThree.castShadow = false;
+    this._physics.bodies.push(player);
+
+    const wall = addBox({
+      world: this._physics.world,
+      scene: this,
+      geometry: this._boxGeometry,
+      material: this._whiteMaterial,
+      size: { x: 30, y: 60, z: 0.3 },
+      position: new CANNON.Vec3(0, 30, -25),
+      type: CANNON.Body.STATIC,
+    });
+    wall.meshThree.castShadow = false;
+    this._physics.bodies.push(wall);
   }
 
   setRendererBounds(bounds: Bounds) {
