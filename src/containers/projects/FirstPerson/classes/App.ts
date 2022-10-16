@@ -5,7 +5,9 @@ import GUI from 'lil-gui';
 import { sharedValues } from 'utils/sharedValues';
 import { Preloader } from 'utils/helperClasses/Preloader';
 
+import { appState } from '../Project.state';
 import { ExperienceScene } from './Scenes/ExperienceScene';
+import { getRapier } from './utils/rapier';
 //Assets imports
 import starterImageSrc from './assets/starter.jpg';
 
@@ -58,6 +60,18 @@ export class App extends THREE.EventDispatcher {
     this._preloader.setAssetsToPreload([
       { src: starterImageSrc.src, type: 'image', targetName: 'starterImage' },
     ]);
+
+    getRapier()
+      .then(RAPIER => {
+        appState.RAPIER = RAPIER;
+
+        if (this._assetsLoaded) {
+          this._revealApp();
+        }
+      })
+      .catch(err => {
+        console.error('App: RAPIER load failed: ', err);
+      });
   }
 
   _onResizeDebounced = debounce(() => this._onResize(), 300);
@@ -86,8 +100,15 @@ export class App extends THREE.EventDispatcher {
   _onAssetsLoaded = (e: THREE.Event) => {
     this._assetsLoaded = true;
     this._experienceScene.setLoadedAssets((e.target as Preloader).loadedAssets);
-    this._setShouldRevealReact(true);
+    if (appState.RAPIER !== null) {
+      this._revealApp();
+    }
   };
+
+  _revealApp() {
+    this._setShouldRevealReact(true);
+    this._experienceScene.onAppReady();
+  }
 
   _onPreloaderProgress = (e: THREE.Event) => {
     this._setProgressValueReact(e.progress as number);
@@ -156,5 +177,6 @@ export class App extends THREE.EventDispatcher {
     this._experienceScene.destroy();
     this._preloader.destroy();
     this._gui.destroy();
+    appState.RAPIER = null;
   }
 }

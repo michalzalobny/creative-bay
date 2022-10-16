@@ -1,9 +1,10 @@
 import * as THREE from 'three';
-import * as CANNON from 'cannon-es';
 import GUI from 'lil-gui';
+import RAPIER from '@dimforge/rapier3d-compat';
 
 import { UpdateInfo, LoadedAssets, Bounds } from 'utils/sharedTypes';
 
+import { appState } from '../../Project.state';
 import { InteractiveScene } from './InteractiveScene';
 import { addBox, GetObjectReturn } from '../utils/getObject3D';
 
@@ -13,14 +14,14 @@ interface Constructor {
 }
 
 export interface Physics {
-  world: CANNON.World | null;
+  world: RAPIER.World | null;
   bodies: GetObjectReturn[];
 }
 
 export class ExperienceScene extends InteractiveScene {
   _loadedAssets: LoadedAssets | null = null;
-  _ambientLight1: THREE.AmbientLight | null = null;
-  _pointLight1: THREE.PointLight | null = null;
+  _ambientLight1: THREE.AmbientLight;
+  _pointLight1: THREE.PointLight;
   _boxGeometry = new THREE.BoxBufferGeometry(1, 1, 1);
   _whiteMaterial: THREE.MeshStandardMaterial;
 
@@ -32,25 +33,20 @@ export class ExperienceScene extends InteractiveScene {
   constructor({ gui, camera }: Constructor) {
     super({ camera, gui });
 
-    this._whiteMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
-    this._addLights();
-    this._setupPhysics();
-    this._fpsCamera.setPlayerBody(this._physics.bodies[3].bodyCannon);
-  }
-
-  _addLights() {
     this._ambientLight1 = new THREE.AmbientLight(0xffffff, 0.05);
     this.add(this._ambientLight1);
 
-    this._pointLight1 = new THREE.PointLight(0x0000ff);
+    this._pointLight1 = new THREE.PointLight(0xff0000);
     this._pointLight1.position.y = 15;
     this.add(this._pointLight1);
+
+    this._whiteMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
   }
 
   _setupPhysics() {
-    this._physics.world = new CANNON.World({
-      gravity: new CANNON.Vec3(0, -9.82, 0),
-    });
+    if (!appState.RAPIER) return;
+    const gravity = { x: 0.0, y: -9.81, z: 0.0 };
+    this._physics.world = new appState.RAPIER.World(gravity);
 
     const box = addBox({
       world: this._physics.world,
@@ -58,32 +54,19 @@ export class ExperienceScene extends InteractiveScene {
       geometry: this._boxGeometry,
       material: this._whiteMaterial,
       size: { x: 10, y: 20, z: 10 },
-      position: new CANNON.Vec3(60, 60, 0),
-      mass: 1,
     });
-    box.meshThree.castShadow = false;
+    box.rigidBody.setTranslation(new RAPIER.Vector3(60, 85, 0), true);
     this._physics.bodies.push(box);
-
-    const box2 = addBox({
-      world: this._physics.world,
-      scene: this,
-      geometry: this._boxGeometry,
-      material: this._whiteMaterial,
-      size: { x: 5, y: 5, z: 5 },
-      position: new CANNON.Vec3(0, 30, -50),
-      mass: 0.2,
-    });
-    box2.meshThree.castShadow = false;
-    this._physics.bodies.push(box2);
 
     const ground = addBox({
       world: this._physics.world,
       scene: this,
       geometry: this._boxGeometry,
       material: this._whiteMaterial,
-      size: { x: 120, y: 0.5, z: 120 },
-      type: CANNON.Body.STATIC,
+      size: { x: 120, y: 1.5, z: 120 },
+      rigidBodyDesc: RAPIER.RigidBodyDesc.fixed(),
     });
+    ground.meshThree.castShadow = false;
     ground.meshThree.receiveShadow = true;
     this._physics.bodies.push(ground);
 
@@ -92,12 +75,10 @@ export class ExperienceScene extends InteractiveScene {
       scene: this,
       geometry: this._boxGeometry,
       material: this._whiteMaterial,
-      size: { x: 5, y: 5, z: 5 },
-      position: new CANNON.Vec3(0, 10, 0),
-      type: CANNON.Body.KINEMATIC,
-      mass: 0.2,
+      size: { x: 10, y: 10, z: 10 },
+      rigidBodyDesc: RAPIER.RigidBodyDesc.dynamic(),
     });
-    player.meshThree.castShadow = false;
+    player.rigidBody.setTranslation(new RAPIER.Vector3(0, 20, 0), true);
     this._physics.bodies.push(player);
 
     const wall = addBox({
@@ -105,12 +86,13 @@ export class ExperienceScene extends InteractiveScene {
       scene: this,
       geometry: this._boxGeometry,
       material: this._whiteMaterial,
-      size: { x: 30, y: 60, z: 0.3 },
-      position: new CANNON.Vec3(0, 30, -25),
-      type: CANNON.Body.STATIC,
+      size: { x: 20, y: 50, z: 3.5 },
+      rigidBodyDesc: RAPIER.RigidBodyDesc.fixed(),
     });
-    wall.meshThree.castShadow = false;
+    wall.rigidBody.setTranslation(new RAPIER.Vector3(60, 25, 0), true);
     this._physics.bodies.push(wall);
+
+    this._fpsCamera.setPlayerBody(this._physics.bodies[2].rigidBody);
   }
 
   setRendererBounds(bounds: Bounds) {
@@ -123,37 +105,35 @@ export class ExperienceScene extends InteractiveScene {
 
   update(updateInfo: UpdateInfo) {
     super.update(updateInfo);
-    this._updatePhysics();
+
+    //Update physics
+    this._physics.world?.step();
+    this._physics.bodies.forEach(body => {
+      const pos = body.rigidBody.translation();
+      const rot = body.rigidBody.rotation();
+
+      body.meshThree.position.x = pos.x;
+      body.meshThree.position.y = pos.y;
+      body.meshThree.position.z = pos.z;
+      body.meshThree.setRotationFromQuaternion(new THREE.Quaternion(rot.x, rot.y, rot.z, rot.w));
+    });
   }
 
-  _updatePhysics() {
-    // this._physics.world?.step(1 / 60, updateInfo.delta, updateInfo.slowDownFactor); //Alternative (need to test)
-    this._physics.world?.fixedStep();
-    this._physics.bodies.forEach(object => {
-      object.meshThree.position.set(
-        object.bodyCannon.position.x,
-        object.bodyCannon.position.y,
-        object.bodyCannon.position.z
-      );
-      object.meshThree.quaternion.set(
-        object.bodyCannon.quaternion.x,
-        object.bodyCannon.quaternion.y,
-        object.bodyCannon.quaternion.z,
-        object.bodyCannon.quaternion.w
-      );
-    });
+  onAppReady() {
+    this._setupPhysics();
   }
 
   destroy() {
     super.destroy();
 
-    this._physics.bodies.forEach(object => {
-      this.remove(object.meshThree);
-      this._physics.world?.removeBody(object.bodyCannon);
+    this._physics.bodies.forEach(el => {
+      this.remove(el.meshThree);
+      this._physics.world?.removeCollider(el.collider, true);
+      this._physics.world?.removeRigidBody(el.rigidBody);
     });
 
-    this._ambientLight1 && this.remove(this._ambientLight1);
-    this._pointLight1 && this.remove(this._pointLight1);
+    this.remove(this._ambientLight1);
+    this.remove(this._pointLight1);
     this._whiteMaterial.dispose();
     this._boxGeometry.dispose();
   }

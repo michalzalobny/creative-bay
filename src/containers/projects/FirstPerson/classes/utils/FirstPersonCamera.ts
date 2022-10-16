@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import * as CANNON from 'cannon-es';
+import RAPIER from '@dimforge/rapier3d-compat';
 import { clamp } from 'three/src/math/MathUtils';
 
 import { UpdateInfo } from 'utils/sharedTypes';
@@ -27,7 +27,7 @@ export class FirstPersonCamera {
 
   _camera;
   _rotation = new THREE.Quaternion();
-  _translation = new THREE.Vector3(0, 0, 0); //Starting position
+  _translation = new THREE.Vector3(0, 5, 0); //Starting position
   _phi = {
     current: 0,
     target: 0,
@@ -48,7 +48,7 @@ export class FirstPersonCamera {
   _strafeVelocity = 0;
   _mouseSpeed = 0.76;
   _domElement: HTMLElement;
-  _playerBody: CANNON.Body | null = null;
+  _playerBody: RAPIER.RigidBody | null = null;
 
   constructor(props: Props) {
     this._camera = props.camera;
@@ -64,15 +64,14 @@ export class FirstPersonCamera {
     this._camera.quaternion.copy(this._rotation);
 
     if (this._playerBody) {
-      this._playerBody.position.x = this._translation.x;
-      this._playerBody.position.z = this._translation.z;
+      this._playerBody.setTranslation(
+        new RAPIER.Vector3(this._translation.x, this._translation.y, this._translation.z),
+        true
+      );
 
       //Stick camera to the position of player
-      this._camera.position.set(
-        this._playerBody.position.x,
-        this._playerBody.position.y,
-        this._playerBody.position.z
-      );
+      const pos = this._playerBody.translation();
+      this._camera.position.set(pos.x, pos.y, pos.z);
     }
     this._camera.position.y += Math.sin(this._headBobTimer) * this._stepHeight;
 
@@ -172,7 +171,7 @@ export class FirstPersonCamera {
     );
   }
 
-  setPlayerBody(body: CANNON.Body) {
+  setPlayerBody(body: RAPIER.RigidBody) {
     this._playerBody = body;
   }
 
