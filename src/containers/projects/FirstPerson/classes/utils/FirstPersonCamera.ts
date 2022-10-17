@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import RAPIER from '@dimforge/rapier3d-compat';
+import RAPIER from '@dimforge/rapier3d';
 import { clamp } from 'three/src/math/MathUtils';
 
 import { UpdateInfo } from 'utils/sharedTypes';

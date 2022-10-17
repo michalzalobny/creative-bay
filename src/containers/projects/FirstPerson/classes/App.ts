@@ -7,7 +7,6 @@ import { Preloader } from 'utils/helperClasses/Preloader';
 
 import { appState } from '../Project.state';
 import { ExperienceScene } from './Scenes/ExperienceScene';
-import { getRapier } from './utils/rapier';
 //Assets imports
 import starterImageSrc from './assets/starter.jpg';
 
@@ -61,7 +60,7 @@ export class App extends THREE.EventDispatcher {
       { src: starterImageSrc.src, type: 'image', targetName: 'starterImage' },
     ]);
 
-    getRapier()
+    import('@dimforge/rapier3d')
       .then(RAPIER => {
         appState.RAPIER = RAPIER;
 

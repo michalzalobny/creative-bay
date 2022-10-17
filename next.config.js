@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
   reactStrictMode: true,
+
   i18n: {
     locales: ['en-US'],
     defaultLocale: 'en-US',
@@ -10,6 +11,8 @@ module.exports = {
     styledComponents: true,
   },
   webpack: config => {
+    config.output.webassemblyModuleFilename = 'static/wasm/[modulehash].wasm';
+    config.experiments = { ...config.experiments, asyncWebAssembly: true };
     config.module.rules.push({
       test: /\.(glsl|vs|fs|vert|frag)$/,
       exclude: /node_modules/,
