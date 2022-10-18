@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import * as CANNON from 'cannon-es';
+import RAPIER from '@dimforge/rapier3d';
 import { clamp } from 'three/src/math/MathUtils';
 
 import { UpdateInfo } from 'utils/sharedTypes';
@@ -40,7 +40,7 @@ export class FirstPersonCamera {
   _thetaSpeed = 5 * 0.5;
   _moveSpeed = 1.7 * 0.7;
   _stepSpeed = 1.9;
-  _stepHeight = 1.5;
+  _stepHeight = 1.1;
   _headBobActive = false;
   _headBobTimer = 0;
   _firstPersonControls;
@@ -48,7 +48,10 @@ export class FirstPersonCamera {
   _strafeVelocity = 0;
   _mouseSpeed = 0.76;
   _domElement: HTMLElement;
-  _playerBody: CANNON.Body | null = null;
+  _playerBody: RAPIER.RigidBody | null = null;
+  _playerCollider: RAPIER.Collider | null = null;
+  _world: RAPIER.World | null = null;
+  _characterController: RAPIER.KinematicCharacterController | null = null;
 
   constructor(props: Props) {
     this._camera = props.camera;
@@ -60,30 +63,27 @@ export class FirstPersonCamera {
     this._addEvents();
   }
 
+  setWorld(world: RAPIER.World) {
+    this._world = world;
+    this._useCharacterControls();
+  }
+
+  _useCharacterControls() {
+    if (!this._world) return;
+    this._characterController = this._world.createCharacterController(0.1);
+    this._characterController.enableAutostep(0.7, 0.3, true);
+    this._characterController.enableSnapToGround(0.7);
+    this._characterController.setMaxSlopeClimbAngle(Math.PI * 0.5);
+  }
+
   _updateCamera() {
     this._camera.quaternion.copy(this._rotation);
-
+    //Stick camera to the position of player
     if (this._playerBody) {
-      this._playerBody.position.x = this._translation.x;
-      this._playerBody.position.z = this._translation.z;
-
-      //Stick camera to the position of player
-      this._camera.position.set(
-        this._playerBody.position.x,
-        this._playerBody.position.y,
-        this._playerBody.position.z
-      );
+      const pos = this._playerBody.translation();
+      this._camera.position.set(pos.x, pos.y + 8, pos.z); //8 is halth of the height of character
     }
     this._camera.position.y += Math.sin(this._headBobTimer) * this._stepHeight;
-
-    const forward = new THREE.Vector3(0, 0, -1);
-    forward.applyQuaternion(this._rotation);
-
-    forward.multiplyScalar(100);
-    forward.add(this._translation);
-    const closest = forward;
-
-    this._camera.lookAt(closest);
   }
 
   _handleMouseMove = (e: THREE.Event) => {
@@ -144,14 +144,14 @@ export class FirstPersonCamera {
 
     const forward = new THREE.Vector3(0, 0, -1);
     forward.applyQuaternion(qx);
-    forward.multiplyScalar(this._forwardVelocity * updateInfo.slowDownFactor * this._moveSpeed);
 
     const left = new THREE.Vector3(-1, 0, 0);
     left.applyQuaternion(qx);
-    left.multiplyScalar(this._strafeVelocity * updateInfo.slowDownFactor * this._moveSpeed);
 
-    this._translation.add(forward);
-    this._translation.add(left);
+    forward.multiplyScalar(this._forwardVelocity * updateInfo.slowDownFactor);
+    left.multiplyScalar(this._strafeVelocity * updateInfo.slowDownFactor);
+
+    this._translation = forward.add(left);
 
     if (this._forwardVelocity != 0 || this._strafeVelocity != 0) {
       this._headBobActive = true;
@@ -172,8 +172,12 @@ export class FirstPersonCamera {
     );
   }
 
-  setPlayerBody(body: CANNON.Body) {
+  setPlayerBody(body: RAPIER.RigidBody) {
     this._playerBody = body;
+  }
+
+  setPlayerCollider(collider: RAPIER.Collider) {
+    this._playerCollider = collider;
   }
 
   update(updateInfo: UpdateInfo) {
@@ -181,7 +185,29 @@ export class FirstPersonCamera {
     this._updateTranslation(updateInfo);
     this._updateHeadBob(updateInfo);
     this._updateCamera();
+    this._updateCharacter();
     // this._lerpValues(updateInfo);
+  }
+
+  _updateCharacter() {
+    if (!this._characterController || !this._playerCollider || !this._playerBody) return;
+    const speed = 0.1; //Docs value for Y
+
+    const movementDirection = {
+      x: this._translation.x, //Left
+      y: -speed, //Up
+      z: this._translation.z, //Forward
+    };
+
+    this._characterController.computeColliderMovement(this._playerCollider, movementDirection);
+
+    const movement = this._characterController.computedMovement();
+    const newPos = this._playerBody.translation();
+    newPos.x += movement.x;
+    newPos.y += movement.y;
+    newPos.z += movement.z;
+
+    this._playerBody.setNextKinematicTranslation(newPos);
   }
 
   _handleClick = () => {
