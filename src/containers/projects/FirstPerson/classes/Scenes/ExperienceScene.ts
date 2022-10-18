@@ -57,7 +57,6 @@ export class ExperienceScene extends InteractiveScene {
     if (!appState.RAPIER) return;
     const gravity = { x: 0.0, y: -9.81, z: 0.0 };
     this._physics.world = new appState.RAPIER.World(gravity);
-    // this._physics.world.timestep = 100 / 60;
 
     const box = addBox({
       world: this._physics.world,
@@ -66,7 +65,7 @@ export class ExperienceScene extends InteractiveScene {
       material: this._whiteMaterial,
       size: { x: 10, y: 20, z: 10 },
     });
-    box.rigidBody.setTranslation(new RAPIER.Vector3(60, 85, 0), true);
+    box.rigidBody.setTranslation(new RAPIER.Vector3(0, 60, -60), true);
     this._physics.bodies.push(box);
 
     const ground = addBox({
@@ -120,7 +119,11 @@ export class ExperienceScene extends InteractiveScene {
     super.update(updateInfo);
 
     //Update physics
-    this._physics.world?.step();
+    if (this._physics.world) {
+      this._physics.world.step();
+      this._physics.world.timestep = (1 / 60) * updateInfo.slowDownFactor;
+    }
+
     this._physics.bodies.forEach(body => {
       const pos = body.rigidBody.translation();
       const rot = body.rigidBody.rotation();
