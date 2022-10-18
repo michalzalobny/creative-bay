@@ -14,37 +14,37 @@ module.exports = {
     styledComponents: true,
   },
   webpack: (config, { isServer }) => {
-    config.output.webassemblyModuleFilename = 'static/wasm/[modulehash].wasm';
+    // config.output.webassemblyModuleFilename = 'static/wasm/[modulehash].wasm';
     config.experiments = { ...config.experiments, asyncWebAssembly: true };
 
     //https://github.com/vercel/next.js/issues/25852#issuecomment-1057059000
-    config.plugins.push(
-      new (class {
-        apply(compiler) {
-          compiler.hooks.afterEmit.tapPromise('SymlinkWebpackPlugin', async compiler => {
-            if (isServer) {
-              const from = path.join(compiler.options.output.path, '../static');
-              const to = path.join(compiler.options.output.path, 'static');
+    // config.plugins.push(
+    //   new (class {
+    //     apply(compiler) {
+    //       compiler.hooks.afterEmit.tapPromise('SymlinkWebpackPlugin', async compiler => {
+    //         if (isServer) {
+    //           const from = path.join(compiler.options.output.path, '../static');
+    //           const to = path.join(compiler.options.output.path, 'static');
 
-              try {
-                await fileSys.access(from);
-                console.log(`${from} already exists`);
-                return;
-              } catch (error) {
-                if (error.code === 'ENOENT') {
-                  // No link exists
-                } else {
-                  throw error;
-                }
-              }
+    //           try {
+    //             await fileSys.access(from);
+    //             console.log(`${from} already exists`);
+    //             return;
+    //           } catch (error) {
+    //             if (error.code === 'ENOENT') {
+    //               // No link exists
+    //             } else {
+    //               throw error;
+    //             }
+    //           }
 
-              await fileSys.symlink(to, from, 'junction');
-              console.log(`created symlink ${from} -> ${to}`);
-            }
-          });
-        }
-      })()
-    );
+    //           await fileSys.symlink(to, from, 'junction');
+    //           console.log(`created symlink ${from} -> ${to}`);
+    //         }
+    //       });
+    //     }
+    //   })()
+    // );
 
     config.module.rules.push({
       test: /\.(glsl|vs|fs|vert|frag)$/,
