@@ -6,7 +6,7 @@ import { UpdateInfo, LoadedAssets, Bounds } from 'utils/sharedTypes';
 
 import { appState } from '../../Project.state';
 import { InteractiveScene } from './InteractiveScene';
-import { addBox, GetObjectReturn } from '../utils/getObject3D';
+import { addBox, addCylinder, GetObjectReturn } from '../utils/getObject3D';
 
 interface Constructor {
   camera: THREE.PerspectiveCamera;
@@ -23,7 +23,9 @@ export class ExperienceScene extends InteractiveScene {
   _ambientLight1: THREE.AmbientLight;
   _pointLight1: THREE.PointLight;
   _boxGeometry = new THREE.BoxBufferGeometry(1, 1, 1);
+  _cylinderGeometry = new THREE.CylinderBufferGeometry(1, 1, 1, 20, 1);
   _whiteMaterial: THREE.MeshStandardMaterial;
+  _playerMaterial: THREE.MeshStandardMaterial;
 
   _physics: Physics = {
     world: null,
@@ -40,7 +42,15 @@ export class ExperienceScene extends InteractiveScene {
     this._pointLight1.position.y = 15;
     this.add(this._pointLight1);
 
-    this._whiteMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
+    this._whiteMaterial = new THREE.MeshStandardMaterial({
+      color: 0xffffff,
+    });
+
+    this._playerMaterial = new THREE.MeshStandardMaterial({
+      color: 0xffffff,
+      transparent: true,
+      opacity: 0,
+    });
   }
 
   _setupPhysics() {
@@ -63,22 +73,22 @@ export class ExperienceScene extends InteractiveScene {
       scene: this,
       geometry: this._boxGeometry,
       material: this._whiteMaterial,
-      size: { x: 120, y: 1.5, z: 120 },
+      size: { x: 150 * 2, y: 0.1 * 2, z: 150 * 2 },
       rigidBodyDesc: RAPIER.RigidBodyDesc.fixed(),
     });
     ground.meshThree.castShadow = false;
     ground.meshThree.receiveShadow = true;
     this._physics.bodies.push(ground);
 
-    const player = addBox({
+    const player = addCylinder({
       world: this._physics.world,
       scene: this,
-      geometry: this._boxGeometry,
-      material: this._whiteMaterial,
-      size: { x: 10, y: 10, z: 10 },
-      rigidBodyDesc: RAPIER.RigidBodyDesc.dynamic(),
+      geometry: this._cylinderGeometry,
+      material: this._playerMaterial,
+      rigidBodyDesc: RAPIER.RigidBodyDesc.kinematicPositionBased(),
+      size: { x: 2, y: 16 },
     });
-    player.rigidBody.setTranslation(new RAPIER.Vector3(0, 20, 0), true);
+    player.rigidBody.setTranslation(new RAPIER.Vector3(0, 10, 30), true);
     this._physics.bodies.push(player);
 
     const wall = addBox({
@@ -89,10 +99,12 @@ export class ExperienceScene extends InteractiveScene {
       size: { x: 20, y: 50, z: 3.5 },
       rigidBodyDesc: RAPIER.RigidBodyDesc.fixed(),
     });
-    wall.rigidBody.setTranslation(new RAPIER.Vector3(60, 25, 0), true);
+    wall.rigidBody.setTranslation(new RAPIER.Vector3(-30, 25, 0), true);
     this._physics.bodies.push(wall);
 
     this._fpsCamera.setPlayerBody(this._physics.bodies[2].rigidBody);
+    this._fpsCamera.setPlayerCollider(this._physics.bodies[2].collider);
+    this._fpsCamera.setWorld(this._physics.world);
   }
 
   setRendererBounds(bounds: Bounds) {
@@ -135,6 +147,8 @@ export class ExperienceScene extends InteractiveScene {
     this.remove(this._ambientLight1);
     this.remove(this._pointLight1);
     this._whiteMaterial.dispose();
+    this._playerMaterial.dispose();
     this._boxGeometry.dispose();
+    this._cylinderGeometry.dispose();
   }
 }

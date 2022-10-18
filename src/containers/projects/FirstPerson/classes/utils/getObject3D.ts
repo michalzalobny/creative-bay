@@ -7,9 +7,23 @@ interface Size {
   z: number;
 }
 
+interface Size2D {
+  x: number;
+  y: number;
+}
+
 interface AddBox {
   material: THREE.Material;
   size: Size;
+  world: RAPIER.World;
+  scene: THREE.Scene;
+  geometry: THREE.BufferGeometry;
+  rigidBodyDesc?: RAPIER.RigidBodyDesc;
+}
+
+interface AddCylinder {
+  material: THREE.Material;
+  size: Size2D;
   world: RAPIER.World;
   scene: THREE.Scene;
   geometry: THREE.BufferGeometry;
@@ -42,6 +56,32 @@ export const addBox = (props: AddBox): GetObjectReturn => {
   //Rapier
   const rigidBody = world.createRigidBody(rigidBodyDesc);
   const colliderDesc = RAPIER.ColliderDesc.cuboid(size.x / 2, size.y / 2, size.z / 2);
+  const collider = world.createCollider(colliderDesc, rigidBody);
+
+  return { meshThree, rigidBody, collider };
+};
+
+export const addCylinder = (props: AddCylinder): GetObjectReturn => {
+  const {
+    material,
+    size,
+    world,
+    geometry,
+    scene,
+    rigidBodyDesc = RAPIER.RigidBodyDesc.dynamic(),
+  } = props;
+
+  //Three
+  const meshThree = new THREE.Mesh(geometry, material);
+  meshThree.scale.x = size.x;
+  meshThree.scale.y = size.y;
+  meshThree.scale.z = size.x;
+
+  scene.add(meshThree);
+
+  //Rapier
+  const rigidBody = world.createRigidBody(rigidBodyDesc);
+  const colliderDesc = RAPIER.ColliderDesc.cylinder(size.x / 2, size.y / 2);
   const collider = world.createCollider(colliderDesc, rigidBody);
 
   return { meshThree, rigidBody, collider };

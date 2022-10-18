@@ -1,9 +1,9 @@
 import { App } from './classes/App';
-import { Rapier } from './classes/utils/rapier';
+import RAPIER from '@dimforge/rapier3d';
 
 interface AppState {
   app: App | null;
-  RAPIER: Rapier | null;
+  RAPIER: typeof RAPIER | null;
 }
 
 export const appState: AppState = {
