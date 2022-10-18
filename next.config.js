@@ -15,7 +15,8 @@ module.exports = {
   },
   webpack: (config, { isServer }) => {
     // config.output.webassemblyModuleFilename = 'static/wasm/[modulehash].wasm';
-    config.experiments = { ...config.experiments, asyncWebAssembly: true };
+    // config.experiments = { ...config.experiments, asyncWebAssembly: true };
+    config.experiments.asyncWebAssembly = true;
 
     //https://github.com/vercel/next.js/issues/25852#issuecomment-1057059000
     config.plugins.push(
