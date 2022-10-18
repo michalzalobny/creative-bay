@@ -35,11 +35,11 @@ export class ExperienceScene extends InteractiveScene {
   constructor({ gui, camera }: Constructor) {
     super({ camera, gui });
 
-    this._ambientLight1 = new THREE.AmbientLight(0xffffff, 0.05);
+    this._ambientLight1 = new THREE.AmbientLight('#652fc2', 0.1);
     this.add(this._ambientLight1);
 
-    this._pointLight1 = new THREE.PointLight(0xff0000);
-    this._pointLight1.position.y = 15;
+    this._pointLight1 = new THREE.PointLight('#652fc2');
+    this._pointLight1.position.y = 35;
     this.add(this._pointLight1);
 
     this._whiteMaterial = new THREE.MeshStandardMaterial({
