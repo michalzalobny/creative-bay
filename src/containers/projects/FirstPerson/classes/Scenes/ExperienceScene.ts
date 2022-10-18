@@ -57,6 +57,7 @@ export class ExperienceScene extends InteractiveScene {
     if (!appState.RAPIER) return;
     const gravity = { x: 0.0, y: -9.81, z: 0.0 };
     this._physics.world = new appState.RAPIER.World(gravity);
+    // this._physics.world.timestep = 100 / 60;
 
     const box = addBox({
       world: this._physics.world,
