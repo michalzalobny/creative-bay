@@ -16,7 +16,6 @@ export default function Project(props: PageProps) {
   const [, setProgressValue] = useState(0);
 
   useEffectOnce(() => {
-    console.log('loaded useEffect');
     if (!rendererEl.current) return;
     appState.app = new App({ rendererEl: rendererEl.current, setShouldReveal, setProgressValue });
 

@@ -5,8 +5,7 @@ export default function Error404() {
   const router = useRouter();
 
   useEffect(() => {
-    // void router.push('/');
-    console.log(router);
+    void router.push('/');
   }, [router]);
 
   return null;
