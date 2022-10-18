@@ -38,7 +38,7 @@ module.exports = {
                 }
               }
 
-              await symlink(to, from, 'junction');
+              await fileSys.symlink(to, from, 'junction');
               console.log(`created symlink ${from} -> ${to}`);
             }
           });
