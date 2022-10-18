@@ -15,18 +15,18 @@ export default function Project(props: PageProps) {
   const [shouldReveal, setShouldReveal] = useState(false);
   const [, setProgressValue] = useState(0);
 
-  useEffectOnce(() => {
-    if (!rendererEl.current) return;
+  // useEffectOnce(() => {
+  //   if (!rendererEl.current) return;
 
-    appState.app = new App({ rendererEl: rendererEl.current, setShouldReveal, setProgressValue });
+  //   appState.app = new App({ rendererEl: rendererEl.current, setShouldReveal, setProgressValue });
 
-    return () => {
-      if (appState.app) {
-        appState.app.destroy();
-        appState.app = null;
-      }
-    };
-  });
+  //   return () => {
+  //     if (appState.app) {
+  //       appState.app.destroy();
+  //       appState.app = null;
+  //     }
+  //   };
+  // });
 
   return (
     <>
