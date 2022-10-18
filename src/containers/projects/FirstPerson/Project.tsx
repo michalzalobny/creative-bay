@@ -18,15 +18,14 @@ export default function Project(props: PageProps) {
   useEffectOnce(() => {
     console.log('loaded useEffect');
     if (!rendererEl.current) return;
+    appState.app = new App({ rendererEl: rendererEl.current, setShouldReveal, setProgressValue });
 
-    // appState.app = new App({ rendererEl: rendererEl.current, setShouldReveal, setProgressValue });
-
-    // return () => {
-    //   if (appState.app) {
-    //     appState.app.destroy();
-    //     appState.app = null;
-    //   }
-    // };
+    return () => {
+      if (appState.app) {
+        appState.app.destroy();
+        appState.app = null;
+      }
+    };
   });
 
   return (
