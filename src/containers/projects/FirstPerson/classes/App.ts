@@ -60,17 +60,17 @@ export class App extends THREE.EventDispatcher {
       { src: starterImageSrc.src, type: 'image', targetName: 'starterImage' },
     ]);
 
-    import('@dimforge/rapier3d')
-      .then(RAPIER => {
-        appState.RAPIER = RAPIER;
+    // import('@dimforge/rapier3d')
+    //   .then(RAPIER => {
+    //     appState.RAPIER = RAPIER;
 
-        if (this._assetsLoaded) {
-          this._revealApp();
-        }
-      })
-      .catch(err => {
-        console.error('App: RAPIER load failed: ', err);
-      });
+    //     if (this._assetsLoaded) {
+    //       this._revealApp();
+    //     }
+    //   })
+    //   .catch(err => {
+    //     console.error('App: RAPIER load failed: ', err);
+    //   });
   }
 
   _onResizeDebounced = debounce(() => this._onResize(), 300);
