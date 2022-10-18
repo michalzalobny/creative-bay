@@ -40,7 +40,7 @@ export class FirstPersonCamera {
   _thetaSpeed = 5 * 0.5;
   _moveSpeed = 1.7 * 0.7;
   _stepSpeed = 1.9;
-  _stepHeight = 1.5;
+  _stepHeight = 1.1;
   _headBobActive = false;
   _headBobTimer = 0;
   _firstPersonControls;
