@@ -49,6 +49,7 @@ export class FirstPersonCamera {
   _mouseSpeed = 0.76;
   _domElement: HTMLElement;
   _playerBody: RAPIER.RigidBody | null = null;
+  _gun: THREE.Object3D | null = null;
   _playerCollider: RAPIER.Collider | null = null;
   _world: RAPIER.World | null = null;
   _characterController: RAPIER.KinematicCharacterController | null = null;
@@ -76,14 +77,18 @@ export class FirstPersonCamera {
     this._characterController.setMaxSlopeClimbAngle(Math.PI * 0.5);
   }
 
+  //Updates camera and gun position
   _updateCamera() {
     this._camera.quaternion.copy(this._rotation);
+    this._gun?.quaternion.copy(this._rotation);
     //Stick camera to the position of player
     if (this._playerBody) {
       const pos = this._playerBody.translation();
-      this._camera.position.set(pos.x, pos.y + 8, pos.z); //8 is halth of the height of character
+      this._camera.position.set(pos.x, pos.y + 6, pos.z); //8 is halth of the height of character
+      this._gun?.position.set(pos.x, pos.y + 6, pos.z);
     }
-    this._camera.position.y += Math.sin(this._headBobTimer) * this._stepHeight;
+    // this._camera.position.y += Math.sin(this._headBobTimer) * this._stepHeight;
+    if (this._gun) this._gun.position.y += Math.sin(this._headBobTimer) * this._stepHeight * 0.02;
   }
 
   _handleMouseMove = (e: THREE.Event) => {
@@ -174,6 +179,10 @@ export class FirstPersonCamera {
 
   setPlayerBody(body: RAPIER.RigidBody) {
     this._playerBody = body;
+  }
+
+  setGun(obj: THREE.Object3D) {
+    this._gun = obj;
   }
 
   setPlayerCollider(collider: RAPIER.Collider) {

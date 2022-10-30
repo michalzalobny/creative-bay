@@ -143,6 +143,7 @@ export class ExperienceScene extends InteractiveScene {
     this._fpsCamera.setPlayerBody(this._physics.bodies[2].rigidBody);
     this._fpsCamera.setPlayerCollider(this._physics.bodies[2].collider);
     this._fpsCamera.setWorld(this._physics.world);
+    this._fpsCamera.setGun(this._gun3D);
   }
 
   setRendererBounds(bounds: Bounds) {
