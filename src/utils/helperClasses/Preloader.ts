@@ -13,6 +13,7 @@ export class Preloader extends EventDispatcher {
   _assetsLoadedCounter = 0;
   _dracoLoader = new DRACOLoader();
   _gltfLoader = new GLTFLoader();
+  _cubeTextureLoader = new THREE.CubeTextureLoader();
   _assetsToPreload: AssetToPreload[] = [];
   loadedAssets: LoadedAssets = {};
 
@@ -134,6 +135,25 @@ export class Preloader extends EventDispatcher {
       );
     };
 
+    const handleCubeTextureLoad = (item: AssetToPreload) => {
+      const onLoad = (texture: THREE.CubeTexture) => {
+        this._assignAsset({
+          objPropertyName: item.targetName || item.src,
+          type: AssetType.CUBE_TEXTURE,
+          asset: texture,
+          naturalWidth: 1,
+          naturalHeight: 1,
+        });
+      };
+
+      this._cubeTextureLoader.setPath(`cubeMaps/${item.src}/`);
+
+      this._cubeTextureLoader.load(
+        ['px.jpg', 'nx.jpg', 'py.jpg', 'ny.jpg', 'pz.jpg', 'nz.jpg'],
+        onLoad
+      );
+    };
+
     this._assetsToPreload.forEach(item => {
       switch (item.type) {
         case AssetType.IMAGE: {
@@ -146,6 +166,10 @@ export class Preloader extends EventDispatcher {
         }
         case AssetType.MODEL3D: {
           handleModel3DLoad(item);
+          break;
+        }
+        case AssetType.CUBE_TEXTURE: {
+          handleCubeTextureLoad(item);
           break;
         }
         default:
@@ -188,6 +212,9 @@ export class Preloader extends EventDispatcher {
           (el[1].asset as GLTF).scenes.forEach(scene => {
             disposeModel(scene);
           });
+          break;
+        case AssetType.CUBE_TEXTURE:
+          (el[1].asset as THREE.Texture).dispose();
           break;
         default:
           break;

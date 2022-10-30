@@ -7,6 +7,7 @@ import { UpdateInfo, LoadedAssets, Bounds } from 'utils/sharedTypes';
 import { appState } from '../../Project.state';
 import { InteractiveScene } from './InteractiveScene';
 import { addBox, addCylinder, GetObjectReturn } from '../utils/getObject3D';
+import { GLTF } from 'three-stdlib';
 
 interface Constructor {
   camera: THREE.PerspectiveCamera;
@@ -20,12 +21,16 @@ export interface Physics {
 
 export class ExperienceScene extends InteractiveScene {
   _loadedAssets: LoadedAssets | null = null;
-  _ambientLight1: THREE.AmbientLight;
-  _pointLight1: THREE.PointLight;
+  _directionalLight1: THREE.DirectionalLight;
+  _directionalLight1Helper: THREE.CameraHelper;
   _boxGeometry = new THREE.BoxBufferGeometry(1, 1, 1);
   _cylinderGeometry = new THREE.CylinderBufferGeometry(1, 1, 1, 20, 1);
   _whiteMaterial: THREE.MeshStandardMaterial;
   _playerMaterial: THREE.MeshStandardMaterial;
+  _gun: THREE.Group | null = null;
+  _debugObjects = {
+    envMapIntensity: 2.5,
+  };
 
   _physics: Physics = {
     world: null,
@@ -35,12 +40,16 @@ export class ExperienceScene extends InteractiveScene {
   constructor({ gui, camera }: Constructor) {
     super({ camera, gui });
 
-    this._ambientLight1 = new THREE.AmbientLight('#652fc2', 0.1);
-    this.add(this._ambientLight1);
+    this._directionalLight1 = new THREE.DirectionalLight('#ffffff', 3);
+    this._directionalLight1.position.set(-80, 55, 80);
+    this._directionalLight1.castShadow = true;
+    this._directionalLight1.shadow.camera.far = 250;
+    this._directionalLight1.shadow.mapSize.set(1024, 1024);
+    this._directionalLight1.shadow.normalBias = 0.05;
+    this.add(this._directionalLight1);
 
-    this._pointLight1 = new THREE.PointLight('#652fc2');
-    this._pointLight1.position.y = 35;
-    this.add(this._pointLight1);
+    this._directionalLight1Helper = new THREE.CameraHelper(this._directionalLight1.shadow.camera);
+    this.add(this._directionalLight1Helper);
 
     this._whiteMaterial = new THREE.MeshStandardMaterial({
       color: 0xffffff,
@@ -51,6 +60,26 @@ export class ExperienceScene extends InteractiveScene {
       transparent: true,
       opacity: 0,
     });
+
+    this._setGui();
+  }
+
+  _setGui() {
+    const debugObjects = this._gui.addFolder('Debug Objects');
+    debugObjects.close();
+    debugObjects
+      .add(this._debugObjects, 'envMapIntensity', 0.01, 10, 0.01)
+      .name('envMapIntensity')
+      .onFinishChange(() => {
+        this.updateAllMaterials();
+      });
+
+    const light1 = this._gui.addFolder('Directional Light');
+    light1.close();
+    light1.add(this._directionalLight1, 'intensity', 0, 10, 0.001).name('lightIntensity');
+    light1.add(this._directionalLight1.position, 'x', -100, 100, 0.1).name('lightX');
+    light1.add(this._directionalLight1.position, 'y', -100, 100, 0.1).name('lightY');
+    light1.add(this._directionalLight1.position, 'z', -100, 100, 0.1).name('lightZ');
   }
 
   _setupPhysics() {
@@ -76,8 +105,7 @@ export class ExperienceScene extends InteractiveScene {
       size: { x: 150 * 2, y: 0.1 * 2, z: 150 * 2 },
       rigidBodyDesc: RAPIER.RigidBodyDesc.fixed(),
     });
-    ground.meshThree.castShadow = false;
-    ground.meshThree.receiveShadow = true;
+
     this._physics.bodies.push(ground);
 
     const player = addCylinder({
@@ -113,6 +141,25 @@ export class ExperienceScene extends InteractiveScene {
 
   setLoadedAssets(assets: LoadedAssets) {
     this._loadedAssets = assets;
+
+    this._gun = (this._loadedAssets['gun'].asset as GLTF).scene;
+    this._gun.scale.set(2, 2, 2);
+    this._gun.position.y = 10;
+
+    this.add(this._gun);
+  }
+
+  updateAllMaterials() {
+    if (!this._loadedAssets) return;
+    const envMap = this._loadedAssets['env_map_0'].asset as THREE.CubeTexture;
+    this.traverse(child => {
+      if (child instanceof THREE.Mesh && child.material instanceof THREE.MeshStandardMaterial) {
+        child.material.envMap = envMap;
+        child.material.envMapIntensity = this._debugObjects.envMapIntensity;
+        child.castShadow = true;
+        child.receiveShadow = true;
+      }
+    });
   }
 
   update(updateInfo: UpdateInfo) {
@@ -133,10 +180,17 @@ export class ExperienceScene extends InteractiveScene {
       body.meshThree.position.z = pos.z;
       body.meshThree.setRotationFromQuaternion(new THREE.Quaternion(rot.x, rot.y, rot.z, rot.w));
     });
+
+    if (this._gun) {
+      this._gun.rotation.y = updateInfo.time * 0.0005;
+      const offsetY = Math.sin(updateInfo.time * 0.001) * 1.5;
+      this._gun.position.y = 10 + offsetY * offsetY;
+    }
   }
 
   onAppReady() {
     this._setupPhysics();
+    this.updateAllMaterials();
   }
 
   destroy() {
@@ -148,8 +202,12 @@ export class ExperienceScene extends InteractiveScene {
       this._physics.world?.removeRigidBody(el.rigidBody);
     });
 
-    this.remove(this._ambientLight1);
-    this.remove(this._pointLight1);
+    if (this._gun) {
+      this.remove(this._gun);
+    }
+
+    this.remove(this._directionalLight1);
+    this.remove(this._directionalLight1Helper);
     this._whiteMaterial.dispose();
     this._playerMaterial.dispose();
     this._boxGeometry.dispose();

@@ -8,7 +8,7 @@ import { Preloader } from 'utils/helperClasses/Preloader';
 import { appState } from '../Project.state';
 import { ExperienceScene } from './Scenes/ExperienceScene';
 //Assets imports
-import starterImageSrc from './assets/starter.jpg';
+import gunSrc from './assets/gun_3.glb';
 
 interface Constructor {
   rendererEl: HTMLDivElement;
@@ -49,6 +49,13 @@ export class App extends THREE.EventDispatcher {
       powerPreference: 'default',
     });
 
+    this._renderer.outputEncoding = THREE.sRGBEncoding;
+    this._renderer.physicallyCorrectLights = true;
+    this._renderer.toneMappingExposure = 2.5;
+    this._renderer.toneMapping = THREE.ReinhardToneMapping;
+    this._renderer.shadowMap.enabled = true;
+    this._renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
     this._gui.title('Scene settings');
     this._experienceScene = new ExperienceScene({ camera: this._camera, gui: this._gui });
 
@@ -57,7 +64,8 @@ export class App extends THREE.EventDispatcher {
     this._resumeAppFrame();
 
     this._preloader.setAssetsToPreload([
-      { src: starterImageSrc.src, type: 'image', targetName: 'starterImage' },
+      { src: gunSrc, type: 'model3d', targetName: 'gun' },
+      { src: '1', type: 'cube_texture', targetName: 'env_map_0' },
     ]);
 
     import('@dimforge/rapier3d')
@@ -71,6 +79,20 @@ export class App extends THREE.EventDispatcher {
       .catch(err => {
         console.error('App: RAPIER load failed: ', err);
       });
+
+    this._setGui();
+  }
+
+  _setGui() {
+    this._gui.add(this._renderer, 'toneMapping', {
+      No: THREE.NoToneMapping,
+      Linear: THREE.LinearToneMapping,
+      Reinhard: THREE.ReinhardToneMapping,
+      Cineon: THREE.CineonToneMapping,
+      ACESFilmic: THREE.ACESFilmicToneMapping,
+    });
+
+    this._gui.add(this._renderer, 'toneMappingExposure').min(0).max(10).step(0.001);
   }
 
   _onResizeDebounced = debounce(() => this._onResize(), 300);
@@ -99,6 +121,13 @@ export class App extends THREE.EventDispatcher {
   _onAssetsLoaded = (e: THREE.Event) => {
     this._assetsLoaded = true;
     this._experienceScene.setLoadedAssets((e.target as Preloader).loadedAssets);
+
+    const environmentMap = (e.target as Preloader).loadedAssets['env_map_0']
+      .asset as THREE.CubeTexture;
+    environmentMap.encoding = THREE.sRGBEncoding;
+
+    this._experienceScene.background = environmentMap;
+
     if (appState.RAPIER !== null) {
       this._revealApp();
     }
@@ -146,12 +175,6 @@ export class App extends THREE.EventDispatcher {
     const delta = time - this._lastFrameTime;
     const slowDownFactor = delta / sharedValues.motion.DT_FPS;
 
-    // //Rounded slowDown factor to the nearest integer reduces physics lags
-    // const slowDownFactorRounded = Math.round(slowDownFactor);
-
-    // if (slowDownFactorRounded >= 1) {
-    //   slowDownFactor = slowDownFactorRounded;
-    // }
     this._lastFrameTime = time;
 
     this._experienceScene.update({ delta, slowDownFactor, time });

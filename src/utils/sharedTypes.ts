@@ -23,10 +23,11 @@ export enum AssetType {
   MODEL3D = 'model3d',
   VIDEO = 'video',
   IMAGE = 'image',
+  CUBE_TEXTURE = 'cube_texture',
 }
 
 export interface LoadedAsset {
-  type: AssetType.IMAGE | AssetType.MODEL3D | AssetType.VIDEO;
+  type: AssetType.IMAGE | AssetType.MODEL3D | AssetType.VIDEO | AssetType.CUBE_TEXTURE;
   asset: THREE.Texture | GLTF | null;
   naturalWidth: number;
   naturalHeight: number;
@@ -58,7 +59,7 @@ export interface Mouse {
 
 export interface AssetToPreload {
   src: string;
-  type: 'model3d' | 'image' | 'video';
+  type: 'model3d' | 'image' | 'video' | 'cube_texture';
   targetName?: string;
 }
 
