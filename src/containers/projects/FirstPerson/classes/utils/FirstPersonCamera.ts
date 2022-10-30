@@ -23,10 +23,11 @@ const KEYS = {
 };
 
 export class FirstPersonCamera {
-  static cameraEase = 0.9;
+  static cameraEase = 0.6;
 
   _camera;
   _rotation = new THREE.Quaternion();
+  _rotationLerped = new THREE.Quaternion();
   _translation = new THREE.Vector3(0, 0, 0); //Starting position
   _phi = {
     current: 0,
@@ -80,11 +81,11 @@ export class FirstPersonCamera {
   //Updates camera and gun position
   _updateCamera() {
     this._camera.quaternion.copy(this._rotation);
-    this._gun?.quaternion.copy(this._rotation);
+    this._gun?.quaternion.copy(this._rotationLerped);
     //Stick camera to the position of player
     if (this._playerBody) {
       const pos = this._playerBody.translation();
-      this._camera.position.set(pos.x, pos.y + 6, pos.z); //8 is halth of the height of character
+      this._camera.position.set(pos.x, pos.y + 6, pos.z); //6 is halth of the height of character
       this._gun?.position.set(pos.x, pos.y + 6, pos.z);
     }
     // this._camera.position.y += Math.sin(this._headBobTimer) * this._stepHeight;
@@ -95,15 +96,16 @@ export class FirstPersonCamera {
     const xh = e.dx * 0.0005 * this._mouseSpeed;
     const yh = e.dy * 0.0005 * this._mouseSpeed;
 
-    this._phi.current = this._phi.current + -xh * this._phiSpeed;
-    this._theta.current = clamp(
-      this._theta.current + -yh * this._thetaSpeed,
+    this._phi.target = this._phi.target + -xh * this._phiSpeed;
+    this._theta.target = clamp(
+      this._theta.target + -yh * this._thetaSpeed,
       -Math.PI / 2.01, //2.01 to fix approximation issue
       Math.PI / 2.01
     );
   };
 
   _updateRotation() {
+    //Lerped
     const qx = new THREE.Quaternion();
     qx.setFromAxisAngle(new THREE.Vector3(0, 1, 0), this._phi.current);
     const qz = new THREE.Quaternion();
@@ -113,7 +115,19 @@ export class FirstPersonCamera {
     q.multiply(qx);
     q.multiply(qz);
 
-    this._rotation.copy(q);
+    this._rotationLerped.copy(q);
+
+    //Target - no interpolation
+    const qxT = new THREE.Quaternion();
+    qxT.setFromAxisAngle(new THREE.Vector3(0, 1, 0), this._phi.target);
+    const qzT = new THREE.Quaternion();
+    qzT.setFromAxisAngle(new THREE.Vector3(1, 0, 0), this._theta.target);
+
+    const qT = new THREE.Quaternion();
+    qT.multiply(qxT);
+    qT.multiply(qzT);
+
+    this._rotation.copy(qT);
   }
 
   _updateHeadBob(updateInfo: UpdateInfo) {
@@ -190,12 +204,12 @@ export class FirstPersonCamera {
   }
 
   update(updateInfo: UpdateInfo) {
+    this._lerpValues(updateInfo);
     this._updateRotation();
     this._updateTranslation(updateInfo);
     this._updateHeadBob(updateInfo);
     this._updateCamera();
     this._updateCharacter();
-    // this._lerpValues(updateInfo);
   }
 
   _updateCharacter() {
