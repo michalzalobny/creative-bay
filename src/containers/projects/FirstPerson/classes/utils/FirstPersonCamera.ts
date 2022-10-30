@@ -99,8 +99,8 @@ export class FirstPersonCamera {
     this._phi.target = this._phi.target + -xh * this._phiSpeed;
     this._theta.target = clamp(
       this._theta.target + -yh * this._thetaSpeed,
-      -Math.PI / 2.01, //2.01 to fix approximation issue
-      Math.PI / 2.01
+      -Math.PI * 0.51, //0.51 to fix approximation issue
+      Math.PI * 0.51
     );
   };
 
@@ -159,7 +159,7 @@ export class FirstPersonCamera {
 
   _updateTranslation(updateInfo: UpdateInfo) {
     const qx = new THREE.Quaternion();
-    qx.setFromAxisAngle(new THREE.Vector3(0, 1, 0), this._phi.current);
+    qx.setFromAxisAngle(new THREE.Vector3(0, 1, 0), this._phi.target);
 
     const forward = new THREE.Vector3(0, 0, -1);
     forward.applyQuaternion(qx);
