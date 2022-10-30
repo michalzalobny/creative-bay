@@ -23,7 +23,7 @@ const KEYS = {
 };
 
 export class FirstPersonCamera {
-  static cameraEase = 0.6;
+  static cameraEase = 0.25;
 
   _camera;
   _rotation = new THREE.Quaternion();
