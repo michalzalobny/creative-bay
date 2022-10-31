@@ -188,22 +188,59 @@ export class FirstPersonCamera {
     this._updateCharacter();
   }
 
+  //https://www.youtube.com/watch?v=45ssV6CEgoU
   _updateGunSway(updateInfo: UpdateInfo) {
     if (!this._gun3D) return;
 
-    let movementX = -this._mouse.x * Gun3D.swayAmount;
-    let movementY = this._mouse.y * Gun3D.swayAmount;
+    //Move sway
+    const inputX = -this._mouse.x;
+    const inputY = this._mouse.y;
 
-    movementX = clampRange(movementX, -Gun3D.maxSwayAmount, Gun3D.maxSwayAmount);
-    movementY = clampRange(movementY, -Gun3D.maxSwayAmount, Gun3D.maxSwayAmount);
+    const movementX = clampRange(
+      inputX * Gun3D.swayAmount,
+      -Gun3D.maxSwayAmount,
+      Gun3D.maxSwayAmount
+    );
+    const movementY = clampRange(
+      inputY * Gun3D.swayAmount,
+      -Gun3D.maxSwayAmount,
+      Gun3D.maxSwayAmount
+    );
 
     const finalPosition = new THREE.Vector3(movementX, movementY, 0);
-    const localPosition = this._gun3D.getPosition();
+    const localPosition = this._gun3D.getGunGroupPosition();
     const gunPosition = localPosition.lerp(
       finalPosition.add(Gun3D.startPosition),
       Gun3D.smoothAmount * updateInfo.slowDownFactor
     );
     this._gun3D.setGunGroupPosition(gunPosition);
+
+    //Rotation
+    const tiltY = clampRange(
+      inputX * Gun3D.swayRotationAmount,
+      -Gun3D.maxSwayRotationAmount,
+      Gun3D.maxSwayRotationAmount
+    );
+    const tiltX = clampRange(
+      inputY * Gun3D.swayRotationAmount,
+      -Gun3D.maxSwayRotationAmount,
+      Gun3D.maxSwayRotationAmount
+    );
+
+    const finalRotation = new THREE.Quaternion();
+    finalRotation.setFromEuler(
+      new THREE.Euler(
+        this._gun3D.swayRotation.rotationX ? -tiltX : 0,
+        this._gun3D.swayRotation.rotationY ? tiltY : 0,
+        this._gun3D.swayRotation.rotationZ ? tiltY : 0
+      )
+    );
+    const localRotation = this._gun3D.getGunGroupRotation();
+    const gunRotation = localRotation.slerp(
+      finalRotation.multiply(Gun3D.startRotation),
+      Gun3D.smoothRotationAmount * updateInfo.slowDownFactor
+    );
+    this._gun3D.setGunGroupRotation(gunRotation);
 
     this._mouse.x = 0;
     this._mouse.y = 0;
