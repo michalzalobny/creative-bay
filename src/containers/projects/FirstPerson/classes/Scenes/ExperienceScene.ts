@@ -140,6 +140,18 @@ export class ExperienceScene extends InteractiveScene {
     wall.rigidBody.setTranslation(new RAPIER.Vector3(-30, 25, 0), true);
     this._physics.bodies.push(wall);
 
+    const ramp = addBox({
+      world: this._physics.world,
+      scene: this,
+      geometry: this._boxGeometry,
+      material: this._whiteMaterial,
+      size: { x: 20, y: 50, z: 3.5 },
+      rigidBodyDesc: RAPIER.RigidBodyDesc.fixed(),
+    });
+    ramp.rigidBody.setTranslation(new RAPIER.Vector3(30, 12, 0), true);
+    ramp.rigidBody.setRotation({ w: 1.0, x: 0.5, y: 0.0, z: 0.0 }, true);
+    this._physics.bodies.push(ramp);
+
     this._fpsCamera.setPlayerBody(this._physics.bodies[2].rigidBody);
     this._fpsCamera.setPlayerCollider(this._physics.bodies[2].collider);
     this._fpsCamera.setWorld(this._physics.world);
