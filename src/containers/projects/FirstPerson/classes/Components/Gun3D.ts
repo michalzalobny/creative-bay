@@ -9,6 +9,11 @@ interface Constructor {
   gui: GUI;
 }
 export class Gun3D extends InteractiveObject3D {
+  static swayAmount = 0.03;
+  static maxSwayAmount = 0.3;
+  static smoothAmount = 0.04;
+  static startPosition = new THREE.Vector3(0.5, -0.5, -1.3);
+
   _gui: GUI;
   _gunGroup = new THREE.Group();
   _gun: THREE.Group | null = null;
@@ -17,6 +22,8 @@ export class Gun3D extends InteractiveObject3D {
     super();
     this._gui = gui;
     this.add(this._gunGroup);
+    this.setGunGroupPosition(Gun3D.startPosition);
+    this._gunGroup.rotation.y = Math.PI * 0.5;
     this._setGui();
   }
 
@@ -31,12 +38,15 @@ export class Gun3D extends InteractiveObject3D {
   setAsset(item: THREE.Group) {
     this._gun = item;
     this._gun.scale.set(0.18, 0.18, 0.18);
-
-    this._gunGroup.rotation.y = Math.PI * 0.5;
-    this._gunGroup.position.x = 0.6;
-    this._gunGroup.position.y = -0.5;
-    this._gunGroup.position.z = -1.3;
     this._gunGroup.add(this._gun);
+  }
+
+  setGunGroupPosition(pos: THREE.Vector3) {
+    this._gunGroup.position.copy(pos);
+  }
+
+  getPosition() {
+    return this._gunGroup.position;
   }
 
   update(updateInfo: UpdateInfo) {

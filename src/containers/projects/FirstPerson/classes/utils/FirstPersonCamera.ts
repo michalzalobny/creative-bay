@@ -3,8 +3,9 @@ import RAPIER from '@dimforge/rapier3d';
 import { clamp } from 'three/src/math/MathUtils';
 
 import { UpdateInfo } from 'utils/sharedTypes';
-import { lerp } from 'utils/functions/lerp';
+import { clampRange } from 'utils/functions/clamp';
 
+import { Gun3D } from '../Components/Gun3D';
 import { FirstPersonControls, Keys } from './FirstPersonControls';
 
 interface Props {
@@ -27,16 +28,9 @@ export class FirstPersonCamera {
 
   _camera;
   _rotation = new THREE.Quaternion();
-  _rotationLerped = new THREE.Quaternion();
   _translation = new THREE.Vector3(0, 0, 0); //Starting position
-  _phi = {
-    current: 0,
-    target: 0,
-  };
-  _theta = {
-    current: 0,
-    target: 0,
-  };
+  _phi = 0;
+  _theta = 0;
   _phiSpeed = 5 * 0.5;
   _thetaSpeed = 5 * 0.5;
   _moveSpeed = 1.7 * 0.7;
@@ -50,10 +44,14 @@ export class FirstPersonCamera {
   _mouseSpeed = 0.76;
   _domElement: HTMLElement;
   _playerBody: RAPIER.RigidBody | null = null;
-  _gun: THREE.Object3D | null = null;
+  _gun3D: Gun3D | null = null;
   _playerCollider: RAPIER.Collider | null = null;
   _world: RAPIER.World | null = null;
   _characterController: RAPIER.KinematicCharacterController | null = null;
+  _mouse = {
+    x: 0,
+    y: 0,
+  };
 
   constructor(props: Props) {
     this._camera = props.camera;
@@ -81,53 +79,45 @@ export class FirstPersonCamera {
   //Updates camera and gun position
   _updateCamera() {
     this._camera.quaternion.copy(this._rotation);
-    this._gun?.quaternion.copy(this._rotationLerped);
+    this._gun3D?.quaternion.copy(this._rotation);
     //Stick camera to the position of player
     if (this._playerBody) {
       const pos = this._playerBody.translation();
       this._camera.position.set(pos.x, pos.y + 6, pos.z); //6 is halth of the height of character
-      this._gun?.position.set(pos.x, pos.y + 6, pos.z);
+      this._gun3D?.position.set(pos.x, pos.y + 6, pos.z);
     }
     // this._camera.position.y += Math.sin(this._headBobTimer) * this._stepHeight;
-    if (this._gun) this._gun.position.y += Math.sin(this._headBobTimer) * this._stepHeight * 0.02;
+    if (this._gun3D)
+      this._gun3D.position.y += Math.sin(this._headBobTimer) * this._stepHeight * 0.02;
   }
 
   _handleMouseMove = (e: THREE.Event) => {
     const xh = e.dx * 0.0005 * this._mouseSpeed;
     const yh = e.dy * 0.0005 * this._mouseSpeed;
 
-    this._phi.target = this._phi.target + -xh * this._phiSpeed;
-    this._theta.target = clamp(
-      this._theta.target + -yh * this._thetaSpeed,
+    //Used for sway
+    this._mouse.x = e.dx * 1;
+    this._mouse.y = e.dy * 1;
+
+    this._phi = this._phi + -xh * this._phiSpeed;
+    this._theta = clamp(
+      this._theta + -yh * this._thetaSpeed,
       -Math.PI * 0.51, //0.51 to fix approximation issue
       Math.PI * 0.51
     );
   };
 
   _updateRotation() {
-    //Lerped
     const qx = new THREE.Quaternion();
-    qx.setFromAxisAngle(new THREE.Vector3(0, 1, 0), this._phi.current);
+    qx.setFromAxisAngle(new THREE.Vector3(0, 1, 0), this._phi);
     const qz = new THREE.Quaternion();
-    qz.setFromAxisAngle(new THREE.Vector3(1, 0, 0), this._theta.current);
+    qz.setFromAxisAngle(new THREE.Vector3(1, 0, 0), this._theta);
 
     const q = new THREE.Quaternion();
     q.multiply(qx);
     q.multiply(qz);
 
-    this._rotationLerped.copy(q);
-
-    //Target - no interpolation
-    const qxT = new THREE.Quaternion();
-    qxT.setFromAxisAngle(new THREE.Vector3(0, 1, 0), this._phi.target);
-    const qzT = new THREE.Quaternion();
-    qzT.setFromAxisAngle(new THREE.Vector3(1, 0, 0), this._theta.target);
-
-    const qT = new THREE.Quaternion();
-    qT.multiply(qxT);
-    qT.multiply(qzT);
-
-    this._rotation.copy(qT);
+    this._rotation.copy(q);
   }
 
   _updateHeadBob(updateInfo: UpdateInfo) {
@@ -159,7 +149,7 @@ export class FirstPersonCamera {
 
   _updateTranslation(updateInfo: UpdateInfo) {
     const qx = new THREE.Quaternion();
-    qx.setFromAxisAngle(new THREE.Vector3(0, 1, 0), this._phi.target);
+    qx.setFromAxisAngle(new THREE.Vector3(0, 1, 0), this._phi);
 
     const forward = new THREE.Vector3(0, 0, -1);
     forward.applyQuaternion(qx);
@@ -177,26 +167,12 @@ export class FirstPersonCamera {
     }
   }
 
-  _lerpValues(updateInfo: UpdateInfo) {
-    this._phi.current = lerp(
-      this._phi.current,
-      this._phi.target,
-      FirstPersonCamera.cameraEase * updateInfo.slowDownFactor
-    );
-
-    this._theta.current = lerp(
-      this._theta.current,
-      this._theta.target,
-      FirstPersonCamera.cameraEase * updateInfo.slowDownFactor
-    );
-  }
-
   setPlayerBody(body: RAPIER.RigidBody) {
     this._playerBody = body;
   }
 
-  setGun(obj: THREE.Object3D) {
-    this._gun = obj;
+  setGun3D(obj: Gun3D) {
+    this._gun3D = obj;
   }
 
   setPlayerCollider(collider: RAPIER.Collider) {
@@ -204,12 +180,33 @@ export class FirstPersonCamera {
   }
 
   update(updateInfo: UpdateInfo) {
-    this._lerpValues(updateInfo);
+    this._updateGunSway(updateInfo);
     this._updateRotation();
     this._updateTranslation(updateInfo);
     this._updateHeadBob(updateInfo);
     this._updateCamera();
     this._updateCharacter();
+  }
+
+  _updateGunSway(updateInfo: UpdateInfo) {
+    if (!this._gun3D) return;
+
+    let movementX = -this._mouse.x * Gun3D.swayAmount;
+    let movementY = this._mouse.y * Gun3D.swayAmount;
+
+    movementX = clampRange(movementX, -Gun3D.maxSwayAmount, Gun3D.maxSwayAmount);
+    movementY = clampRange(movementY, -Gun3D.maxSwayAmount, Gun3D.maxSwayAmount);
+
+    const finalPosition = new THREE.Vector3(movementX, movementY, 0);
+    const localPosition = this._gun3D.getPosition();
+    const gunPosition = localPosition.lerp(
+      finalPosition.add(Gun3D.startPosition),
+      Gun3D.smoothAmount * updateInfo.slowDownFactor
+    );
+    this._gun3D.setGunGroupPosition(gunPosition);
+
+    this._mouse.x = 0;
+    this._mouse.y = 0;
   }
 
   _updateCharacter() {
