@@ -33,7 +33,7 @@ export class FirstPersonCamera {
   _theta = 0;
   _phiSpeed = 5 * 0.5;
   _thetaSpeed = 5 * 0.5;
-  _moveSpeed = 1.7 * 0.7;
+  _moveSpeed = 0.2;
   _stepSpeed = 1.9;
   _stepHeight = 1.1;
   _headBobActive = false;
@@ -83,12 +83,17 @@ export class FirstPersonCamera {
     //Stick camera to the position of player
     if (this._playerBody) {
       const pos = this._playerBody.translation();
-      this._camera.position.set(pos.x, pos.y + 6, pos.z); //6 is halth of the height of character
-      this._gun3D?.position.set(pos.x, pos.y + 6, pos.z);
+      this._camera.position.set(pos.x, pos.y + 1.85 * 0.5, pos.z); //1.85 *0.5 is halth of the height of character
+      this._gun3D?.position.set(pos.x, pos.y + 1.85 * 0.5, pos.z);
     }
     // this._camera.position.y += Math.sin(this._headBobTimer) * this._stepHeight;
-    if (this._gun3D)
+    if (this._gun3D) {
       this._gun3D.position.y += Math.sin(this._headBobTimer) * this._stepHeight * 0.02;
+    }
+
+    //test
+    // this._camera.position.set(-12 * 0, 8, -12 * 0);
+    // this._camera.lookAt(new THREE.Vector3(0, 0, 0));
   }
 
   _handleMouseMove = (e: THREE.Event) => {
@@ -139,12 +144,12 @@ export class FirstPersonCamera {
   _handleKeyChange = (e: THREE.Event) => {
     const keys = e.keys as Keys;
     this._forwardVelocity =
-      (keys[KEYS.w] || keys[KEYS.arrowUp] ? 1 : 0) +
-      (keys[KEYS.s] || keys[KEYS.arrowDown] ? -1 : 0);
+      (keys[KEYS.w] || keys[KEYS.arrowUp] ? 1 * this._moveSpeed : 0) +
+      (keys[KEYS.s] || keys[KEYS.arrowDown] ? -1 * this._moveSpeed : 0);
 
     this._strafeVelocity =
-      (keys[KEYS.a] || keys[KEYS.arrowLeft] ? 1 : 0) +
-      (keys[KEYS.d] || keys[KEYS.arrowRight] ? -1 : 0);
+      (keys[KEYS.a] || keys[KEYS.arrowLeft] ? 1 * this._moveSpeed : 0) +
+      (keys[KEYS.d] || keys[KEYS.arrowRight] ? -1 * this._moveSpeed : 0);
   };
 
   _updateTranslation(updateInfo: UpdateInfo) {

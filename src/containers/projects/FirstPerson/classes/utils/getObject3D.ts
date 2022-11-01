@@ -81,7 +81,7 @@ export const addCylinder = (props: AddCylinder): GetObjectReturn => {
 
   //Rapier
   const rigidBody = world.createRigidBody(rigidBodyDesc);
-  const colliderDesc = RAPIER.ColliderDesc.cylinder(size.x / 2, size.y / 2);
+  const colliderDesc = RAPIER.ColliderDesc.cylinder(size.y / 2, size.x);
   const collider = world.createCollider(colliderDesc, rigidBody);
 
   return { meshThree, rigidBody, collider };
