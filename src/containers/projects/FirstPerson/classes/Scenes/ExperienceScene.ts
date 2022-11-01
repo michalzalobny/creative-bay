@@ -175,7 +175,7 @@ export class ExperienceScene extends InteractiveScene {
       if (child instanceof THREE.Mesh && child.material instanceof THREE.MeshStandardMaterial) {
         child.material.envMap = envMap;
         child.material.envMapIntensity = this._debugObjects.envMapIntensity;
-        child.castShadow = true;
+        child.castShadow = false;
         child.receiveShadow = true;
       }
     });
