@@ -98,8 +98,8 @@ export class ExperienceScene extends InteractiveScene {
     this._directionalLight1.shadow.normalBias = 0.05;
     this.add(this._directionalLight1);
 
-    this._directionalLight1Helper = new THREE.CameraHelper(this._directionalLight1.shadow.camera);
-    this.add(this._directionalLight1Helper);
+    // this._directionalLight1Helper = new THREE.CameraHelper(this._directionalLight1.shadow.camera);
+    // this.add(this._directionalLight1Helper);
   }
 
   _setGui() {
@@ -133,7 +133,7 @@ export class ExperienceScene extends InteractiveScene {
       geometry: this._cylinderGeometry,
       material: this._playerMaterial,
       rigidBodyDesc: RAPIER.RigidBodyDesc.kinematicPositionBased(),
-      size: { x: 0.3, y: 1.85 },
+      size: { x: 2, y: 1.85 },
     });
     player.rigidBody.setTranslation(new RAPIER.Vector3(0, 1.85, 3), true);
     this._physics.bodies.push(player);
