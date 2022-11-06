@@ -20,6 +20,11 @@ export interface Physics {
   bodies: GetObjectReturn[];
 }
 
+const SIZE = 65;
+const WALL_HEIGHT = 5;
+const GAP = 1;
+const W_GAP = 0;
+
 export class ExperienceScene extends InteractiveScene {
   _loadedAssets: LoadedAssets | null = null;
   _directionalLight1: THREE.DirectionalLight | null = null;
@@ -98,27 +103,6 @@ export class ExperienceScene extends InteractiveScene {
     const gravity = { x: 0.0, y: -9.81, z: 0.0 };
     this._physics.world = new appState.RAPIER.World(gravity);
 
-    const ground = addBox({
-      world: this._physics.world,
-      scene: this,
-      geometry: this._boxGeometry,
-      material: this._whiteMaterial,
-      size: { x: 80, y: 0.25, z: 80 },
-      rigidBodyDesc: RAPIER.RigidBodyDesc.fixed(),
-    });
-    ground.rigidBody.setTranslation(new RAPIER.Vector3(0, -0.125, 0), true);
-    this._physics.bodies.push(ground);
-
-    const box = addBox({
-      world: this._physics.world,
-      scene: this,
-      geometry: this._boxGeometry,
-      material: this._whiteMaterial,
-      size: { x: 1.25, y: 2.5, z: 1.25 },
-    });
-    box.rigidBody.setTranslation(new RAPIER.Vector3(4, 2.5 / 2, -8.5), true);
-    this._physics.bodies.push(box);
-
     const player = addCylinder({
       world: this._physics.world,
       scene: this,
@@ -130,38 +114,59 @@ export class ExperienceScene extends InteractiveScene {
     player.rigidBody.setTranslation(new RAPIER.Vector3(0, 1.85, 3), true);
     this._physics.bodies.push(player);
 
-    const wall = addBox({
+    const ground = addBox({
       world: this._physics.world,
       scene: this,
       geometry: this._boxGeometry,
       material: this._whiteMaterial,
-      size: { x: 80, y: 5, z: 0.2 },
+      size: { x: SIZE, y: 0.25, z: SIZE },
       rigidBodyDesc: RAPIER.RigidBodyDesc.fixed(),
     });
-    wall.rigidBody.setTranslation(new RAPIER.Vector3(0, 5 / 2, -40), true);
-    this._physics.bodies.push(wall);
+    ground.rigidBody.setTranslation(new RAPIER.Vector3(0, -0.125, 0), true);
+    this._physics.bodies.push(ground);
 
-    const ramp = addBox({
+    // const box = addBox({
+    //   world: this._physics.world,
+    //   scene: this,
+    //   geometry: this._boxGeometry,
+    //   material: this._whiteMaterial,
+    //   size: { x: 1.25, y: 2.5, z: 1.25 },
+    // });
+    // box.rigidBody.setTranslation(new RAPIER.Vector3(4, 2.5 / 2, -8.5), true);
+    // this._physics.bodies.push(box);
+
+    const wall1 = addBox({
       world: this._physics.world,
       scene: this,
       geometry: this._boxGeometry,
       material: this._whiteMaterial,
-      size: { x: 3, y: 25, z: 0.2 },
+      size: { x: SIZE - W_GAP, y: WALL_HEIGHT, z: 0.2 },
       rigidBodyDesc: RAPIER.RigidBodyDesc.fixed(),
     });
-    ramp.rigidBody.setTranslation(new RAPIER.Vector3(3.5, 1.5, 0), true);
-    ramp.rigidBody.setRotation({ w: 1.0, x: 0.5, y: 0.0, z: 0.0 }, true);
-    this._physics.bodies.push(ramp);
+    wall1.rigidBody.setTranslation(new RAPIER.Vector3(0, WALL_HEIGHT / 2 + GAP, -SIZE / 2), true);
+    this._physics.bodies.push(wall1);
+
+    // const ramp = addBox({
+    //   world: this._physics.world,
+    //   scene: this,
+    //   geometry: this._boxGeometry,
+    //   material: this._whiteMaterial,
+    //   size: { x: 3, y: 25, z: 0.2 },
+    //   rigidBodyDesc: RAPIER.RigidBodyDesc.fixed(),
+    // });
+    // ramp.rigidBody.setTranslation(new RAPIER.Vector3(3.5, 1.5, 0), true);
+    // ramp.rigidBody.setRotation({ w: 1.0, x: 0.5, y: 0.0, z: 0.0 }, true);
+    // this._physics.bodies.push(ramp);
 
     const wall2 = addBox({
       world: this._physics.world,
       scene: this,
       geometry: this._boxGeometry,
       material: this._whiteMaterial,
-      size: { x: 80, y: 5, z: 0.2 },
+      size: { x: SIZE - W_GAP, y: WALL_HEIGHT, z: 0.2 },
       rigidBodyDesc: RAPIER.RigidBodyDesc.fixed(),
     });
-    wall2.rigidBody.setTranslation(new RAPIER.Vector3(0, 5 / 2, 40), true);
+    wall2.rigidBody.setTranslation(new RAPIER.Vector3(0, WALL_HEIGHT / 2 + GAP, SIZE / 2), true);
     this._physics.bodies.push(wall2);
 
     const wall3 = addBox({
@@ -169,10 +174,10 @@ export class ExperienceScene extends InteractiveScene {
       scene: this,
       geometry: this._boxGeometry,
       material: this._whiteMaterial,
-      size: { x: 80, y: 5, z: 0.2 },
+      size: { x: SIZE - W_GAP, y: WALL_HEIGHT, z: 0.2 },
       rigidBodyDesc: RAPIER.RigidBodyDesc.fixed(),
     });
-    wall3.rigidBody.setTranslation(new RAPIER.Vector3(40, 5 / 2, 0), true);
+    wall3.rigidBody.setTranslation(new RAPIER.Vector3(SIZE / 2, WALL_HEIGHT / 2 + GAP, 0), true);
     wall3.rigidBody.setRotation({ w: 1.0, x: 0, y: 1, z: 0.0 }, true);
     this._physics.bodies.push(wall3);
 
@@ -181,15 +186,15 @@ export class ExperienceScene extends InteractiveScene {
       scene: this,
       geometry: this._boxGeometry,
       material: this._whiteMaterial,
-      size: { x: 80, y: 5, z: 0.2 },
+      size: { x: SIZE - W_GAP, y: WALL_HEIGHT, z: 0.2 },
       rigidBodyDesc: RAPIER.RigidBodyDesc.fixed(),
     });
-    wall4.rigidBody.setTranslation(new RAPIER.Vector3(-40, 5 / 2, 0), true);
+    wall4.rigidBody.setTranslation(new RAPIER.Vector3(-SIZE / 2, WALL_HEIGHT / 2 + GAP, 0), true);
     wall4.rigidBody.setRotation({ w: 1.0, x: 0, y: 1, z: 0.0 }, true);
     this._physics.bodies.push(wall4);
 
-    this._fpsCamera.setPlayerBody(this._physics.bodies[2].rigidBody);
-    this._fpsCamera.setPlayerCollider(this._physics.bodies[2].collider);
+    this._fpsCamera.setPlayerBody(this._physics.bodies[0].rigidBody);
+    this._fpsCamera.setPlayerCollider(this._physics.bodies[0].collider);
     this._fpsCamera.setWorld(this._physics.world);
     this._fpsCamera.setGun3D(this._gun3D);
   }
