@@ -43,7 +43,8 @@ export class ExperienceScene extends InteractiveScene {
     super({ camera, gui });
 
     this._whiteMaterial = new THREE.MeshStandardMaterial({
-      color: 0xffffff,
+      color: 0xd4d4d4,
+      roughness: 0,
     });
 
     this._playerMaterial = new THREE.MeshStandardMaterial({
