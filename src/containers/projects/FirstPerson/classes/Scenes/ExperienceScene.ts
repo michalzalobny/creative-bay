@@ -63,11 +63,35 @@ export class ExperienceScene extends InteractiveScene {
 
     this._setLights();
     this._setGui();
+    this._addEventListeners();
+  }
+
+  handleClick = () => {
+    if (!this._physics.world) return;
+
+    const ground = addBox({
+      world: this._physics.world,
+      scene: this,
+      geometry: this._boxGeometry,
+      material: this._whiteMaterial,
+      size: { x: 0.2, y: 0.2, z: 0.2 },
+      rigidBodyDesc: RAPIER.RigidBodyDesc.dynamic(),
+    });
+    const startPos = this._camera.position;
+    ground.rigidBody.setTranslation(new RAPIER.Vector3(startPos.x, startPos.y, startPos.z), true);
+    this._physics.bodies.push(ground);
+  };
+
+  _addEventListeners() {
+    // window.addEventListener('click', this.handleClick);
+  }
+  _removeEventListeners() {
+    // window.removeEventListener('click', this.handleClick);
   }
 
   _setLights() {
     this._directionalLight1 = new THREE.DirectionalLight('#ffffff', 3);
-    this._directionalLight1.position.set(-8, 6.8, 10);
+    this._directionalLight1.position.set(-80, 28, -43);
     this._directionalLight1.castShadow = true;
     this._directionalLight1.shadow.camera.far = 32;
     this._directionalLight1.shadow.mapSize.set(1024, 1024);
@@ -109,7 +133,7 @@ export class ExperienceScene extends InteractiveScene {
       geometry: this._cylinderGeometry,
       material: this._playerMaterial,
       rigidBodyDesc: RAPIER.RigidBodyDesc.kinematicPositionBased(),
-      size: { x: 2, y: 1.85 },
+      size: { x: 0.3, y: 1.85 },
     });
     player.rigidBody.setTranslation(new RAPIER.Vector3(0, 1.85, 3), true);
     this._physics.bodies.push(player);
@@ -269,5 +293,6 @@ export class ExperienceScene extends InteractiveScene {
     this._playerMaterial.dispose();
     this._boxGeometry.dispose();
     this._cylinderGeometry.dispose();
+    this._removeEventListeners();
   }
 }

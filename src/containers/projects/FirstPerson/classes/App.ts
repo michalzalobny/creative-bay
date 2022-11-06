@@ -81,6 +81,7 @@ export class App extends THREE.EventDispatcher {
       });
 
     this._setGui();
+    this._gui.hide();
   }
 
   _setGui() {
