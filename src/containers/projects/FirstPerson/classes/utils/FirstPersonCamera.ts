@@ -4,6 +4,7 @@ import { clamp } from 'three/src/math/MathUtils';
 
 import { UpdateInfo } from 'utils/sharedTypes';
 import { clampRange } from 'utils/functions/clamp';
+import { isTouchDevice } from 'utils/functions/isTouchDevice';
 
 import { Gun3D } from '../Components/Gun3D';
 import { FirstPersonControls, Keys } from './FirstPersonControls';
@@ -53,6 +54,7 @@ export class FirstPersonCamera {
     y: 0,
   };
   _infoDomEl: HTMLElement | null;
+  _boardDomEl: HTMLElement | null;
 
   constructor(props: Props) {
     this._camera = props.camera;
@@ -63,6 +65,7 @@ export class FirstPersonCamera {
     });
     this._addEvents();
     this._infoDomEl = document.querySelector('[data-first-peron="esc"]');
+    this._boardDomEl = document.querySelector('[data-first-peron="board"]');
   }
 
   setWorld(world: RAPIER.World) {
@@ -275,6 +278,7 @@ export class FirstPersonCamera {
   }
 
   _handleClick = () => {
+    if (isTouchDevice()) return;
     this._requestLock();
   };
 
@@ -284,13 +288,15 @@ export class FirstPersonCamera {
   }
 
   _handleLock = () => {
-    if (!this._infoDomEl) return;
+    if (!this._infoDomEl || !this._boardDomEl) return;
     this._infoDomEl.style.opacity = '1';
+    this._boardDomEl.style.opacity = '0';
   };
 
   _handleUnLock = () => {
-    if (!this._infoDomEl) return;
+    if (!this._infoDomEl || !this._boardDomEl) return;
     this._infoDomEl.style.opacity = '0';
+    this._boardDomEl.style.opacity = '0.8';
   };
 
   _addEvents() {

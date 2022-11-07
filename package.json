@@ -13,6 +13,7 @@
     "@tweenjs/tween.js": "18.6.4",
     "focus-visible": "5.2.0",
     "fontfaceobserver": "2.1.0",
+    "framer-motion": "^7.6.4",
     "glsl-noise": "0.0.0",
     "gsap": "3.10.4",
     "lil-gui": "0.16.1",

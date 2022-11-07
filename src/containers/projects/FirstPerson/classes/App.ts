@@ -4,6 +4,7 @@ import GUI from 'lil-gui';
 
 import { sharedValues } from 'utils/sharedValues';
 import { Preloader } from 'utils/helperClasses/Preloader';
+import { isTouchDevice } from 'utils/functions/isTouchDevice';
 
 import { appState } from '../Project.state';
 import { ExperienceScene } from './Scenes/ExperienceScene';
@@ -14,6 +15,7 @@ interface Constructor {
   rendererEl: HTMLDivElement;
   setShouldReveal: React.Dispatch<React.SetStateAction<boolean>>;
   setProgressValue: React.Dispatch<React.SetStateAction<number>>;
+  setInfoText: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export class App extends THREE.EventDispatcher {
@@ -28,11 +30,13 @@ export class App extends THREE.EventDispatcher {
   _experienceScene: ExperienceScene;
   _setShouldRevealReact: React.Dispatch<React.SetStateAction<boolean>>;
   _setProgressValueReact: React.Dispatch<React.SetStateAction<number>>;
+  _setInfoTextReact: React.Dispatch<React.SetStateAction<string>>;
   _gui = new GUI();
   _pixelRatio = 1;
   _assetsLoaded = false;
+  _isLoaded = false;
 
-  constructor({ setShouldReveal, rendererEl, setProgressValue }: Constructor) {
+  constructor({ setInfoText, setShouldReveal, rendererEl, setProgressValue }: Constructor) {
     super();
     this._rendererEl = rendererEl;
     this._canvas = document.createElement('canvas');
@@ -41,6 +45,7 @@ export class App extends THREE.EventDispatcher {
 
     this._setShouldRevealReact = setShouldReveal;
     this._setProgressValueReact = setProgressValue;
+    this._setInfoTextReact = setInfoText;
 
     this._renderer = new THREE.WebGLRenderer({
       canvas: this._canvas,
@@ -109,6 +114,14 @@ export class App extends THREE.EventDispatcher {
     this._camera.updateProjectionMatrix();
     this._experienceScene.setPixelRatio(this._pixelRatio);
     this._experienceScene.setRendererBounds(rendererBounds);
+
+    if (isTouchDevice()) {
+      this._setInfoTextReact('Controls for touch devices are not supported, try on PC');
+    } else {
+      if (this._isLoaded) {
+        this._setInfoTextReact('Click to play | Move: WSAD | Look: Mouse');
+      }
+    }
   }
 
   _onVisibilityChange = () => {
@@ -135,6 +148,10 @@ export class App extends THREE.EventDispatcher {
   };
 
   _revealApp() {
+    this._isLoaded = true;
+    if (!isTouchDevice()) {
+      this._setInfoTextReact('Click to play | Move: WSAD | Look: Mouse');
+    }
     this._setShouldRevealReact(true);
     this._experienceScene.onAppReady();
   }
