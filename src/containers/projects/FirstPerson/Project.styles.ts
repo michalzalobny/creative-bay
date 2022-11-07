@@ -47,6 +47,18 @@ export const ReadyWrapper = styled.div<ReadyWrapperProps>`
     `}
 `;
 
+export const ExitInfo = styled.p`
+  position: fixed;
+  z-index: 10;
+  top: 20px;
+  right: 30px;
+  font-size: 15px;
+  color: white;
+  mix-blend-mode: difference;
+  opacity: 0;
+  transition: opacity 0.45s;
+`;
+
 export const CanvasWrapper = styled.div`
   position: absolute;
   top: 0;

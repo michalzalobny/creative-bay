@@ -52,6 +52,7 @@ export class FirstPersonCamera {
     x: 0,
     y: 0,
   };
+  _infoDomEl: HTMLElement | null;
 
   constructor(props: Props) {
     this._camera = props.camera;
@@ -61,6 +62,7 @@ export class FirstPersonCamera {
       domElement: this._domElement,
     });
     this._addEvents();
+    this._infoDomEl = document.querySelector('[data-first-peron="esc"]');
   }
 
   setWorld(world: RAPIER.World) {
@@ -281,15 +283,29 @@ export class FirstPersonCamera {
     this._domElement.requestPointerLock();
   }
 
+  _handleLock = () => {
+    if (!this._infoDomEl) return;
+    this._infoDomEl.style.opacity = '1';
+  };
+
+  _handleUnLock = () => {
+    if (!this._infoDomEl) return;
+    this._infoDomEl.style.opacity = '0';
+  };
+
   _addEvents() {
     this._firstPersonControls.addEventListener('mousemove', this._handleMouseMove);
     this._firstPersonControls.addEventListener('keychange', this._handleKeyChange);
+    this._firstPersonControls.addEventListener('lock', this._handleLock);
+    this._firstPersonControls.addEventListener('unlock', this._handleUnLock);
     this._domElement.addEventListener('click', this._handleClick);
   }
 
   _removeEvents() {
     this._firstPersonControls.removeEventListener('mousemove', this._handleMouseMove);
     this._firstPersonControls.removeEventListener('keychange', this._handleKeyChange);
+    this._firstPersonControls.removeEventListener('lock', this._handleLock);
+    this._firstPersonControls.removeEventListener('unlock', this._handleUnLock);
     this._domElement.removeEventListener('click', this._handleClick);
   }
 

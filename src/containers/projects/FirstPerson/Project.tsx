@@ -32,6 +32,7 @@ export default function Project(props: PageProps) {
       <Head {...head} />
       <S.Wrapper>
         <S.ReadyWrapper shouldReveal={shouldReveal} />
+        <S.ExitInfo data-first-peron="esc">Press ESC to pause</S.ExitInfo>
         <S.CanvasWrapper data-first-peron="holder" ref={rendererEl} />
       </S.Wrapper>
     </>
