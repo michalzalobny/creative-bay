@@ -22,7 +22,7 @@ export interface Physics {
 
 const SIZE = 65;
 const WALL_HEIGHT = 5;
-const GAP = 1;
+const GAP = 0.8;
 const W_GAP = 0;
 
 export class ExperienceScene extends InteractiveScene {
