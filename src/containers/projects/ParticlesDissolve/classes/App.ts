@@ -8,7 +8,7 @@ import { Preloader } from 'utils/helperClasses/Preloader';
 
 import { ExperienceScene } from './Scenes/ExperienceScene';
 //Assets imports
-// import starterImageSrc from './assets/starter.jpg';
+import starterImageSrc from './assets/starter.png';
 
 interface Constructor {
   rendererEl: HTMLDivElement;
@@ -51,9 +51,9 @@ export class App extends THREE.EventDispatcher {
 
     this._orbitControls = new OrbitControls(this._camera, this._rendererEl);
     this._orbitControls.enableDamping = true;
-    this._orbitControls.enablePan = false;
-    this._orbitControls.enableRotate = false;
-    this._orbitControls.enableZoom = false;
+    // this._orbitControls.enablePan = false;
+    // this._orbitControls.enableRotate = false;
+    // this._orbitControls.enableZoom = false;
     this._orbitControls.update();
 
     this._gui.title('Scene settings');
@@ -63,10 +63,12 @@ export class App extends THREE.EventDispatcher {
     this._addListeners();
     this._resumeAppFrame();
 
-    this._preloader.setAssetsToPreload([]);
+    this._preloader.setAssetsToPreload([
+      { src: starterImageSrc.src, type: 'image', targetName: 'starterImage' },
+    ]);
   }
 
-  _onResizeDebounced = debounce(() => this._onResize(), 300);
+  _onResizeDebounced = debounce(() => this._onResize(), 100);
 
   _onResize() {
     const rendererBounds = this._rendererEl.getBoundingClientRect();
@@ -97,7 +99,6 @@ export class App extends THREE.EventDispatcher {
   _onAssetsLoaded = (e: THREE.Event) => {
     this._setShouldRevealReact(true);
     this._experienceScene.setLoadedAssets((e.target as Preloader).loadedAssets);
-    this._experienceScene.animateIn();
   };
 
   _onPreloaderProgress = (e: THREE.Event) => {

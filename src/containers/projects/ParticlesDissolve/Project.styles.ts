@@ -41,3 +41,30 @@ export const CanvasWrapper = styled.div`
   z-index: 1;
   background: #000000;
 `;
+
+export const ImageWrapper = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* width: 50%; */
+  width: 25%;
+  z-index: 3;
+
+  &:before {
+    content: '';
+    display: block;
+    /* padding-bottom: 18.75%; */
+    padding-bottom: 100%;
+  }
+`;
+
+export const Image = styled.img`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+`;
