@@ -69,6 +69,11 @@ export interface AnimateCamera {
   duration?: number;
 }
 
+export interface Size {
+  width: number;
+  height: number;
+}
+
 export interface PageProps {
   head: HeadProps;
   inspirationName?: string;
