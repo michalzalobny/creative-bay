@@ -52,7 +52,7 @@ export default function IndexPage() {
             </Link>
           </S.ProjectContainer>
           <S.ProjectContainer>
-            <S.ProjectLink target="_blank" href="https://michalzalobny.com/">
+            <S.ProjectLink target="_blank" href="https://portfolio2021.michalzalobny.com/">
               9. Portfolio 2021
             </S.ProjectLink>
           </S.ProjectContainer>
